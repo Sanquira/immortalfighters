@@ -6,6 +6,8 @@ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 sudo apt-get install python3-pip
 sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
+sudo apt-get install python3-setuptools
+
 sudo pip3 install Django==2.0.5
 
 # REST

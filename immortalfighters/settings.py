@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7-$4suws1#+-j09t&)yq4h+#&69mo*j_lov8b+&+g@sb5gw@xr'
+SECRET_KEY = '8yglz-x=_6ux+ffp!)3$#u$j2iijk(9+&k&e(h1&=p5-=ih%fq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_swagger',
+    'bootstrap3',
+    'sass_processor',
+    'base',
+    'guilds',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +87,10 @@ DATABASES = {
 }
 
 
+SASS_PRECISION = 8
+SASS_OUTPUT_STYLE = 'compact'
+STATIC_ROOT = "immortalfighters/static/"
+
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -121,7 +129,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
-}
+
+from .settings_local import *
