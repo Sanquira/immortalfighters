@@ -1,0 +1,152 @@
+@import "fonts";
+
+$menu_border_image: "menu/menu_border.png";
+$menu_bg: "menu/menu_lbg.png";
+$menu_bg_vert: "menu/menu_vert.png";
+$form_send_image: "forms/send.png";
+
+body {
+  background-color: black;
+  color: #B07344;
+  font-family: Georgia;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+@mixin bg-image-base {
+  background-position: top center, bottom center;
+  background-repeat: no-repeat;
+}
+
+@for $i from 1 through 5 {
+  #bg-image-#{$i} {
+    background-image: url("backgrounds/bghory04_#{$i}1.jpg"),
+    url("backgrounds/bghory02_#{$i}1.jpg");
+    @include bg-image-base;
+  }
+}
+
+#page {
+  padding-top: 295px;
+  padding-bottom: 295px;
+  width: 1024px;
+  margin: auto;
+}
+
+.col-md-2 {
+  //    border: white thick solid;
+  padding: 0;
+}
+
+.col-md-1 {
+  //    border: white solid thick;
+  /*flex: 0 0 5%;*/
+  /*-ms-flex: 0 0 5%;*/
+  /*max-width: 5%;*/
+  padding: 0;
+}
+
+.col-md-7 {
+  /*flex: 0 0 61.6666666666666666%;*/
+  /*-ms-flex: 0 0 61.6666666666666666%%;*/
+  /*max-width: 61.6666666666666666%%;*/
+  padding: 0;
+  padding-top: 35px;
+}
+
+.menu-side {
+  border-collapse: separate;
+  margin-left: 0;
+  background: url($menu_bg);
+  background-size: 84% auto;
+  background-repeat: repeat-y;
+  background-position: 12px 0px;
+
+  td {
+    border: 15px solid transparent;
+    border-image: url($menu_border_image) 15 round;
+    border-bottom: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    max-height: 1px;
+    min-height: 1px;
+    height: 14px;
+
+    &.last {
+      border-bottom: 15px solid transparent;
+    }
+
+    &.collapsed {
+      border-top: 0;
+    }
+
+  }
+}
+
+#vertical-text {
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  font-family: boecklins-universe;
+  font-size: 20px;
+  color: white;
+  text-shadow: 2px 2px 0 green,
+  -1px -1px 0 green,
+  1px -1px 0 green,
+  -1px 1px 0 green,
+  1px 1px 0 green;
+  /*letter-spacing: -6px;*/
+
+  margin: auto;
+  border: 15px solid transparent;
+  border-image: url($menu_border_image) 15 round;
+  /*border-left: 0;*/
+  background-image: url($menu_bg_vert);
+  background-origin: padding-box;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.center {
+  text-align: center;
+}
+
+a {
+  color: white;
+
+  &:hover {
+    color: #B0A49B;
+    text-decoration: transparent;
+  }
+
+  &.online {
+    color: green;
+
+    &:hover {
+      color: darkgreen;
+    }
+  }
+}
+
+.ellipsis {
+  max-width: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.login-form {
+  font-family: "Arial";
+  font-size: 8pt;
+  color: white;
+  border: 1px solid #990000;
+  background-color: black;
+  width: 100%;
+}
+
+.white-text {
+  color: white;
+}
+
+.gray-text {
+  color: #999;
+}
