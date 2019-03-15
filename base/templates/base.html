@@ -1,14 +1,11 @@
-{% load static %}
-{% load bootstrap4 %}
-{% load sass_tags %}
+{% load static %}{% load bootstrap4 %}{% load sass_tags %}
 
 <!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}ImmortalFighters{% endblock %}</title>
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
+    {% bootstrap_css %} {% bootstrap_javascript %}
     <link rel="stylesheet" href="{% sass_src 'base/style.scss' %}">
     {% block extraHead %}{% endblock %}
 </head>
@@ -140,7 +137,7 @@
                 </tr>
                 {% block PJ_help %}{% endblock %}
                 <tr>
-                    <td><a href="http://immortalfighters.net">Pravidla</a></td>
+                    <td><a href={% url 'base:site_rules' %}>Pravidla</a></td>
                 </tr>
                 <tr>
                     <td><a href="http://immortalfighters.net">Nápověda k webu</a></td>
@@ -236,14 +233,10 @@
                     <td class="center collapsed">
                         {% if user.is_authenticated %}
                             <a href="http://webchat.freenode.net/?nick={{ user.username }}.&channels=immortalfighters&uio=OT10cnVlJjExPTIyNge7"
-                               target="_blank">
-                                IRC Channel
-                            </a>
+                               target="_blank"> IRC Channel </a>
                         {% else %}
                             <a href="http://webchat.freenode.net/?nick=IF_Host_.&channels=immortalfighters&uio=OT10cnVlJjExPTIyNge7"
-                               target="_blank">
-                                IRC Channel
-                            </a>
+                               target="_blank"> IRC Channel </a>
                         {% endif %}
                     </td>
                 </tr>
@@ -254,18 +247,14 @@
                 </tr>
                 <tr>
                     <td class="center last collapsed">
-                        <a href="http://immortalfighters.net">
-                            Immortal Fighters na Facebooku
-                        </a>
+                        <a href="http://immortalfighters.net"> Immortal Fighters na Facebooku </a>
                     </td>
                 </tr>
                 <tr>
                     <td class="center">&copy; 2019 IF TEAM</td>
                 </tr>
                 <tr>
-                    <td class="last center collapsed">Dračí doupě&reg;, DrD&trade; a ALTAR&reg; jsou zapsané ochranné
-                        známky
-                        nakladatelství ALTAR.
+                    <td class="last center collapsed">Dračí doupě&reg;, DrD&trade; a ALTAR&reg; jsou zapsané ochranné známky nakladatelství ALTAR.
                     </td>
                 </tr>
             {% endblock %}
@@ -275,14 +264,18 @@
         <p id="vertical-text">IMMORTAL FIGHTERS</p>
     </div>
     <div class="col-md-7">
-        {% block content %}
-            <div><p>This is center block for content. Now it's empty.</p></div>
-        {% endblock %}
+        <div>
+            {% block content %}
+                <p>This is center block for content. Now it's empty.</p>
+            {% endblock %}
+        </div>
     </div>
     <div class="col-md-2">
         <table cellspacing="0" cellpadding="0" class="menu-side">
-            {% block right_menu %}
-                <form method="post" action="index.html" name="prihlaseni" id="login_form"></form>
+            {% if user.is_anonymous %}
+                <form method="post" action={% url 'base:log_in' %} name="prihlaseni" id="login_form">
+                    {% csrf_token %}
+                </form>
                 <tr>
                     <td class="center">- PŘIHLÁŠENÍ -</td>
                 </tr>
@@ -290,13 +283,14 @@
                     <td>Uživatel:</td>
                 </tr>
                 <tr>
-                    <td class="collapsed"><input form="login_form" name="login" type="text" class="login-form"></td>
+                    <td class="collapsed"><input form="login_form" name="username" type="text"></td>
                 </tr>
                 <tr>
                     <td class="collapsed">Heslo:</td>
                 </tr>
                 <tr>
-                    <td class="collapsed"><input form="login_form" name="pwd" type="password" class="login-form"></td>
+                    <td class="collapsed"><input form="login_form" name="password" type="password">
+                    </td>
                 </tr>
                 <tr>
                     <td class="collapsed"><input form="login_form" type="image" src={% static 'base/forms/send.png' %}>
@@ -308,168 +302,115 @@
                             href="http://immortalfighters.net">Facebook login</a></td>
                 </tr>
                 <tr>
-                    <td class="collapsed"><a href="http://immortalfighters.net">Nová registrace</a></td>
+                    <td class="collapsed"><a href={% url "base:registration" %}>Nová registrace</a></td>
                 </tr>
                 <tr>
                     <td class="collapsed"><a href="http://immortalfighters.net">Obnovit heslo</a></td>
                 </tr>
                 <tr>
-                    <td class="collapsed">Registrovaní: {{ menu_attrs.registered_number }}</td>
+                    <td class="collapsed">Registrovaní: <span
+                            class="gray-text">{{ menu_attrs.statistics.registered }}</span></td>
                 </tr>
                 <tr>
-                    <td class="collapsed">Online: {{ menu_attrs.current_online }}</td>
+                    <td class="collapsed">Online: <span class="gray-text">{{ menu_attrs.statistics.online }}</span></td>
                 </tr>
                 <tr>
                     <td class="collapsed last">
-                        <a href="http://immortalfighters.net">Posledních 24h:
-                        </a> {{ menu_attrs.online_last_day }}
+                        <a href="http://immortalfighters.net">Posledních 24h: </a> <span
+                            class="gray-text">{{ menu_attrs.statistics.last_day }}</span>
                     </td>
                 </tr>
                 <tr>
                     <td class="last center">Reg. povolání</td>
                 </tr>
-                <tr>
-                    <td class="collapsed">Alchymista:
-                        <span class="gray-text">{{ menu_attrs.num_alchemists }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Hraničář:
-                        <span class="gray-text">{{ menu_attrs.num_hunters }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Kouzelník:
-                        <span class="gray-text">{{ menu_attrs.num_wizards }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Válečník:
-                        <span class="gray-text">{{ menu_attrs.num_warriors }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Zloděj:
-                        <span class="gray-text">{{ menu_attrs.num_thiefs }}</span>
-                    </td>
-                </tr>
+                {% for profession in menu_attrs.statistics.profession %}
+                    <tr>
+                        <td class="collapsed">{{ profession.0 }}: <span class="gray-text">{{ profession.1 }}</span>
+                        </td>
+                    </tr>
+                {% endfor %}
                 <tr>
                     <td class="last center">Reg. rasy</td>
                 </tr>
-                <tr>
-                    <td class="collapsed">Barbar:
-                        <span class="gray-text">{{ menu_attrs.num_barbars }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Člověk:
-                        <span class="gray-text">{{ menu_attrs.num_humans }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Elf:
-                        <span class="gray-text">{{ menu_attrs.num_elfs }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Hobit:
-                        <span class="gray-text">{{ menu_attrs.num_hobits }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Kroll:
-                        <span class="gray-text">{{ menu_attrs.num_krolls }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Kudůk:
-                        <span class="gray-text">{{ menu_attrs.num_kuduks }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed last">Trpaslík: <span class="gray-text">97</span></td>
-                </tr>
+                {% for race in menu_attrs.statistics.race %}
+                    <tr>
+                        <td class="collapsed">{{ race.0 }}: <span class="gray-text">{{ race.1 }}</span>
+                        </td>
+                    </tr>
+                {% endfor %}
                 <tr>
                     <td class="center">
-                        <a href="./?module=main&amp;redir=36" onfocus="this.blur()" target="_blank">
-                            <img src="http://ostarwars.wz.cz/banner.gif" alt="" width="88" height="31" border="0">
+                        <a href="./?module=main&amp;redir=36" onfocus="this.blur()" target="_blank"> <img
+                                src="http://ostarwars.wz.cz/banner.gif" alt="" width="88" height="31" border="0"> </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="collapsed center">
+                        <a href="./?module=main&amp;redir=2" onfocus="this.blur()" target="_blank"> <img
+                                src={% static 'base/banners/smartdblu.gif' %} alt="" width="88" height="31" border="0">
                         </a>
                     </td>
                 </tr>
                 <tr>
                     <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=2" onfocus="this.blur()" target="_blank">
-                            <img src={% static 'base/banners/smartdblu.gif' %} alt="" width="88" height="31" border="0">
+                        <a href="./?module=main&amp;redir=26" onfocus="this.blur()" target="_blank"> <img
+                                src="http://zaklinaci-mistrimece.cz/images/banner_link.gif" alt="" width="88"
+                                height="31" border="0"> </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="collapsed center">
+                        <a href="./?module=main&amp;redir=5" onfocus="this.blur()" target="_blank"> <img
+                                src={% static 'base/banners/baner_paintball.gif' %} alt="" width="88" height="31"
+                                border="0"> </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="collapsed center">
+                        <a href="./?module=main&amp;redir=4" onfocus="this.blur()" target="_blank"> <img
+                                src={% static 'base/banners/aphrael2.gif' %} alt="" width="88" height="31" border="0">
                         </a>
                     </td>
                 </tr>
                 <tr>
                     <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=26" onfocus="this.blur()" target="_blank">
-                            <img src="http://zaklinaci-mistrimece.cz/images/banner_link.gif" alt="" width="88"
-                                 height="31"
-                                 border="0">
+                        <a href="./?module=main&amp;redir=24" onfocus="this.blur()" target="_blank"> <img
+                                src={% static 'base/banners/stable.jpg' %} alt="" width="88" height="31" border="0">
                         </a>
                     </td>
                 </tr>
                 <tr>
                     <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=5" onfocus="this.blur()" target="_blank">
-                            <img src={% static 'base/banners/baner_paintball.gif' %} alt="" width="88" height="31"
-                                 border="0">
+                        <a href="./?module=main&amp;redir=48" onfocus="this.blur()" target="_blank"> <img
+                                src="http://www.slovenciny.com/slovenciny.gif" alt="" width="88" height="31" border="0">
                         </a>
                     </td>
                 </tr>
                 <tr>
                     <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=4" onfocus="this.blur()" target="_blank">
-                            <img src={% static 'base/banners/aphrael2.gif' %} alt="" width="88" height="31" border="0">
-                        </a>
+                        <a href="./?module=main&amp;redir=69" onfocus="this.blur()" target="_blank"> <img
+                                src={% static 'base/banners/hviezdnabrana_sk.gif' %} alt="" width="88" height="31"
+                                border="0"> </a>
                     </td>
                 </tr>
                 <tr>
                     <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=24" onfocus="this.blur()" target="_blank">
-                            <img src={% static 'base/banners/stable.jpg' %} alt="" width="88" height="31" border="0">
-                        </a>
+                        <a href="./?module=main&amp;redir=73" onfocus="this.blur()" target="_blank"> <img
+                                src={% static 'base/banners/ryon-wbs-cz.jpg' %} alt="" width="88" height="31"
+                                border="0"> </a>
                     </td>
                 </tr>
                 <tr>
                     <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=48" onfocus="this.blur()" target="_blank">
-                            <img src="http://www.slovenciny.com/slovenciny.gif" alt="" width="88" height="31"
-                                 border="0">
-                        </a>
+                        <a href="./?module=main&amp;redir=72" onfocus="this.blur()" target="_blank"> <img
+                                src={% static 'base/banners/draci_hlidka.gif' %} alt="" width="88" height="31"
+                                border="0"> </a>
                     </td>
                 </tr>
                 <tr>
                     <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=69" onfocus="this.blur()" target="_blank">
-                            <img src={% static 'base/banners/hviezdnabrana_sk.gif' %} alt="" width="88" height="31"
-                                 border="0">
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=73" onfocus="this.blur()" target="_blank">
-                            <img src={% static 'base/banners/ryon-wbs-cz.jpg' %} alt="" width="88" height="31"
-                                 border="0">
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=72" onfocus="this.blur()" target="_blank">
-                            <img src={% static 'base/banners/draci_hlidka.gif' %} alt="" width="88" height="31"
-                                 border="0">
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=71" onfocus="this.blur()" target="_blank">
-                            <img src={% static 'base/banners/kalendar.png' %} alt="" width="88" height="31" border="0">
+                        <a href="./?module=main&amp;redir=71" onfocus="this.blur()" target="_blank"> <img
+                                src={% static 'base/banners/kalendar.png' %} alt="" width="88" height="31" border="0">
                         </a>
                     </td>
                 </tr>
@@ -478,12 +419,16 @@
                 </tr>
                 <tr>
                     <td class="collapsed center last">
-                        <a href={% url "banners" %} onfocus="this.blur()">
-                            <img src={% static 'base/banners/if_b88x30.gif' %} alt="" width="88" height="30" border="0">
+                        <a href={% url "base:banners" %} onfocus="this.blur()"> <img
+                                src={% static 'base/banners/if_b88x30.gif' %} alt="" width="88" height="30" border="0">
                         </a>
                     </td>
                 </tr>
-            {% endblock %}
+            {% else %}
+                {% block right_menu %}
+                    <a href={% url 'base:log_out' %}>Odhlásit</a>
+                {% endblock %}
+            {% endif %}
         </table>
     </div>
 </div>

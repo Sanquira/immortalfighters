@@ -1,20 +1,11 @@
 {% extends 'base.html' %}
 
-{% block bookmarks %}
-    {% if user.has_bookmarks %}
-        {% for bookmark in user.get_bookmarks %}
-            <tr>
-                <td class="collapsed ellipsis">
-                    <a href=bookmark.url title=bookmark.name>bookmark.name</a>
-                </td>
-            </tr>
-        {% endfor %}
-    {% endif %}
-{% endblock %}
+{% block right_menu %}
+    <tr>
+        <td class="center">- ÚČET -</td>
+    </tr>
+    <tr>
+        <td class="last"><a href={% url 'base:log_out' %}>Odhlásit</a></td>
+    </tr>
 
-{% block IRC %}
-    <a href="http://webchat.freenode.net/?nick=" +user.username + ".&channels=immortalfighters&uio=OT10cnVlJjExPTIyNge7"
-    target="_blank">
-    IRC Channel
-    </a>
 {% endblock %}
