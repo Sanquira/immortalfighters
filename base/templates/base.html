@@ -7,6 +7,7 @@
     <title>{% block title %}ImmortalFighters{% endblock %}</title>
     {% bootstrap_css %} {% bootstrap_javascript %}
     <link rel="stylesheet" href="{% sass_src 'base/style.scss' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'base/favicon.ico' %}"/>
     {% block extraHead %}{% endblock %}
 </head>
 {% now "H" as current_time %}
@@ -261,7 +262,7 @@
         </table>
     </div>
     <div class="col-md-1">
-        <p id="vertical-text">IMMORTAL FIGHTERS</p>
+        <a href="http://immortalfighters.net" id="vertical-text">IMMORTAL FIGHTERS</a>
     </div>
     <div class="col-md-7">
         <div>
