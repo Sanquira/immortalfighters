@@ -1,0 +1,12 @@
+{% extends 'logged_base.html' %}
+
+{% block content %}
+    <h1>Seznamy schopností, kouzel, předmětů a tak vůbec.</h1>
+    <ul>
+        <li><a href={% url 'dictionary:spells' %}>Kouzla (kouzelníci, hraničáři, atd.) - aktivní magie</a></li>
+        <li><a href={% url 'dictionary:skills' %}>Dovednosti - nemagické</a></li>
+        <li><a href={% url 'dictionary:items' %}>Předměty</a></li>
+        <li><a href={% url 'dictionary:races' %}>Rasy</a></li>
+        <li><a href={% url 'dictionary:professions' %}>Povolání</a></li>
+    </ul>
+{% endblock %}

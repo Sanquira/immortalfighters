@@ -3,4 +3,5 @@ from django.db import models
 
 
 class IFUser(AbstractUser, models.Model):
+    active_char = models.ForeignKey("Character", on_delete=models.CASCADE, null=True)
     pass

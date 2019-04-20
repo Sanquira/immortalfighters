@@ -4,7 +4,9 @@ $menu_border_image: "menu/menu_border.png";
 $menu_bg: "menu/menu_lbg.png";
 $menu_bg_vert: "menu/menu_vert.png";
 $form_send_image: "forms/send.png";
-$title_image: "menu/title_brown.png";
+$title_image_brown: "menu/title_brown.png";
+$title_image_green: "menu/title_green.png";
+$list_image: "menu/if_sipka.png";
 
 body {
   background-color: black;
@@ -108,14 +110,24 @@ body {
   background-size: 100% 100%;
 }
 
-h1 {
+@mixin title-base {
   border: 10px solid transparent;
-  border-image: url($title_image) 10 round;
-  border-image-slice: 10 fill;
   color: #999999;
   font-weight: bold;
   font-size: 16px;
   line-height: 1;
+}
+
+h1 {
+  @include title-base;
+  border-image: url($title_image_brown) 10 round;
+  border-image-slice: 10 fill;
+}
+
+h2 {
+  @include title-base;
+  border-image: url($title_image_green) 10 round;
+  border-image-slice: 10 fill;
 }
 
 .tooltip {
@@ -175,7 +187,7 @@ a {
 
 input[type=email],
 input[type=password],
-input[type=text]{
+input[type=text] {
   font-family: "Arial";
   font-size: 8pt;
   color: white;
@@ -185,11 +197,11 @@ input[type=text]{
   vertical-align: baseline;
 }
 
-label{
+label {
   margin: 0;
 }
 
-.warning{
+.warning {
   color: #990000;
 }
 
@@ -199,4 +211,10 @@ label{
 
 .gray-text {
   color: #999;
+}
+
+ul{
+  li{
+    list-style-image: url($list_image);
+  }
 }

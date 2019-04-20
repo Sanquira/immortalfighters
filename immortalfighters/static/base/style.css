@@ -1,0 +1,69 @@
+@font-face { font-family: 'EG-Dragon-Caps12'; src: url("fonts/webfonts_EG-Dragon-Caps12/EG-Dragon-Caps12.ttf.woff") format("woff"), url("fonts/webfonts_EG-Dragon-Caps12/EG-Dragon-Caps12.ttf.svg#EG-Dragon-Caps12") format("svg"), url("fonts/webfonts_EG-Dragon-Caps12/EG-Dragon-Caps12.ttf.eot"), url("fonts/webfonts_EG-Dragon-Caps12/EG-Dragon-Caps12.ttf.eot?#iefix") format("embedded-opentype"); font-weight: normal; font-style: normal; }
+
+@font-face { font-family: 'boecklins-universe'; src: url("fonts/boecklins-universe/Boecklins Universe.ttf"); font-weight: normal; font-style: normal; }
+
+body { background-color: black; color: #B07344; font-family: Georgia; font-size: 12px; font-weight: bold; }
+
+#bg-image-1 { background-image: url("backgrounds/bghory04_11.jpg"), url("backgrounds/bghory02_11.jpg"); background-position: top center, bottom center; background-repeat: no-repeat; }
+
+#bg-image-2 { background-image: url("backgrounds/bghory04_21.jpg"), url("backgrounds/bghory02_21.jpg"); background-position: top center, bottom center; background-repeat: no-repeat; }
+
+#bg-image-3 { background-image: url("backgrounds/bghory04_31.jpg"), url("backgrounds/bghory02_31.jpg"); background-position: top center, bottom center; background-repeat: no-repeat; }
+
+#bg-image-4 { background-image: url("backgrounds/bghory04_41.jpg"), url("backgrounds/bghory02_41.jpg"); background-position: top center, bottom center; background-repeat: no-repeat; }
+
+#bg-image-5 { background-image: url("backgrounds/bghory04_51.jpg"), url("backgrounds/bghory02_51.jpg"); background-position: top center, bottom center; background-repeat: no-repeat; }
+
+#page { padding-top: 295px; padding-bottom: 295px; width: 1024px; margin: auto; }
+
+.col-md-2 { padding: 0; }
+
+.col-md-1 { flex: 0 0 6%; -ms-flex: 0 0 6%; max-width: 6%; padding: 0; }
+
+.col-md-7 { flex: 0 0 59%; -ms-flex: 0 0 59%; max-width: 59%; padding-left: 10px; padding-bottom: 0; padding-top: 20px; padding-right: 10px; }
+
+.menu-side { border-collapse: separate; margin-left: 0; background: url("menu/menu_lbg.png"); background-size: 84% auto; background-repeat: repeat-y; background-position: 12px 0px; width: 100%; }
+
+.menu-side td { border: 15px solid transparent; border-image: url("menu/menu_border.png") 15 round; border-bottom: 0; padding-left: 5px; padding-right: 5px; max-height: 1px; min-height: 1px; height: 14px; }
+
+.menu-side td.last { border-bottom: 15px solid transparent; }
+
+.menu-side td.collapsed { border-top: 0; }
+
+#vertical-text { writing-mode: vertical-lr; text-orientation: upright; font-family: boecklins-universe; font-size: 20px; color: white; text-shadow: 2px 2px 0 green, -1px -1px 0 green, 1px -1px 0 green, -1px 1px 0 green, 1px 1px 0 green; /*letter-spacing: -6px;*/ margin: auto; border: 15px solid transparent; border-image: url("menu/menu_border.png") 15 round; /*border-left: 0;*/ background-image: url("menu/menu_vert.png"); background-origin: padding-box; background-repeat: no-repeat; background-size: 100% 100%; }
+
+h1 { border: 10px solid transparent; color: #999999; font-weight: bold; font-size: 16px; line-height: 1; border-image: url("menu/title_brown.png") 10 round; border-image-slice: 10 fill; }
+
+h2 { border: 10px solid transparent; color: #999999; font-weight: bold; font-size: 16px; line-height: 1; border-image: url("menu/title_green.png") 10 round; border-image-slice: 10 fill; }
+
+.tooltip { position: relative; display: inline-block; }
+
+.tooltip .tooltipblock { visibility: hidden; width: 120px; background-color: black; color: #fff; text-align: center; padding: 5px 0; border-radius: 6px; /* Position the tooltip text - see examples below! */ position: absolute; z-index: 1; }
+
+.tooltip:hover tooltipblock { visibility: visible; }
+
+.center { text-align: center; }
+
+a { color: white; }
+
+a:hover { color: #B0A49B; text-decoration: transparent; }
+
+a.online { color: green; }
+
+a.online:hover { color: darkgreen; }
+
+.ellipsis { max-width: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+input[type=email], input[type=password], input[type=text] { font-family: "Arial"; font-size: 8pt; color: white; border: 1px solid #990000; background-color: black; width: 100%; vertical-align: baseline; }
+
+label { margin: 0; }
+
+.warning { color: #990000; }
+
+.white-text { color: white; }
+
+.gray-text { color: #999; }
+
+ul li { list-style-image: url("menu/if_sipka.png"); }
+
+/*# sourceMappingURL=style.css.map */

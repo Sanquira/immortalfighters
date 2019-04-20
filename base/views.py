@@ -2,9 +2,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 
 from base.forms import RegistrationForm
-from base.models import IFUser
-from base.models.profession import Profession
-from base.models.race import Race
+from base.models import *
+from dictionary.models import Race, BaseProfession
 
 
 def index(request):
@@ -15,7 +14,7 @@ def index(request):
 
 
 def banners(request):
-    return render(request, 'base.html')
+    return render(request, 'base.html', {'menu_attrs': MenuWrapper()})
 
 
 def log_in(request):
@@ -66,10 +65,9 @@ class MenuWrapper:
     def __init__(self):
         self.statistics['race'].clear()
         self.statistics['profession'].clear()
-        for race in Race:
-            self.statistics['race'].append((race.value, 10))
-        for profession in Profession:
-            self.statistics['profession'].append((profession.value, 10))
-        pass
+        for rac in Race.objects.all():
+            self.statistics['race'].append((rac.name, Character.objects.filter(race=rac).count()))
+        for pro in BaseProfession.objects.filter(parentProf=None):
+            self.statistics['profession'].append((pro.name, Character.objects.filter(profession=pro).count()))
 
     pass
