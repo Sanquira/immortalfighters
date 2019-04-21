@@ -4,7 +4,8 @@ from polymorphic.models import PolymorphicModel
 
 class BaseProfession(PolymorphicModel):
     name = models.CharField(max_length=50, null=False, default="Název povolání", verbose_name="Název povolání")
-    parentProf = models.ForeignKey('BaseProfession', on_delete=models.CASCADE, null=True, blank=True)
+    parentProf = models.ForeignKey('BaseProfession', on_delete=models.CASCADE, null=True, blank=True,
+                                   verbose_name="Vychází z povolání")
     str_min = models.SmallIntegerField(default=0, verbose_name="Síla minimum")
     str_max = models.SmallIntegerField(default=0, verbose_name="Síla maximum")
     dex_min = models.SmallIntegerField(default=0, verbose_name="Obratnost minimum")

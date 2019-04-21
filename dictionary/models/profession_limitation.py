@@ -4,9 +4,9 @@ from dictionary.models.profession import BaseProfession
 
 
 class ProfessionLimitation(models.Model):
-    skill = models.ForeignKey('Spell', on_delete=models.CASCADE)
-    profession = models.ForeignKey(BaseProfession, on_delete=models.CASCADE)
-    from_level = models.PositiveSmallIntegerField(default=1)
+    skill = models.ForeignKey('Spell', on_delete=models.CASCADE,verbose_name="Kouzlo")
+    profession = models.ForeignKey(BaseProfession, on_delete=models.CASCADE,verbose_name="Povolání")
+    from_level = models.PositiveSmallIntegerField(default=1,verbose_name="Od úrovně")
 
     def __str__(self):
         return self.profession.name + " - " + self.skill.name

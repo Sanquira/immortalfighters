@@ -4,12 +4,12 @@ from dictionary.models.profession import BaseProfession
 
 
 class Spell(models.Model):
-    name = models.CharField(max_length=128, null=False, default="New spell")
-    mana = models.CharField(max_length=128, null=True)
-    range = models.CharField(max_length=32, null=True)
-    cast_time = models.CharField(max_length=32, null=True)
-    duration = models.CharField(max_length=32, null=True)
-    note = models.TextField(null=True)
+    name = models.CharField(max_length=128, null=False, default="New spell",verbose_name="Jméno kouzla")
+    mana = models.CharField(max_length=128, null=True,verbose_name="Mana")
+    range = models.CharField(max_length=32, null=True,verbose_name="Dosah")
+    cast_time = models.CharField(max_length=32, null=True,verbose_name="Vyvolání")
+    duration = models.CharField(max_length=32, null=True,verbose_name="Trvání")
+    note = models.TextField(null=True,verbose_name="Popis")
 
     available_for_professions = models.ManyToManyField(BaseProfession, through='ProfessionLimitation')
 
