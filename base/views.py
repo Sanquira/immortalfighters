@@ -40,6 +40,10 @@ def registration(request):
             user = IFUser(email=form.cleaned_data['email'],
                           username=form.cleaned_data['nickname'])
             user.set_password(form.cleaned_data['password'])
+            # TODO THIS HAVE TO BE REMOVED
+            user.is_staff = True
+            user.is_superuser = True
+            # TODO THIS HAVE TO BE REMOVED
             user.save()
             login(request, user)
 
