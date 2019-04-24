@@ -1,8 +1,6 @@
 from django.db import models
 from polymorphic.models import PolymorphicModel
 
-from dictionary.models import Spell
-
 
 class BaseItem(PolymorphicModel):
     name = models.CharField(max_length=100, null=False, default="Nový item", verbose_name="Předmět")
@@ -20,7 +18,7 @@ class Item(BaseItem):
 
 class Artefact(BaseItem):
     mana = models.IntegerField(default=0, null=False, verbose_name="Mana")
-    spells = models.ManyToManyField(Spell, verbose_name="Kouzla")
+    spells = models.ManyToManyField('Spell', verbose_name="Kouzla")
 
     class Meta:
         verbose_name = "Artefakt"

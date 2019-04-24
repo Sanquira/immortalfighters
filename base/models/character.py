@@ -19,5 +19,5 @@ class Character(models.Model):
     # level = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
-        verbose_name = _("Postava")
-        verbose_name_plural = _("Postavy")
+        verbose_name = "Postava"
+        verbose_name_plural = "Postavy"

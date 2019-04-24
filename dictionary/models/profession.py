@@ -145,7 +145,7 @@ def init_professions(apps, schema_editor):
     walker = BaseProfession()
     walker.profession_factory("Chodec", ranger)
     caster = BaseProfession()
-    caster.profession_factory("Kouzelník", wizard)
+    caster.profession_factory("Čaroděj", wizard)
     mage = BaseProfession()
     mage.profession_factory("Mág", wizard)
     swordsman = BaseProfession()
