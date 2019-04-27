@@ -11,8 +11,8 @@ class SpellForm(forms.Form):
     cast_time = forms.CharField(label="Vyvolání", max_length=32)
     duration = forms.CharField(label="Trvání", max_length=32)
     note = forms.CharField(widget=forms.Textarea, label="Popis")
-    profession = forms.ModelChoiceField(label="Povolání", queryset=BaseProfession.objects.all())
-    level = forms.IntegerField(label="Od úrovně", min_value=1)
+    profession = forms.ModelChoiceField(label="Povolání", queryset=BaseProfession.objects.all(), required=False)
+    level = forms.IntegerField(label="Od úrovně", min_value=1, required=False, initial=1)
 
     def clean_name(self):
         clname = self.cleaned_data.get('name')

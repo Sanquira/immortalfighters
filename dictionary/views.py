@@ -28,13 +28,14 @@ def spell_add(request):
                           duration=form.cleaned_data['duration'],
                           note=form.cleaned_data['note'])
             spell.save()
-            prof = BaseProfession.objects.get(name=form.cleaned_data['profession'])
-            limit = ProfessionLimitation(
-                profession=prof,
-                spell=spell,
-                from_level=form.cleaned_data['level']
-            )
-            limit.save()
+            if form.cleaned_data['profession'] is not None:
+                prof = BaseProfession.objects.get(name=form.cleaned_data['profession'])
+                limit = ProfessionLimitation(
+                    profession=prof,
+                    spell=spell,
+                    from_level=form.cleaned_data['level']
+                )
+                limit.save()
             return redirect('dictionary:spells')
         return render(request, 'spell_add.html', {'form': form})
     return redirect('dictionary:spells')
