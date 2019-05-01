@@ -11,6 +11,11 @@ class SpellResource(resources.ModelResource):
         model = Spell
 
 
+class SpellDisciplineResource(resources.ModelResource):
+    class Meta:
+        model = SpellDiscipline
+
+
 class ProfessionLimitationResource(resources.ModelResource):
     class Meta:
         model = ProfessionLimitation
@@ -45,6 +50,10 @@ class SpellAdmin(ImportExportModelAdmin):
     resource_class = SpellResource
 
 
+class SpellDisciplineAdmin(ImportExportModelAdmin):
+    resource_class = SpellDisciplineResource
+
+
 class ProfessionLimitationAdmin(ImportExportModelAdmin):
     resource_class = ProfessionLimitationResource
 
@@ -74,6 +83,7 @@ class ArtefactAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(Spell, SpellAdmin)
+admin.site.register(SpellDiscipline, SpellDisciplineAdmin)
 admin.site.register(ProfessionLimitation, ProfessionLimitationAdmin)
 admin.site.register(Race, RaceAdmin)
 admin.site.register(BaseProfession, BaseProfessionAdmin)

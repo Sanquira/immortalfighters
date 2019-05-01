@@ -11,4 +11,6 @@ urlpatterns = [
     path('professions', views.professions, name='professions'),
 
     path('spells/add', views.spell_add, name="spell_add"),
+    path('spells/edit/<int:pk>', views.spell_edit, name="spell_edit"),
+    path('spells/delete/<int:pk>', views.spell_delete, name="spell_delete"),
 ]

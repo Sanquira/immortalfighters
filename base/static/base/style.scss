@@ -187,7 +187,8 @@ a {
 
 input[type=email],
 input[type=password],
-input[type=text] {
+input[type=text],
+input[type=number] {
   font-family: "Arial";
   font-size: 8pt;
   color: white;
@@ -195,6 +196,36 @@ input[type=text] {
   background-color: black;
   width: 100%;
   vertical-align: baseline;
+}
+
+.framed_table {
+  border: solid #B07344;
+  width: 100%;
+  color: white;
+
+  thead {
+    border: #B07344 solid;
+    background-color: #B07344;
+
+    td{
+      &:hover {
+        background-color: #c5916a;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      font-weight: normal;
+      border-top-color: #B07344;
+      border-top-style: solid;
+      border-top-width: 1px;
+
+      &:hover {
+        background-color: gray;
+      }
+    }
+  }
 }
 
 label {
@@ -213,8 +244,8 @@ label {
   color: #999;
 }
 
-ul{
-  li{
+ul {
+  li {
     list-style-image: url($list_image);
   }
 }

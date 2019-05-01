@@ -54,7 +54,17 @@ a.online:hover { color: darkgreen; }
 
 .ellipsis { max-width: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-input[type=email], input[type=password], input[type=text] { font-family: "Arial"; font-size: 8pt; color: white; border: 1px solid #990000; background-color: black; width: 100%; vertical-align: baseline; }
+input[type=email], input[type=password], input[type=text], input[type=number] { font-family: "Arial"; font-size: 8pt; color: white; border: 1px solid #990000; background-color: black; width: 100%; vertical-align: baseline; }
+
+.framed_table { border: solid #B07344; width: 100%; color: white; }
+
+.framed_table thead { border: #B07344 solid; background-color: #B07344; }
+
+.framed_table thead td:hover { background-color: #c5916a; }
+
+.framed_table tbody tr { font-weight: normal; border-top-color: #B07344; border-top-style: solid; border-top-width: 1px; }
+
+.framed_table tbody tr:hover { background-color: gray; }
 
 label { margin: 0; }
 
