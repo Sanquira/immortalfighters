@@ -56,7 +56,7 @@ def spell_edit(request, pk):
             if form_pl.cleaned_data['profession'] is not None:
                 limitation = form_pl.save(commit=False)
                 limitation.spell = spell
-                limitation = limitation.save()
+                limitation.save()
             return redirect('dictionary:spells')
         return render(request, 'spell_edit.html', {'pk': pk, 'form_spell': form_spell, 'form_pl': form_pl})
     return redirect('base:index')

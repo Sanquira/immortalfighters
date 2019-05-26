@@ -1,4 +1,5 @@
 from django.db import models
+from markdownx.models import MarkdownxField
 
 from dictionary.models.profession import BaseProfession
 
@@ -10,7 +11,7 @@ class Spell(models.Model):
     scope = models.CharField(max_length=128, null=True, verbose_name="Rozsah")
     cast_time = models.CharField(max_length=128, null=True, verbose_name="Vyvolání")
     duration = models.CharField(max_length=128, null=True, verbose_name="Trvání")
-    note = models.TextField(null=True, verbose_name="Popis")
+    note = MarkdownxField(null=True,verbose_name="Popis")
     discipline = models.ForeignKey('SpellDiscipline', on_delete=models.CASCADE, null=True, blank=True,
                                    verbose_name="Obor magie")
 

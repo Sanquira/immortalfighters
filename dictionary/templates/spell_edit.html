@@ -4,7 +4,7 @@
     <h1>Změna kouzla</h1>
     <form action={% url 'dictionary:spell_edit' pk %} method=POST>
         {% csrf_token %}
-        <table align="center">
+        <table class="table-edit">
             {% for field in form_spell %}
                 <tr>
                     <th>{{ field.label }}</th>
@@ -25,4 +25,5 @@
             </tr>
         </table>
     </form>
+    {{ form_spell.media }}
 {% endblock %}
