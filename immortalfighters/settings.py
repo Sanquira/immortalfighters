@@ -27,7 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
+APPEND_SLASH = True
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -60,6 +60,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'immortalfighters.urls'
 
+BOOTSTRAP4 = {
+    "jquery_url": {
+        "url": "https://code.jquery.com/jquery-3.4.1.min.js",
+        "integrity": "sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=",
+        "crossorigin": "anonymous",
+    },
+    'include_jquery': True,
+}
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
