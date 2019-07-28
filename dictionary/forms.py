@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm, BaseFormSet
+from django.forms import ModelForm, BaseModelFormSet
 
 from dictionary.models.profession import BaseProfession
 from dictionary.models.profession_limitation import ProfessionLimitation
@@ -32,12 +32,12 @@ class ProfessionLimitationForm(ModelForm):
     def get_profession_name(self):
         """ returns the name of the selected profession """
         try:
-            return BaseProfession.objects.get(id=self.initial['profession']).name
+            return BaseProfession.objects.get(id=self.initial['profession_id']).name
         except:
             return None
 
 
-class BaseProfessionLimitationFormSet(BaseFormSet):
+class BaseProfessionLimitationFormSet(BaseModelFormSet):
     def clean(self):
         if any(self.errors):
             return

@@ -90,6 +90,7 @@ immortalfighters/static/
 
 .env
 db.sqlite3
+immortalfighters/settings_local.py
 
 #Python virtual environment
 venv/

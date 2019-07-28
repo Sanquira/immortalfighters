@@ -1,8 +1,8 @@
 {% extends 'logged_base.html' %}{% load bootstrap4 %}{% load static %}{% load markdown %}
 
-{%  block extraHead %}
+{% block extraHead %}
     <script src="https://cdn.jsdelivr.net/npm/jquery.formset@1.3.0/src/jquery.formset.js"></script>
-{%  endblock %}
+{% endblock %}
 
 {% block content %}
     {% bootstrap_messages %}
@@ -19,7 +19,7 @@
                 </div>
             {% endfor %}
             {{ form_profs.management_form }}
-            {{ form_profs }}
+            {#            {{ form_profs }}#}
             {% for form_prof in form_profs %}
                 <div class="row margin-bottom form-profs">
                                         {{ form_prof.profession }}
@@ -33,7 +33,6 @@
             </div>
         </div>
     </form>
-
     <script>
         $('.form-profs').formset({
             addText: 'add link',

@@ -1,10 +1,9 @@
 from django.contrib import messages
 from django.db import transaction, IntegrityError
 from django.db.models import Count, Q
-from django.forms import formset_factory
+from django.forms import modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse
 
 from base.views import MenuWrapper, BaseProfession
 from dictionary.forms import SpellForm, ProfessionLimitationForm, SpellFormEdit, BaseProfessionLimitationFormSet
@@ -86,14 +85,20 @@ def spell_edit(request, pk):
 
     if pk:
         spell = get_object_or_404(Spell, pk=pk)
-        is_adding = False
         form_spell = SpellFormEdit(request.POST or None, instance=spell)
+        is_adding = False
     else:
         spell = Spell()
-        is_adding = True
         form_spell = SpellForm(request.POST or None, instance=spell)
+        is_adding = True
 
-    ProfessionLimitationFormSet = formset_factory(ProfessionLimitationForm, formset=BaseProfessionLimitationFormSet)
+    ProfessionLimitationFormSet = modelformset_factory(ProfessionLimitation, form=ProfessionLimitationForm,
+                                                       formset=BaseProfessionLimitationFormSet)
+    # data = {
+    #     'form-INITIAL_FORMS': '2',
+    #     'form-MIN_NUM_FORMS': '1',
+    #     'form-MAX_NUM_FORMS': '',
+    # }
 
     if request.POST:
         form_profs = ProfessionLimitationFormSet(request.POST)
@@ -110,10 +115,11 @@ def spell_edit(request, pk):
                         prof.save()
             except IntegrityError:
                 messages.error(request, 'There was an error saving your profile.')
-                return redirect(reverse('profile-settings'))
+                # return redirect(reverse('dictionary:spell_edit'))
     else:
-        profs = ProfessionLimitation.objects.filter(spell=spell).values()
-        form_profs = ProfessionLimitationFormSet(initial=profs)
+        profs = ProfessionLimitation.objects.filter(spell=spell)
+        # data['form-TOTAL_FORMS'] = profs.count()
+        form_profs = ProfessionLimitationFormSet(queryset=profs)
 
     context = dict()
     context['add'] = is_adding
