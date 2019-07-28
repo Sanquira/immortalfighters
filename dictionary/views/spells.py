@@ -87,14 +87,11 @@ def spell_edit(request, pk):
     if pk:
         spell = get_object_or_404(Spell, pk=pk)
         is_adding = False
+        form_spell = SpellFormEdit(request.POST or None, instance=spell)
     else:
         spell = Spell()
         is_adding = True
-
-    if is_adding:
         form_spell = SpellForm(request.POST or None, instance=spell)
-    else:
-        form_spell = SpellFormEdit(request.POST or None, instance=spell)
 
     ProfessionLimitationFormSet = formset_factory(ProfessionLimitationForm, formset=BaseProfessionLimitationFormSet)
 
@@ -115,7 +112,7 @@ def spell_edit(request, pk):
                 messages.error(request, 'There was an error saving your profile.')
                 return redirect(reverse('profile-settings'))
     else:
-        profs = ProfessionLimitation.objects.filter(spell=spell).values_list()
+        profs = ProfessionLimitation.objects.filter(spell=spell).values()
         form_profs = ProfessionLimitationFormSet(initial=profs)
 
     context = dict()
