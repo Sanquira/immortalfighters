@@ -1,7 +1,8 @@
 from django.db import models
 
 from base.models import IFUser
-from dictionary.models import Race, BaseProfession
+from dictionary.models.profession import BaseProfession
+from dictionary.models.race import Race
 
 
 class Character(models.Model):
@@ -9,7 +10,7 @@ class Character(models.Model):
     character_name = models.CharField(max_length=50, null=True, verbose_name="Jméno postavy")
     race = models.ForeignKey(Race, on_delete=models.CASCADE, null=True, verbose_name="Rasa")
     profession = models.ForeignKey(BaseProfession, on_delete=models.CASCADE, null=True, verbose_name="Povolání")
-
+    
     # stat_strength = models.PositiveSmallIntegerField(default=0)
     # stat_dexterity = models.PositiveSmallIntegerField(default=0)
     # stat_resistance = models.PositiveSmallIntegerField(default=0)
@@ -17,7 +18,7 @@ class Character(models.Model):
     # stat_charisma = models.PositiveSmallIntegerField(default=0)
     # experience_points = models.PositiveIntegerField(default=0)
     # level = models.PositiveSmallIntegerField(default=0)
-
+    
     class Meta:
         verbose_name = "Postava"
         verbose_name_plural = "Postavy"

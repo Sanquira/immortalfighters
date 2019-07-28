@@ -1,0 +1,97 @@
+#data-list_paginate {
+
+  .paginate_button {
+    color: white !important;
+    border: none;
+
+    &.current {
+      background: #A07344;
+      border: 1px solid #b2804c;
+    }
+
+    &:hover {
+      background: linear-gradient(to bottom, #A07344 0%, black 100%);
+    }
+  }
+}
+
+
+#data-list_next,
+#data-list_previous,
+#data-list_info,
+#data-list_filter,
+#data-list_length {
+  color: white !important;
+}
+
+#data-list {
+  width: 100%;
+  color: white;
+
+  thead {
+    background-color: #A07344;
+
+    .sorting {
+      background-image: url("forms/w_1bboth.png");
+    }
+
+    .sorting_asc {
+      background-image: url("forms/w_1bup.png");
+    }
+
+    .sorting_desc {
+      background-image: url("forms/w_1bdn.png");
+    }
+
+    th {
+      &:hover {
+        background-color: #b2804c;
+      }
+
+      &.sorting_asc, &.sorting_desc {
+        background-color: #b2804c;
+      }
+    }
+  }
+
+  tbody {
+    button {
+      width: 100%;
+      height: 100%;
+    }
+
+    tr {
+      td {
+        border: none;
+        padding: 5px 10px;
+      }
+
+      &.group {
+        background-color: #c5916a;
+      }
+
+      &.odd {
+        background-color: #121212;
+
+        td.sorting_1 {
+          background-color: #121212;
+        }
+
+      }
+
+      &.even {
+        background-color: #1F1F1F;
+
+        td.sorting_1 {
+          background-color: #1F1F1F;
+        }
+      }
+
+      &:hover,
+      &:hover td.sorting_1 {
+
+        background-color: gray;
+      }
+    }
+  }
+}

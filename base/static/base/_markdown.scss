@@ -1,0 +1,87 @@
+ul:not(.nav-tabs) {
+  li {
+    list-style-image: url($list_image);
+  }
+}
+
+.nav-tabs {
+  border: none;
+
+  .nav-item {
+    margin-bottom: 0;
+  }
+
+  .nav-link {
+    color: #B07344;
+    background: url($menu_bg);
+
+    &:focus {
+      outline: 1px dashed #990000;
+      //outline: none;
+      border: none;
+    }
+
+    &.active {
+      color: #B0A49B;
+      border: 1px solid #990000;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &:hover {
+      border: 1px solid #990000;
+    }
+  }
+}
+
+.markdownx-preview {
+  border: 1px solid #990000;
+}
+
+
+.markdown-language-human {
+  color: rgb(146, 124, 90);
+}
+
+.markdown-language-elf {
+  color: rgb(61, 123, 55);
+}
+
+.markdown-language-dwarf {
+  color: rgb(79, 104, 120);
+}
+
+.markdown-language-barbarian {
+  color: rgb(198, 62, 40);
+}
+
+.markdown-language-others {
+  color: rgb(219, 217, 59);
+}
+
+.markdown-language-green {
+  color: green;
+}
+
+.markdown-language-yellow {
+  color: yellow;
+}
+
+.markdown-language-red {
+  color: red;
+}
+
+.markdown-table {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+  //border: 1px solid red;
+  tr {
+    //border: 1px red solid;
+    th, td {
+      border: 1px #794f2f solid;
+    }
+  }
+}

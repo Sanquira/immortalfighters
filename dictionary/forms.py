@@ -1,14 +1,17 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, BaseFormSet
 
-from dictionary.models import BaseProfession, ProfessionLimitation
+from dictionary.models.profession import BaseProfession
+from dictionary.models.profession_limitation import ProfessionLimitation
+from dictionary.models.skill import Skill
 from dictionary.models.spell import Spell
 
 
+# Spells
 class SpellFormEdit(ModelForm):
     class Meta:
         model = Spell
-        exclude = ('available_for_professions',)
+        exclude = ('directions', 'available_for_professions',)
 
 
 class SpellForm(SpellFormEdit):
@@ -25,3 +28,48 @@ class ProfessionLimitationForm(ModelForm):
     class Meta:
         model = ProfessionLimitation
         exclude = ('spell',)
+
+    def get_profession_name(self):
+        """ returns the name of the selected profession """
+        try:
+            return BaseProfession.objects.get(id=self.initial['profession']).name
+        except:
+            return None
+
+
+class BaseProfessionLimitationFormSet(BaseFormSet):
+    def clean(self):
+        if any(self.errors):
+            return
+
+        profs = []
+        duplicates = False
+
+        for form in self.forms:
+            if form.cleaned_data:
+                prof = form.cleaned_data['profession']
+
+                # TODO from_level empty, non-number value check??
+                if prof in profs:
+                    duplicates = True
+                profs.append(prof)
+                if duplicates:
+                    raise forms.ValidationError(
+                        'Duplicita povolání není povolena.',
+                        code='duplicate_profession'
+                    )
+
+
+# Skills
+class SkillFormEdit(ModelForm):
+    class Meta:
+        model = Skill
+        fields = '__all__'
+
+
+class SkillForm(SkillFormEdit):
+    def clean_name(self):
+        clname = self.cleaned_data.get('name')
+        if Skill.objects.filter(name=clname).exists():
+            raise forms.ValidationError('Dovednost s tímto jménem už existuje.')
+        return clname

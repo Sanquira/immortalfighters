@@ -2,9 +2,19 @@ from django.contrib import admin
 # Register your models here.
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+from markdownx.admin import MarkdownxModelAdmin
 
-from dictionary.models import *
+from dictionary.models.category import Category
+from dictionary.models.items import Item, Artefact
+from dictionary.models.profession import BaseProfession, XPLevel
+from dictionary.models.profession_limitation import ProfessionLimitation
+from dictionary.models.race import Race
+from dictionary.models.skill import Skill
+from dictionary.models.spell import Spell, SpellDiscipline, SpellDirection
 
+
+#######################################
+# Resources
 
 class SpellResource(resources.ModelResource):
     class Meta:
@@ -14,6 +24,11 @@ class SpellResource(resources.ModelResource):
 class SpellDisciplineResource(resources.ModelResource):
     class Meta:
         model = SpellDiscipline
+
+
+class SpellDirectionResource(resources.ModelResource):
+    class Meta:
+        model = SpellDirection
 
 
 class ProfessionLimitationResource(resources.ModelResource):
@@ -46,12 +61,43 @@ class ArtefactResources(resources.ModelResource):
         model = Artefact
 
 
-class SpellAdmin(ImportExportModelAdmin):
+class CategoryResources(resources.ModelResource):
+    class Meta:
+        model = Category
+
+
+class SkillResources(resources.ModelResource):
+    class Meta:
+        model = Skill
+
+
+#######################################
+# Inlines
+# class SpellDisciplineLimitationInline(admin.TabularInline):
+#     model = SpellDisciplineLimitation
+#     extra = 0
+#     filter_horizontal = ('directions',)
+
+
+class ProfessionLimitationInline(admin.TabularInline):
+    model = ProfessionLimitation
+    extra = 0
+
+
+#######################################
+# Admins
+class SpellAdmin(ImportExportModelAdmin, MarkdownxModelAdmin):
     resource_class = SpellResource
+    inlines = (ProfessionLimitationInline,)
+    filter_horizontal = ('directions',)
 
 
 class SpellDisciplineAdmin(ImportExportModelAdmin):
     resource_class = SpellDisciplineResource
+
+
+class SpellDirectionAdmin(ImportExportModelAdmin):
+    resource_class = SpellDirectionResource
 
 
 class ProfessionLimitationAdmin(ImportExportModelAdmin):
@@ -82,11 +128,24 @@ class ArtefactAdmin(ImportExportModelAdmin):
     filter_horizontal = ('spells',)
 
 
+class CategoryAdmin(ImportExportModelAdmin):
+    resource_class = CategoryResources
+
+
+class SkillAdmin(ImportExportModelAdmin):
+    resource_class = SkillResources
+    ordering = ('name', 'stat',)
+
+
 admin.site.register(Spell, SpellAdmin)
 admin.site.register(SpellDiscipline, SpellDisciplineAdmin)
+admin.site.register(SpellDirection, SpellDirectionAdmin)
+# admin.site.register(SpellDisciplineLimitation, SpellDisciplineLimitationAdmin)
 admin.site.register(ProfessionLimitation, ProfessionLimitationAdmin)
 admin.site.register(Race, RaceAdmin)
 admin.site.register(BaseProfession, BaseProfessionAdmin)
 admin.site.register(XPLevel, XPLevelAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Artefact, ArtefactAdmin)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Skill, SkillAdmin)

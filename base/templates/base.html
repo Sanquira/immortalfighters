@@ -17,6 +17,13 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
     {% block extraHead %}{% endblock %}
 </head>
 {% now "H" as current_time %}
@@ -26,7 +33,7 @@
 >
 <div id="page" class="row">
     <div class="col-md-2">
-        <table cellspacing="0" cellpadding="0" class="menu-side">
+        <table class="menu-side">
             {% block left_menu %}
                 <tr>
                     <td class="center">- MENU IF -</td>
@@ -272,7 +279,7 @@
         </table>
     </div>
     <div class="col-md-1">
-        <a href="http://immortalfighters.net" id="vertical-text">IMMORTAL FIGHTERS</a>
+        <a href="http://immortalfighters.net" id="vertical-text">IMMORAL FIGHTERS</a>
     </div>
     <div class="col-md-7">
         <div class="content">
@@ -282,7 +289,7 @@
         </div>
     </div>
     <div class="col-md-2">
-        <table cellspacing="0" cellpadding="0" class="menu-side">
+        <table class="menu-side">
             {% if user.is_anonymous %}
                 <form method="post" action={% url 'base:log_in' %} name="prihlaseni" id="login_form">
                     {% csrf_token %}

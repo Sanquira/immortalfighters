@@ -1,34 +1,123 @@
 {% extends 'logged_base.html' %}{% load static %}
 {% load verbose_names %}
+{% load permissions %}
+
+{% block extraHead %}
+    <script>
+        $(document).ready(function () {
+            const groupColumn = 3;
+            let table = $('#data-list').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        url: "{% url 'dictionary:spells_table' %}",
+                        type: 'POST',
+                        data: {
+                            "csrfmiddlewaretoken": "{{ csrf_token }}"
+                        },
+                    },
+                    "stateSave": false,
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Vše"]],
+                    "bSortMulti": false,
+                    "order": [1, "asc"],
+                    "columns": [
+                        {"data": "pk", "visible": false},
+                        {"data": "name"},
+                        {"data": "disciplines"},
+                        {"data": "profession", "visible": false},
+                        {
+                            {% has_perm "edit_spell" %}
+                                "defaultContent": "<button class=\"btn_edit\">Uprav</button>",
+                                "orderable": false,
+                                {% else %}
+                                "data": "pk",
+                                "visible": false,
+                            {% endhas_perm %}
+                        },
+                        {
+                            {% has_perm "delete_spell" %}
+                                "defaultContent": "<button class=\"btn_delete\">Smaž</button>",
+                                "orderable": false,
+                                {% else %}
+                                "data": "pk",
+                                "visible": false,
+                            {% endhas_perm %}
+                        },
+
+                    ],
+                    "drawCallback":
+
+                        function (settings) {
+                            var api = this.api();
+                            var rows = api.rows({page: 'current'}).nodes();
+                            var last = null;
+
+                            api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                                if (last !== group) {
+                                    $(rows).eq(i).before(
+                                        '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                                    );
+
+                                    last = group;
+                                }
+                            });
+                        }
+
+                    ,
+                    "language":
+                        {
+                            "url":
+                                "//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json"
+                        }
+                })
+            ;
+            var tableObj = $('#data-list tbody');
+            {% has_perm "delete_spell" %}
+                tableObj.on('click', '.btn_delete', function (e) {
+                    var url = "{% url 'dictionary:spell_delete' %}";
+                    var data = table.row($(this).parents('tr')).data();
+                    url = url.replace("999", data["pk"])
+                    alert(url);
+                    {#window.location.href = url;#}
+                    e.stopPropagation();
+                });
+            {% endhas_perm %}
+            {% has_perm "edit_spell" %}
+                tableObj.on('click', '.btn_edit', function (e) {
+                    var url = "{% url 'dictionary:spell_edit' %}";
+                    var data = table.row($(this).parents('tr')).data();
+                    url = url.replace("999", data["pk"])
+                    alert(url);
+                    {#window.location.href = url;#}
+                    e.stopPropagation();
+                });
+            {% endhas_perm %}
+            tableObj.on('click', 'tr', function () {
+                var url = "{% url 'dictionary:spell_item' %}";
+                var data = table.row(this).data();
+                window.location.href = url + "/" + data["pk"];
+            });
+        });
+    </script>
+{% endblock %}
 
 
 {% block content %}
-    <h1>Předměty</h1>
-    <a class="align-right" href="{% url 'dictionary:spell_add' %}">Přidej kouzlo</a>
-    <table class="framed_table">
+
+    <h1>Kouzla</h1>
+    <div class="clearfix"><a class="align-right" href="{% url 'dictionary:spell_item' %}">Přidej kouzlo</a></div>
+
+    <table id="data-list" class="display" style="width:100%">
         <thead>
         <tr>
-            {% if spell_list.count > 0 %}
-                <td onclick="window.location.href=&quot;{% url 'dictionary:spells' %}?order=name&sort={% if sort == "ascend" %}descend{% else %}ascend{% endif %}&quot;">{% get_verbose_field_name spell_list.0 "name" %}
-                    {% if sort == "ascend" and order == "name" %}
-                        <img src={% static 'base/forms/w_1bdn.png' %} alt="">
-                    {% else %}
-                        <img src={% static 'base/forms/w_1bup.png' %} alt="">
-                    {% endif %}
-                </td>
-                <td></td>
-            {% else %}
-                <td>Jméno</td>
-            {% endif %}
+            <th>pk</th>
+            <th>{% get_verbose_field_name dummy_spell "name" %}</th>
+            <th>{% get_verbose_field_name dummy_spell "directions" %}</th>
+            <th>povolání</th>
+            <th>Uprav</th>
+            <th>Smaž</th>
         </tr>
         </thead>
-        {% for item in spell_list %}
-            <tr onclick="window.location.href=&quot;{% url 'dictionary:spell_edit' pk=item.id %}&quot;">
-                <td>{{ item.name }}</td>
-                {% if user.is_authenticated %}
-                    <td align="right"><a href="{% url 'dictionary:spell_delete' pk=item.id %}">Smaž</a></td>
-                {% endif %}
-            </tr>
-        {% endfor %}
     </table>
+
 {% endblock %}

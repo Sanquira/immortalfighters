@@ -5,6 +5,8 @@ from polymorphic.models import PolymorphicModel
 class BaseItem(PolymorphicModel):
     name = models.CharField(max_length=100, null=False, default="Nový item", verbose_name="Předmět")
     note = models.TextField(null=True, verbose_name="Poznámka")
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True, related_name="children",
+                                 verbose_name="Kategorie")
 
     def __str__(self):
         return self.name

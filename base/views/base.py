@@ -3,7 +3,9 @@ from django.shortcuts import render, redirect
 
 from base.forms import RegistrationForm
 from base.models import *
-from dictionary.models import Race, BaseProfession
+from base.models.character import Character
+from dictionary.models.profession import BaseProfession
+from dictionary.models.race import Race
 
 
 def index(request):

@@ -1,0 +1,52 @@
+{% extends 'logged_base.html' %}{% load static %}
+{% load verbose_names %}
+
+
+{% block content %}
+    <h1>Dovednosti</h1>
+    <div class="clearfix"><a class="align-right" href="{% url 'dictionary:skill_item' %}">Přidej dovednost</a></div>
+    {% for stat,skill_list in skills.items %}
+        <h2>{{ stat.value }}</h2>
+        <table class="framed_table">
+            <thead>
+            <tr>
+                {% if skill_list.count > 0 %}
+                    <td onclick="window.location.href=&quot;{% url 'dictionary:skills' %}?order=name&sort={% if sort == "ascend" %}descend{% else %}ascend{% endif %}&quot;">{% get_verbose_field_name skill_list.0 "name" %}
+                        {% if order == "name" %}
+                            {% if sort == "ascend" %}
+                                <img src={% static 'base/forms/w_1bdn.png' %} alt="">
+                            {% elif sort == "descend" %}
+                                <img src={% static 'base/forms/w_1bup.png' %} alt="">
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td onclick="window.location.href=&quot;{% url 'dictionary:skills' %}?order=discipline&sort={% if sort == "ascend" %}descend{% else %}ascend{% endif %}&quot;">{% get_verbose_field_name skill_list.0 "difficulty" %}
+                        {% if order == "stat" %}
+                            {% if sort == "ascend" %}
+                                <img src={% static 'base/forms/w_1bdn.png' %} alt="">
+                            {% elif sort == "descend" %}
+                                <img src={% static 'base/forms/w_1bup.png' %} alt="">
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    {% if user.is_authenticated %}
+                        <td></td>
+                    {% endif %}
+                {% else %}
+                    <td>Jméno</td>
+                {% endif %}
+            </tr>
+            </thead>
+            {% for item in skill_list %}
+                <tr onclick="window.location.href=&quot;{% url 'dictionary:skill_item' pk=item.id %}&quot;">
+                    <td>{{ item.name }}</td>
+                    <td>{% if item.stat %}{{ item.get_difficulty_display }}{% else %}-{% endif %}</td>
+                    {% if user.is_authenticated %}
+                        <td class="clearfix">
+                            <a class="align-right" href="{% url 'dictionary:skill_delete' pk=item.id %}">Smaž</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+{% endblock %}

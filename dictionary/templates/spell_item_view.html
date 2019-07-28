@@ -1,0 +1,58 @@
+{% extends 'logged_base.html' %}{% load bootstrap4 %}{% load static %}{% load markdown %}{% load verbose_names %}
+
+{% block content %}
+    <h1>Kouzlo</h1>
+    <div class="spell_div">
+        <h3>{{ spell.name }}</h3>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name spell 'mana' %}:</div>
+            <div class="col-9 ">{{ spell.mana }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name spell 'range' %}:</div>
+            <div class="col-9 ">{{ spell.range }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name spell 'scope' %}:</div>
+            <div class="col-9 ">{{ spell.scope }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name spell 'cast_time' %}:</div>
+            <div class="col-9 ">{{ spell.cast_time }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name spell 'duration' %}:</div>
+            <div class="col-9 ">{{ spell.duration }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name spell 'note' %}:</div>
+            <div class="col-9 ">{{ spell.note|show_markdown|safe }}</div>
+        </div>
+        {% if dirs %}
+            <div class="row ">
+                <div class="col-3 ">{% get_verbose_field_name spell 'directions' %}:</div>
+                <div class="col-9 row">
+                    {% for disc, ds in dirs.items %}
+                        <div class="col-6 " style="padding: 0">{{ disc }}</div>
+                        <div class="col-6 " style="padding: 0">
+                            {% for d in ds %}
+                                <p>{{ d }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% if profs %}
+            <div class="row ">
+                <div class="col-3 ">{% get_verbose_field_name spell 'available_for_professions' %}:</div>
+                <div class="col-9 ">
+                    {% for pl in profs %}
+                        <p>{{ pl.profession }} ({{ pl.from_level }}+)</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {{ form_spell.media }}
+{% endblock %}
