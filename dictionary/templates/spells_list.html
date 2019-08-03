@@ -77,9 +77,14 @@
             {% has_perm "delete_spell" %}
                 tableObj.on('click', '.btn_delete', function (e) {
                     var url = "{% url 'dictionary:spell_delete' %}";
-                    var data = table.row($(this).parents('tr')).data();
+                    var row = table.row($(this).parents('tr'));
+                    var data = row.data();
                     url = url.replace("999", data["pk"]);
-                    window.location.href = url;
+                    $.ajax(url, {
+                        success: function () {
+                            table.draw(false);
+                        },
+                    });
                     e.stopPropagation();
                 });
             {% endhas_perm %}

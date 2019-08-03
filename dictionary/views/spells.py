@@ -1,8 +1,8 @@
 from django.contrib import messages
-from django.db import transaction, IntegrityError
+from django.db import IntegrityError
 from django.db.models import Count, Q
 from django.forms import modelformset_factory
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
 from base.views import MenuWrapper, BaseProfession
@@ -20,7 +20,7 @@ def spells(request):
 
 def spells_table(request):
     datatables = request.POST
-
+    
     # Ambil draw
     draw = int(datatables.get('draw'))
     # Ambil start
@@ -34,7 +34,7 @@ def spells_table(request):
     order = datatables.get('columns[' + order + '][data]')
     # Ambil order dir
     orderDir = datatables.get('order[0][dir]')
-
+    
     data = [
         {
             'pk': spell.pk,
@@ -52,14 +52,14 @@ def spells_table(request):
             'profession': "Nezařazeno"
         } for spell in Spell.get_spells_for_profession(None).filter(name__contains=search)
     )
-
+    
     data.sort(key=lambda x: x[order], reverse=False if orderDir == "asc" else True)
     data.sort(key=lambda x: x["profession"])
     dataFiltered = len(data)
     del data[:start]
     if length > 0:
         del data[length:]
-
+    
     dataTotal = Spell.objects.aggregate(noRestriction=Count('pk', filter=Q(available_for_professions=None)),
                                         restriction=Count('available_for_professions'))
     return JsonResponse({
@@ -74,7 +74,7 @@ def spell_item_view(request, pk):
     spell = get_object_or_404(Spell, pk=pk)
     dirs = spell.get_directions_grouped()
     profs = ProfessionLimitation.objects.filter(spell=spell)
-
+    
     return render(request, 'spell_item_view.html',
                   {'spell': spell, 'dirs': dirs, 'profs': profs})
 
@@ -82,7 +82,7 @@ def spell_item_view(request, pk):
 def spell_edit(request, pk):
     if not request.user.is_authenticated:
         return redirect('base:index')
-
+    
     if pk:
         spell = get_object_or_404(Spell, pk=pk)
         form_spell = SpellFormEdit(request.POST or None, instance=spell)
@@ -91,16 +91,15 @@ def spell_edit(request, pk):
         spell = Spell()
         form_spell = SpellForm(request.POST or None, instance=spell)
         is_adding = True
-
+    
     ProfessionLimitationFormSet = modelformset_factory(ProfessionLimitation, form=ProfessionLimitationForm,
-                                                       formset=BaseProfessionLimitationFormSet)
+                                                       formset=BaseProfessionLimitationFormSet, min_num=1,
+                                                       validate_min=True, validate_max=True, can_delete=True)
     if request.POST:
         form_profs = ProfessionLimitationFormSet(request.POST)
-
+        
         if form_spell.is_valid() and form_profs.is_valid():
-            if is_adding and not Spell.objects.filter(name=form_spell.cleaned_data['name']).count() == 0:
-                pass
-
+            
             spell = form_spell.save()
             try:
                 form_profs.save_all(spell)
@@ -108,53 +107,30 @@ def spell_edit(request, pk):
                     messages.success(request, 'Nové kouzlo bylo uloženo.')
                 else:
                     messages.success(request, "Kouzlo bylo úspěšně editováno")
-                redirect("dictionary:spells")
+                return redirect("dictionary:spells")
             except IntegrityError:
                 messages.error(request, 'There was an error saving your profile.')
-                return redirect("dictionary:spells")
-
-        else:
-            print("test")
+    
     else:
         profs = ProfessionLimitation.objects.filter(spell=spell)
         form_profs = ProfessionLimitationFormSet(queryset=profs)
-
+    
     context = dict()
     context['add'] = is_adding
     context['edit'] = True
     context['pk'] = pk
     context['form_spell'] = form_spell
     context['form_profs'] = form_profs
-
+    
     return render(request, 'spell_item.html', context)
-
-
-# try:
-#     limitation = ProfessionLimitation.objects.filter(spell=spell)[0]
-# except ProfessionLimitation.DoesNotExist:
-#     limitation = ProfessionLimitation.objects.none()
-
-# form_pl = ProfessionLimitationForm(request.POST or None, instance=limitation)
-# if request.POST and form_spell.is_valid() and form_pl.is_valid() and \
-#         ((is_adding and Spell.objects.filter(name=form_spell.cleaned_data['name']).count() == 0) \
-#          or not is_adding):
-#
-#     spell = form_spell.save()
-# if form_pl.cleaned_data['profession'] is not None:
-#     limitation = form_pl.save(commit=False)
-#     limitation.spell = spell
-#     limitation.save()
-# else:
-#     limitation.delete()
-# return redirect('dictionary:spells')
 
 
 def spell_item(request, pk=None):
     if not request.user.is_authenticated:
         return redirect('base:index')
-
+    
     # TODO permission system
-
+    
     if pk:
         return spell_item_view(request, pk)
     else:
@@ -167,4 +143,4 @@ def spell_delete(request, pk):
             # TODO permission system
             spell = get_object_or_404(Spell, pk=pk)
             spell.delete()
-    return redirect('dictionary:spells')
+    return HttpResponse(status=200)

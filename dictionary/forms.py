@@ -1,5 +1,5 @@
 from django import forms
-from django.db import transaction, IntegrityError
+from django.db import transaction
 from django.forms import ModelForm, BaseModelFormSet
 
 from dictionary.models.profession import BaseProfession
@@ -25,53 +25,44 @@ class SpellForm(SpellFormEdit):
 
 class ProfessionLimitationForm(ModelForm):
     profession = forms.ModelChoiceField(required=True, queryset=BaseProfession.objects.all(), label="Povolání")
-
+    
     class Meta:
         model = ProfessionLimitation
         exclude = ('spell',)
-
-    def get_profession_name(self):
-        """ returns the name of the selected profession """
-        try:
-            return BaseProfession.objects.get(id=self.initial['profession_id']).name
-        except:
-            return None
+    
+    def clean_profession(self):
+        data = self.cleaned_data['profession']
+        
+        return data
 
 
 class BaseProfessionLimitationFormSet(BaseModelFormSet):
     def clean(self):
         if any(self.errors):
             return
-
-        if len(self.forms) == 0:
-            raise forms.ValidationError(
-                'Musí být vytvořeno aspon jedno povolání.',
-                code='no_profession'
-            )
-
         profs = []
-        duplicates = False
-
         for form in self.forms:
-            if form.cleaned_data:
+            if self.can_delete and self._should_delete_form(form):
+                continue
+            
+            if form.cleaned_data and 'profession' in form.cleaned_data:
                 prof = form.cleaned_data['profession']
-
                 # TODO from_level empty, non-number value check??
                 if prof in profs:
-                    duplicates = True
-                profs.append(prof)
-                if duplicates:
                     raise forms.ValidationError(
                         'Duplicita povolání není povolena.',
                         code='duplicate_profession'
                     )
-
+                profs.append(prof)
+    
     def save_all(self, spell):
         with transaction.atomic():
-            for form_prof in self:
-                prof = form_prof.save(commit=False)
-                prof.spell = spell
-                prof.save()
+            instances = self.save(commit=False)
+            for instance in instances:
+                instance.spell = spell
+                instance.save()
+            for instance in self.deleted_objects:
+                instance.delete()
 
 
 # Skills

@@ -18,11 +18,8 @@
             {% endfor %}
             {{ form_profs.management_form }}
             {% for form_prof in form_profs %}
-                <div class="row margin-bottom form-profs">
-                    {{ form_prof.profession }}
-                    {{ form_prof.from_level }}
-                    <div>{{ form_prof.errors }}</div>
-                    <div>{{ form_prof.non_form_errors }}</div>
+                <div class="row margin-bottom form-profs col-12">
+                    {{ form_prof }}
                 </div>
             {% endfor %}
 
@@ -39,8 +36,8 @@
     </form>
     <script>
         $('.form-profs').formset({
-            addText: 'add link',
-            deleteText: 'remove'
+            addText: 'Přidej povolání',
+            deleteText: 'Smaž'
         });
     </script>
     {{ form_spell.media }}
