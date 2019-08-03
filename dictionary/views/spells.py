@@ -94,31 +94,29 @@ def spell_edit(request, pk):
 
     ProfessionLimitationFormSet = modelformset_factory(ProfessionLimitation, form=ProfessionLimitationForm,
                                                        formset=BaseProfessionLimitationFormSet)
-    # data = {
-    #     'form-INITIAL_FORMS': '2',
-    #     'form-MIN_NUM_FORMS': '1',
-    #     'form-MAX_NUM_FORMS': '',
-    # }
-
     if request.POST:
         form_profs = ProfessionLimitationFormSet(request.POST)
 
-        if (form_spell.is_valid() and form_profs.is_valid()) and \
-                ((is_adding and Spell.objects.filter(name=form_spell.cleaned_data['name']).count() == 0)
-                 or not is_adding):
+        if form_spell.is_valid() and form_profs.is_valid():
+            if is_adding and not Spell.objects.filter(name=form_spell.cleaned_data['name']).count() == 0:
+                pass
+
             spell = form_spell.save()
             try:
-                with transaction.atomic():
-                    for form_prof in form_profs:
-                        prof = form_prof.save(commit=False)
-                        prof.spell = spell
-                        prof.save()
+                form_profs.save_all(spell)
+                if is_adding:
+                    messages.success(request, 'Nové kouzlo bylo uloženo.')
+                else:
+                    messages.success(request, "Kouzlo bylo úspěšně editováno")
+                redirect("dictionary:spells")
             except IntegrityError:
                 messages.error(request, 'There was an error saving your profile.')
-                # return redirect(reverse('dictionary:spell_edit'))
+                return redirect("dictionary:spells")
+
+        else:
+            print("test")
     else:
         profs = ProfessionLimitation.objects.filter(spell=spell)
-        # data['form-TOTAL_FORMS'] = profs.count()
         form_profs = ProfessionLimitationFormSet(queryset=profs)
 
     context = dict()

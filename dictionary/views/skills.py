@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.db.models.functions import Lower
 from django.shortcuts import redirect, render, get_object_or_404
 
@@ -47,10 +48,14 @@ def skill_item(request, pk=None):
     else:
         form_skill = SkillFormEdit(request.POST or None, instance=skill)
     
-    if request.POST and form_skill.is_valid() and \
-            ((is_adding and Skill.objects.filter(name=form_skill.cleaned_data['name']).count() == 0) or not is_adding):
-        
-        form_skill.save()
+    if request.POST and form_skill.is_valid():
+        if is_adding and Skill.objects.filter(name=form_skill.cleaned_data['name']).count() == 0:
+            form_skill.save()
+            messages.success(request, "Skill s ID %(id)s byl přidán" % {'id': pk})
+        elif not is_adding:
+            form_skill.save()
+            messages.success(request, "Skill s ID %(id)s byl úspěšně upraven" % {'id': pk})
+
         return redirect('dictionary:skills')
     return render(request, 'skill_item.html', {'add': is_adding, 'edit': is_editing, 'pk': pk, 'form_skill': form_skill})
 
@@ -60,4 +65,5 @@ def skill_delete(request, pk):
         if pk:
             skill = get_object_or_404(Skill, pk=pk)
             skill.delete()
+            messages.success(request, "Skill s ID %(id)s byl smazán" % {'id': pk})
     return redirect('dictionary:skills')

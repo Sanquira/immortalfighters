@@ -1,4 +1,5 @@
 from django import forms
+from django.db import transaction, IntegrityError
 from django.forms import ModelForm, BaseModelFormSet
 
 from dictionary.models.profession import BaseProfession
@@ -23,7 +24,7 @@ class SpellForm(SpellFormEdit):
 
 
 class ProfessionLimitationForm(ModelForm):
-    profession = forms.ModelChoiceField(required=False, queryset=BaseProfession.objects.all(), label="Povolání")
+    profession = forms.ModelChoiceField(required=True, queryset=BaseProfession.objects.all(), label="Povolání")
 
     class Meta:
         model = ProfessionLimitation
@@ -42,6 +43,12 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
         if any(self.errors):
             return
 
+        if len(self.forms) == 0:
+            raise forms.ValidationError(
+                'Musí být vytvořeno aspon jedno povolání.',
+                code='no_profession'
+            )
+
         profs = []
         duplicates = False
 
@@ -58,6 +65,13 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
                         'Duplicita povolání není povolena.',
                         code='duplicate_profession'
                     )
+
+    def save_all(self, spell):
+        with transaction.atomic():
+            for form_prof in self:
+                prof = form_prof.save(commit=False)
+                prof.spell = spell
+                prof.save()
 
 
 # Skills
