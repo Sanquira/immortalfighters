@@ -16,10 +16,7 @@
     {% block extraHead %}{% endblock %}
 </head>
 {% now "H" as current_time %}
-<body id={% if current_time|add:"0" < 5 %}"bg-image-1"{% elif current_time|add:"0" < 10 %}
-    "bg-image-2"{% elif current_time|add:"0" < 15 %}"bg-image-3"{% elif current_time|add:"0" < 20 %}
-    "bg-image-4"{% else %}"bg-image-5"{% endif %}
->
+<body id="{{ request.background_image }}">
 <div id="page" class="row">
     <div class="col-md-2">
         <table class="menu-side">
