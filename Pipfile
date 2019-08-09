@@ -21,6 +21,9 @@ django-tagging = "*"
 django-tagging-autocomplete-new = "*"
 daphne = "*"
 twisted = {extras = ["http2", "tls"],version = "*"}
+channels = "*"
+channels-redis = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.6"

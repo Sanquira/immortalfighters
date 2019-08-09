@@ -20,6 +20,7 @@ from django.urls import include, path
 urlpatterns = [
     url(r'^markdownx/', include('markdownx.urls')),
     path('admin/', admin.site.urls),
-    path('dictionary/', include(('dictionary.urls', "dictionary"), namespace="dictionary")),
     path('', include(('base.urls', "base"), namespace="base")),
+    path('dictionary/', include(('dictionary.urls', "dictionary"), namespace="dictionary")),
+    url(r'^chat/', include('chat.urls')),
 ]
