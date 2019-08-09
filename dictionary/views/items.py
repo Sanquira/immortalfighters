@@ -33,7 +33,7 @@ def items(request):
     if spell_list.count() > 0:
         spells['Nezařazeno'] = spell_list
     
-    return render(request, 'spells_list.html', {'spells': spells, 'order': order, 'sort': sort, 'menu_attrs': MenuWrapper()})
+    return render(request, 'spells_list.html', {'spells': spells, 'order': order, 'sort': sort})
 
 
 def item_item(request, pk=None):

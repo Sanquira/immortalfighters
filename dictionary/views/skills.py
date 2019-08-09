@@ -26,7 +26,7 @@ def skills(request):
         if skill_list.count() > 0:
             skills[stat] = skill_list
     
-    return render(request, 'skill_list.html', {'skills': skills, 'order': order, 'sort': sort, 'menu_attrs': MenuWrapper()})
+    return render(request, 'skill_list.html', {'skills': skills, 'order': order, 'sort': sort})
 
 
 def skill_item(request, pk=None):

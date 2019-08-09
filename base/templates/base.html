@@ -278,7 +278,7 @@
     <div class="col-md-2">
         <table class="menu-side">
             {% if user.is_anonymous %}
-                <form method="post" action={% url 'base:log_in' %} name="prihlaseni" id="login_form">
+                <form method="post" action="{% url 'base:log_in'%}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" name="prihlaseni" id="login_form">
                     {% csrf_token %}
                 </form>
                 <tr>

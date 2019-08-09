@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
-{% block right_menu %}
-    <tr>
-        <td class="center">- ÚČET -</td>
-    </tr>
-    <tr>
-        <td class="last"><a href={% url 'base:log_out' %}>Odhlásit</a></td>
-    </tr>
+{% if user.is_authenticated %}
+    {% block right_menu %}
+        <tr>
+            <td class="center">- ÚČET -</td>
+        </tr>
+        <tr>
+            <td class="last"><a href={% url 'base:log_out' %}>Odhlásit</a></td>
+        </tr>
 
-{% endblock %}
+    {% endblock %}
+{% endif %}

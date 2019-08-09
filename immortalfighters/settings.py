@@ -146,4 +146,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOGIN_URL = '/login_required/'
+
 from .settings_local import *

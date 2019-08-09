@@ -1,4 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from base.forms import RegistrationForm
@@ -9,29 +12,38 @@ from dictionary.models.race import Race
 
 
 def index(request):
-    if request.user.is_authenticated:
-        return render(request, 'logged_base.html', {'menu_attrs': MenuWrapper()})
-    else:
-        return render(request, 'base.html', {'menu_attrs': MenuWrapper()})
+    return render(request, 'logged_base.html')
 
 
 def banners(request):
-    return render(request, 'base.html', {'menu_attrs': MenuWrapper()})
+    return render(request, 'base.html')
 
 
 def log_in(request):
+    next_page = request.GET['next']
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(next_page)
+
     if request.user.is_anonymous:
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
+            if user.is_active:
+                login(request, user)
+                messages.success(request, "Vaše přihlášení proběhlo úspěšně")
+                if next_page is not None:
+                    return HttpResponseRedirect(next_page)
+            else:
+                messages.error(request, "Vás účet není aktivován")
+        else:
+            messages.error(request, "Neplatné uživatelské jměno nebo heslo")
     return redirect('base:index')
 
 
+@login_required
 def log_out(request):
-    if request.user.is_authenticated:
-        logout(request)
+    logout(request)
     return redirect('base:index')
 
 
@@ -50,13 +62,17 @@ def registration(request):
             login(request, user)
 
             return redirect('base:index')
-        return render(request, 'registration.html', {'menu_attrs': MenuWrapper(), 'form': form})
+        return render(request, 'registration.html', {'form': form})
     else:
         return redirect('base:index')
 
 
 def site_rules(request):
-    return render(request, 'site_rules.html', {'menu_attrs': MenuWrapper()})
+    return render(request, 'site_rules.html')
+
+
+def login_required(request):
+    return render(request, 'login_required.html')
 
 
 class MenuWrapper:
