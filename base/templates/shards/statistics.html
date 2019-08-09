@@ -1,0 +1,34 @@
+<tr>
+    <td class="collapsed">Registrovaní: <span
+            class="gray-text">{{ request.statistics.registered }}</span></td>
+</tr>
+<tr>
+    <td class="collapsed">Online:
+    <span class="gray-text">{{ request.statistics.online }}</span></td>
+</tr>
+<tr>
+    <td class="collapsed">
+        <a href="http://immortalfighters.net">Posledních 24h: </a>
+        <span class="gray-text">{{ request.statistics.last_day }}</span>
+    </td>
+</tr>
+<tr>
+    <td class="center">Reg. povolání</td>
+</tr>
+{% for profession in request.statistics.profession %}
+    <tr>
+        <td class="collapsed">
+            {{ profession.0 }}: <span class="gray-text">{{ profession.1 }}</span>
+        </td>
+    </tr>
+{% endfor %}
+<tr>
+    <td class="center">Reg. rasy</td>
+</tr>
+{% for race in request.statistics.race %}
+    <tr>
+        <td class="collapsed">
+            {{ race.0 }}: <span class="gray-text">{{ race.1 }}</span>
+        </td>
+    </tr>
+{% endfor %}

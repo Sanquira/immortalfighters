@@ -1,7 +1,7 @@
 from django.db.models.functions import Lower
 from django.shortcuts import redirect, render, get_object_or_404
 
-from base.views import MenuWrapper, BaseProfession
+from base.views import BaseProfession
 from dictionary.forms import SpellForm, ProfessionLimitationForm, SpellFormEdit
 from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.spell import Spell

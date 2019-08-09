@@ -3,7 +3,6 @@ from django.db.models.functions import Lower
 from django.shortcuts import redirect, render, get_object_or_404
 
 from base.models.stat import Stat
-from base.views import MenuWrapper
 from dictionary.forms import SkillForm, SkillFormEdit
 from dictionary.models.skill import Skill
 

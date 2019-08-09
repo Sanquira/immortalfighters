@@ -12,7 +12,7 @@ from dictionary.models.race import Race
 
 
 def index(request):
-    return render(request, 'logged_base.html')
+    return render(request, 'base.html')
 
 
 def banners(request):
@@ -20,11 +20,13 @@ def banners(request):
 
 
 def log_in(request):
-    next_page = request.GET['next']
-    if request.user.is_authenticated:
+    next_page = None
+    if 'next' in request.GET:
+        next_page = request.GET['next']
+    if request.user.is_authenticated and next_page is not None:
         return HttpResponseRedirect(next_page)
 
-    if request.user.is_anonymous:
+    if request.user.is_anonymous and "username" in request.POST and "password" in request.POST:
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
@@ -73,23 +75,3 @@ def site_rules(request):
 
 def login_required(request):
     return render(request, 'login_required.html')
-
-
-class MenuWrapper:
-    statistics = {
-        'race': list(),
-        'profession': list(),
-        'registered': 0,
-        'online': 0,
-        'last_day': 0,
-    }
-
-    def __init__(self):
-        self.statistics['race'].clear()
-        self.statistics['profession'].clear()
-        for rac in Race.objects.all():
-            self.statistics['race'].append((rac.name, Character.objects.filter(race=rac).count()))
-        for pro in BaseProfession.objects.filter(parentProf=None):
-            self.statistics['profession'].append((pro.name, Character.objects.filter(profession=pro).count()))
-
-    pass

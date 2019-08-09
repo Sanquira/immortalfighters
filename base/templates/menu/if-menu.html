@@ -1,0 +1,7 @@
+{% for item in menu %}
+    {% if item.visible %}
+        <tr>
+            <td><a href="{{ item.url }}">{{ item.title }}</a></td>
+        </tr>
+    {% endif %}
+{% endfor %}

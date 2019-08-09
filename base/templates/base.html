@@ -1,4 +1,8 @@
-{% load static %}{% load bootstrap4 %}{% load sass_tags %}
+{% load static %}
+{% load bootstrap4 %}
+{% load sass_tags %}
+{% load menu %}
+{% generate_menu %}
 
 <!DOCTYPE html>
 <html lang="cs">
@@ -20,248 +24,63 @@
 <div id="page" class="row">
     <div class="col-md-2">
         <table class="menu-side">
-            {% block left_menu %}
-                <tr>
-                    <td class="center">- MENU IF -</td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">Dračí doupě</a></td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">Zpracování</a></td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">Svět DrD</a></td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">F.A.Q.</a></td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">Průvodce po IF</a></td>
-                </tr>
-                <tr>
-                    <td class="last"><a href="http://immortalfighters.net">Pro nováčky</a></td>
-                </tr>
-                {% if user.is_authenticated %}
-                    <tr>
-                        <td class="center">- HRA ON-LINE -</td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Questy</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Gamebooky</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Hádanky</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Jeskyně</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Labyrint</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Deadland</a></td>
-                    </tr>
-                    <tr>
-                        <td class="last"><a href="http://immortalfighters.net">Pexeso</a></td>
-                    </tr>
-                    <tr>
-                        <td class="center">- VE MĚSTĚ -</td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Cvičiště</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Cechy</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Aukční síň</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Kovárna</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Laboratoř</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Runový stůl</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Knihovna</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Galerie</a></td>
-                    </tr>
-                    <tr>
-                        <td class="last"><a href="http://immortalfighters.net">Hřbitov</a></td>
-                    </tr>
-                {% endif %}
-                <tr>
-                    <td class="center">- IF WEB -</td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">Fórum</a></td>
-                </tr>
-                {% if user.is_authenticated %}
-                    <tr>
-                        <td class="collapsed center">Záložky</td>
-                    </tr>
-                    {% for user_bookmark in menu_attrs.user_bookmarks %}
-                        <tr>
-                            <td class="collapsed ellipsis">
-                                <a href={{ user_bookmark.url }} title={{ user_bookmark.name }}>
-                                    {{ user_bookmark.name }}
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                <tr>
-                    <td><a href="http://immortalfighters.net">Toplist</a></td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">Certifikace</a></td>
-                </tr>
-                {% if user.is_authenticated %}
-                    <tr>
-                        <td><a href="http://immortalfighters.net">Ankety</a></td>
-                    </tr>
-                {% endif %}
-                <tr>
-                    <td><a href="http://immortalfighters.net">Statistika</a></td>
-                </tr>
-                <tr>
-                    <td class="last"><a href="http://immortalfighters.net">Odkazy</a></td>
-                </tr>
-                <tr>
-                    <td class="center">- POMOC -</td>
-                </tr>
-                {% block PJ_help %}{% endblock %}
-                <tr>
-                    <td><a href={% url 'base:site_rules' %}>Pravidla</a></td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">Nápověda k webu</a></td>
-                </tr>
-                <tr>
-                    <td class="last"><a href="http://immortalfighters.net">Smajlíci</a></td>
-                </tr>
-                <tr>
-                    <td class="center">- IF TEAM -</td>
-                </tr>
-                <tr>
-                    <td><a href="http://immortalfighters.net">Sestava</a></td>
-                </tr>
-                {#                <tr>#}
-                {#                    <td class="center">Práce na IF:</td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net"></a>Rowenna</td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Wolffram</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="center collapsed">Cechy</td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Sandra Divoká</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="center collapsed">Změny postav</td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Sandra Divoká</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="center collapsed">Bezpečnost/Fóra:</td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Silas</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="center collapsed">Propagace:</td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Kelghor</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="center collapsed">Rady a pomoc:</td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Sandra Divoká</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Wolffram</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Mihai</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Baddy</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Bluk</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Virgil</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Sesshuro</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Muffinko</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Lipran</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Purson</a></td>#}
-                {#                </tr>#}
-                {#                <tr>#}
-                {#                    <td class="collapsed"><a href="http://immortalfighters.net">Torvald Šílený</a></td>#}
-                {#                </tr>#}
-                <tr>
-                    <td class="center">Pro jakýkoli dotaz můžete využít</td>
-                </tr>
-                <tr>
-                    <td class="center collapsed"><a href="http://immortalfighters.net">Hospůdku</a></td>
-                </tr>
-                <tr>
-                    <td class="center collapsed">nebo</td>
-                </tr>
-                <tr>
-                    <td class="center collapsed">
-                        {% if user.is_authenticated %}
-                            <a href="http://webchat.freenode.net/?nick={{ user.username }}.&channels=immortalfighters&uio=OT10cnVlJjExPTIyNge7"
-                               target="_blank"> IRC Channel </a>
-                        {% else %}
-                            <a href="http://webchat.freenode.net/?nick=IF_Host_.&channels=immortalfighters&uio=OT10cnVlJjExPTIyNge7"
-                               target="_blank"> IRC Channel </a>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="center">
-                        <img src={% static 'base/menu/facebook-icon-preview-1-400x400.png' %} height="30" width="30">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="center last collapsed">
-                        <a href="http://immortalfighters.net"> Immortal Fighters na Facebooku </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="center">&copy; 2019 IF TEAM</td>
-                </tr>
-                <tr>
-                    <td class="last center collapsed">Dračí doupě&reg;, DrD&trade; a ALTAR&reg; jsou zapsané ochranné
-                        známky nakladatelství ALTAR.
-                    </td>
-                </tr>
-            {% endblock %}
+            <tr>
+                <td class="center">- MENU IF -</td>
+            </tr>
+            {% include "menu/if-menu.html" with menu=menus.main %}
+
+            <tr>
+                <td class="center">- HRA ON-LINE -</td>
+            </tr>
+            {% include "menu/if-menu.html" with menu=menus.game %}
+
+            <tr>
+                <td class="center">- VE MĚSTĚ -</td>
+            </tr>
+            {% include "menu/if-menu.html" with menu=menus.city %}
+
+            <tr>
+                <td class="center">- POMOC -</td>
+            </tr>
+            {% include "menu/if-menu.html" with menu=menus.aid %}
+            <tr>
+                <td class="center">Pro jakýkoli dotaz můžete využít</td>
+            </tr>
+            <tr>
+                <td class="center collapsed"><a href="http://immortalfighters.net">Hospůdku</a></td>
+            </tr>
+            <tr>
+                <td class="center collapsed">nebo</td>
+            </tr>
+            <tr>
+                <td class="center collapsed">
+                    {% if user.is_authenticated %}
+                        <a href="http://webchat.freenode.net/?nick={{ user.username }}.&channels=immortalfighters&uio=OT10cnVlJjExPTIyNge7"
+                           target="_blank"> IRC Channel </a>
+                    {% else %}
+                        <a href="http://webchat.freenode.net/?nick=IF_Host_.&channels=immortalfighters&uio=OT10cnVlJjExPTIyNge7"
+                           target="_blank"> IRC Channel </a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="center">
+                    <img src={% static 'base/menu/facebook-icon-preview-1-400x400.png' %} height="30" width="30">
+                </td>
+            </tr>
+            <tr>
+                <td class="center last collapsed">
+                    <a href="http://immortalfighters.net"> Immortal Fighters na Facebooku </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="center">&copy; 2019 IF TEAM</td>
+            </tr>
+            <tr>
+                <td class="last center collapsed">Dračí doupě&reg;, DrD&trade; a ALTAR&reg; jsou zapsané ochranné
+                    známky nakladatelství ALTAR.
+                </td>
+            </tr>
         </table>
     </div>
     <div class="col-md-1">
@@ -278,165 +97,13 @@
     <div class="col-md-2">
         <table class="menu-side">
             {% if user.is_anonymous %}
-                <form method="post" action="{% url 'base:log_in'%}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" name="prihlaseni" id="login_form">
-                    {% csrf_token %}
-                </form>
-                <tr>
-                    <td class="center">- PŘIHLÁŠENÍ -</td>
-                </tr>
-                <tr>
-                    <td>Uživatel:</td>
-                </tr>
-                <tr>
-                    <td class="collapsed"><input form="login_form" name="username" type="text"></td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Heslo:</td>
-                </tr>
-                <tr>
-                    <td class="collapsed"><input form="login_form" name="password" type="password">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed"><input form="login_form" type="image" src={% static 'base/forms/send.png' %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed"><img
-                            src={% static 'base/menu/facebook-icon-preview-1-400x400.png' %} height="12" width="12"><a
-                            href="http://immortalfighters.net">Facebook login</a></td>
-                </tr>
-                <tr>
-                    <td class="collapsed"><a href={% url "base:registration" %}>Nová registrace</a></td>
-                </tr>
-                <tr>
-                    <td class="collapsed"><a href="http://immortalfighters.net">Obnovit heslo</a></td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Registrovaní: <span
-                            class="gray-text">{{ menu_attrs.statistics.registered }}</span></td>
-                </tr>
-                <tr>
-                    <td class="collapsed">Online: <span class="gray-text">{{ menu_attrs.statistics.online }}</span></td>
-                </tr>
-                <tr>
-                    <td class="collapsed last">
-                        <a href="http://immortalfighters.net">Posledních 24h: </a> <span
-                            class="gray-text">{{ menu_attrs.statistics.last_day }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="last center">Reg. povolání</td>
-                </tr>
-                {% for profession in menu_attrs.statistics.profession %}
-                    <tr>
-                        <td class="collapsed">{{ profession.0 }}: <span class="gray-text">{{ profession.1 }}</span>
-                        </td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td class="last center">Reg. rasy</td>
-                </tr>
-                {% for race in menu_attrs.statistics.race %}
-                    <tr>
-                        <td class="collapsed">{{ race.0 }}: <span class="gray-text">{{ race.1 }}</span>
-                        </td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td class="center">
-                        <a href="./?module=main&amp;redir=36" onfocus="this.blur()" target="_blank"> <img
-                                src="http://ostarwars.wz.cz/banner.gif" alt="" width="88" height="31" border="0"> </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=2" onfocus="this.blur()" target="_blank"> <img
-                                src={% static 'base/banners/smartdblu.gif' %} alt="" width="88" height="31" border="0">
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=26" onfocus="this.blur()" target="_blank"> <img
-                                src="http://zaklinaci-mistrimece.cz/images/banner_link.gif" alt="" width="88"
-                                height="31" border="0"> </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=5" onfocus="this.blur()" target="_blank"> <img
-                                src={% static 'base/banners/baner_paintball.gif' %} alt="" width="88" height="31"
-                                border="0"> </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=4" onfocus="this.blur()" target="_blank"> <img
-                                src={% static 'base/banners/aphrael2.gif' %} alt="" width="88" height="31" border="0">
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=24" onfocus="this.blur()" target="_blank"> <img
-                                src={% static 'base/banners/stable.jpg' %} alt="" width="88" height="31" border="0">
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=48" onfocus="this.blur()" target="_blank"> <img
-                                src="http://www.slovenciny.com/slovenciny.gif" alt="" width="88" height="31" border="0">
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=69" onfocus="this.blur()" target="_blank"> <img
-                                src={% static 'base/banners/hviezdnabrana_sk.gif' %} alt="" width="88" height="31"
-                                border="0"> </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=73" onfocus="this.blur()" target="_blank"> <img
-                                src={% static 'base/banners/ryon-wbs-cz.jpg' %} alt="" width="88" height="31"
-                                border="0"> </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=72" onfocus="this.blur()" target="_blank"> <img
-                                src={% static 'base/banners/draci_hlidka.gif' %} alt="" width="88" height="31"
-                                border="0"> </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="collapsed center">
-                        <a href="./?module=main&amp;redir=71" onfocus="this.blur()" target="_blank"> <img
-                                src={% static 'base/banners/kalendar.png' %} alt="" width="88" height="31" border="0">
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="center">- IF banery -</td>
-                </tr>
-                <tr>
-                    <td class="collapsed center last">
-                        <a href={% url "base:banners" %} onfocus="this.blur()"> <img
-                                src={% static 'base/banners/if_b88x30.gif' %} alt="" width="88" height="30" border="0">
-                        </a>
-                    </td>
-                </tr>
+                {% include "shards/login_form.html" %}
             {% else %}
-                {% block right_menu %}
-                    <a href={% url 'base:log_out' %}>Odhlásit</a>
-                {% endblock %}
+                {% include "shards/logged_menu.html" %}
             {% endif %}
+            {% include "shards/statistics.html" %}
         </table>
     </div>
 </div>
 </body>
-
 </html>
