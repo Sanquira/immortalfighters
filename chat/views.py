@@ -11,7 +11,13 @@ from chat.models import Room
 
 @login_required
 def index(request):
-    return render(request, 'chat/index.html', {})
+    rooms = Room.objects.all()
+    user = request.user
+    room_list = []
+    for room in rooms:
+        if check_permission(room, user):
+            room_list.append(room)
+    return render(request, 'chat/index.html', {"rooms": room_list})
 
 
 def check_permission(room, user):

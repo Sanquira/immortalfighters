@@ -1,9 +1,13 @@
 # chat/consumers.py
+import logging
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
+    logger = logging.getLogger(__name__)
+
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
@@ -42,27 +46,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        if 'type' not in text_data_json:
-            return
 
-        message = text_data_json['message']
-        message_type = text_data_json['type']
-
-        msg = {
-                'type': message_type,
-                'message': message,
-                'user': self.user.username
-            }
-        if message_type == "private_message":
-            if 'target' not in text_data_json:
-                return
-            msg['target'] = text_data_json['target']
-
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            msg
-        )
+        if self.validate(text_data_json):
+            text_data_json['user'] = self.user.username
+            # Re-send message to room group
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                text_data_json
+            )
 
     # Receive message from room group
     async def chat_message(self, event):
@@ -86,7 +77,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'type': "join_channel",
-            'user':  user
+            'user': user
         }))
 
     # Receive leave_channel message from room group
@@ -114,3 +105,27 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message': message,
             'user': user
         }))
+
+    def raise_error(self, error):
+        self.logger.warning("[Websocket] %s" % error)
+        return False
+
+    def require(self, data, *args):
+        for arg in args:
+            if arg not in data:
+                return self.raise_error("Parameter %s is required for message of type %s" % (arg, data["type"]))
+            if data[args] == "":
+                return self.raise_error("Parameter %s must be not null for message of type %s" % (arg, data["type"]))
+        return True
+
+    def validate(self, data):
+        if 'type' not in data:
+            return self.raise_error("No type specified")
+
+        message_type = data["type"]
+        if message_type == 'chat_message':
+            return self.require(data, "message")
+        elif message_type == "private_message":
+            return self.require(data, "message", "target")
+        else:
+            return self.raise_error("Type %s is unsupported" % message_type)

@@ -1,32 +1,44 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}ChatRoom - {{ room_name }}{% endblock %}
-
+{% block extraHead %}
+    <script src="{% static 'base/js/chatClient.js' %}"></script>
+{% endblock %}
 {% block content %}
     <textarea id="chat-log" cols="65" rows="20" readonly="true"></textarea><br/>
     <input id="chat-message-input" type="text" size="65"/><br/>
     <input id="chat-message-submit" type="button" value="Send"/>
-
     <script>
         $( document ).ready(function() {
             var roomName = {{ room_name_json }};
-
-            var chatSocket = new WebSocket(
-                'ws://' + window.location.host +
+            var log = document.querySelector('#chat-log');
+            var client = new ChatClient('ws://' + window.location.host +
                 '/ws/chat/' + roomName + '/');
 
-            chatSocket.onmessage = function(e) {
-                var data = JSON.parse(e.data);
-                var message = data['message'];
-                log = document.querySelector('#chat-log');
-                log.value += (message + '\n');
+            client.onchatmessage = function(message, user) {
+                log.value += (user + ': ' + message + '\n');
                 log.scrollTop = log.scrollHeight;
             };
 
-            chatSocket.onclose = function(e) {
-                alert('Chat socket closed unexpectedly');
-                console.error('Chat socket closed unexpectedly');
-                window.location.href = '{% url "base:index" %}';
+            client.onpm = function(message, user) {
+                log.value += ('[PRIVATE] ' + user + ': ' + message + '\n');
+                log.scrollTop = log.scrollHeight;
+            };
+
+            client.onjoinchannel = function(user) {
+                log.value += (user + ' se připojil\n');
+                log.scrollTop = log.scrollHeight;
+            };
+
+            client.onleavechannel = function(user) {
+                log.value += (user + ' se odpojil\n');
+                log.scrollTop = log.scrollHeight;
+            };
+
+            client.onerror = function(e) {
+                alert("Websocket error");
+                //window.location.href = '{% url "base:index" %}';
             };
 
             document.querySelector('#chat-message-input').focus();
@@ -40,10 +52,7 @@
                 var messageInputDom = document.querySelector('#chat-message-input');
                 var message = messageInputDom.value;
                 if (message) {
-                    chatSocket.send(JSON.stringify({
-                        'message': message,
-                        'type': "chat_message"
-                    }));
+                    client.sendChatMessage(message);
                 }
 
                 messageInputDom.value = '';

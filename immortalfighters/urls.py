@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('base.urls', "base"), namespace="base")),
     path('dictionary/', include(('dictionary.urls', "dictionary"), namespace="dictionary")),
-    url(r'^chat/', include('chat.urls')),
+    path('chat/', include(('chat.urls', 'chat'), namespace="chat")),
 ]
