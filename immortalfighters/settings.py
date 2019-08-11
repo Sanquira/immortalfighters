@@ -57,8 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'base.middleware.middleware.BackgroundMiddleware',
-    'base.middleware.middleware.StatisticsMiddleware'
+    'base.middleware.middleware.BackgroundMiddleware'
 ]
 
 ROOT_URLCONF = 'immortalfighters.urls'

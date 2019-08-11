@@ -12,6 +12,8 @@ Menu.add_item("main", MenuItem("Sestava",
                                reverse("base:index")))
 Menu.add_item("main", MenuItem("Pravidla stránky",
                                reverse("base:site_rules")))
+Menu.add_item("main", MenuItem("Statistiky webu",
+                               reverse("base:statistics")))
 
 # Hra online
 Menu.add_item("game", MenuItem("Questy",

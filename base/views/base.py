@@ -70,7 +70,23 @@ def registration(request):
 
 
 def site_rules(request):
-    return render(request, 'site_rules.html')
+    return render(request, 'pages/site_rules.html')
+
+
+def statistics(request):
+    stats = {
+        'races': list(),
+        'professions': list(),
+        'registered': IFUser.objects.count(),
+        'online': IFUser.objects.filter(is_active=True).count()
+    }
+
+    for race in Race.objects.all():
+        stats['races'].append((race.name, Character.objects.filter(race=race).count()))
+    for profession in BaseProfession.objects.filter(parentProf=None):
+        stats['professions'].append((profession.name, Character.objects.filter(profession=profession).count()))
+
+    return render(request, 'pages/statistics.html', {'statistics': stats})
 
 
 def login_required(request):

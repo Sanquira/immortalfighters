@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Statistiky
+{% endblock %}
+
+{% block content %}
+    <h2>Uživatelé</h2>
+    <ul>
+        <li>
+            Registrovaní hráči: <span class="gray-text">{{ statistics.registered }}</span>
+        </li>
+        <li>
+            Online hráči: <span class="gray-text">{{ statistics.online }}</span>
+        </li>
+    </ul>
+
+    <h2>Registrované povolání</h2>
+    <ul>
+    {% for profession in statistics.professions %}
+        <li>
+            {{ profession.0 }}: <span class="gray-text">{{ profession.1 }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <h2>Registrované rasy</h2>
+    <ul>
+    {% for race in statistics.races %}
+        <li>
+            {{ race.0 }}: <span class="gray-text">{{ race.1 }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

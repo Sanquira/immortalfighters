@@ -30,25 +30,3 @@ class BackgroundMiddleware:
         # the view is called.
 
         return self.get_response(request)
-
-
-class StatisticsMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        statistics = {
-            'race': list(),
-            'profession': list(),
-            'registered': IFUser.objects.count(),
-            'online': IFUser.objects.filter(is_active=True).count()
-        }
-
-        for race in Race.objects.all():
-            statistics['race'].append((race.name, Character.objects.filter(race=race).count()))
-        for profession in BaseProfession.objects.filter(parentProf=None):
-            statistics['profession'].append((profession.name, Character.objects.filter(profession=profession).count()))
-
-        request.statistics = statistics
-
-        return self.get_response(request)
