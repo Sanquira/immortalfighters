@@ -16,6 +16,7 @@ bootstrap4 = "*"
 django-polymorphic = "*"
 django-markdownx = "*"
 markdown-if = {editable = true,git = "https://Sanquira@bitbucket.org/Sanquira/markdown_if.git"}
+django-simple-menu = "*"
 
 [requires]
 python_version = "3.6"

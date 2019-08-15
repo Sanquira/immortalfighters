@@ -8,8 +8,8 @@ class RegistrationForm(forms.Form):
                                error_messages={'required': "Prosím zadejte přezdívku.",
                                                'min_length': 'Příliš krátká přezdívka.'})
     email = forms.EmailField(error_messages={'invalid': 'Prosím zadejte platný email.'})
-    password = forms.CharField(label='Heslo', widget=forms.PasswordInput());
-    confirm_password = forms.CharField(label='Opakuj heslo', widget=forms.PasswordInput());
+    password = forms.CharField(label='Heslo', widget=forms.PasswordInput())
+    confirm_password = forms.CharField(label='Opakuj heslo', widget=forms.PasswordInput())
 
     def clean_confirm_password(self):
         password = self.cleaned_data.get("password")

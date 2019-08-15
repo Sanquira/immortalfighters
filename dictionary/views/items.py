@@ -1,7 +1,7 @@
 from django.db.models.functions import Lower
 from django.shortcuts import redirect, render, get_object_or_404
 
-from base.views import MenuWrapper, BaseProfession
+from base.views import BaseProfession
 from dictionary.forms import SpellForm, ProfessionLimitationForm, SpellFormEdit
 from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.spell import Spell
@@ -33,7 +33,7 @@ def items(request):
     if spell_list.count() > 0:
         spells['Nezařazeno'] = spell_list
     
-    return render(request, 'spells_list.html', {'spells': spells, 'order': order, 'sort': sort, 'menu_attrs': MenuWrapper()})
+    return render(request, 'spells_list.html', {'spells': spells, 'order': order, 'sort': sort})
 
 
 def item_item(request, pk=None):

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'base',
     'dictionary',
     'markdownx',
+    'menu'
 ]
 
 MARKDOWNX_MARKDOWN_EXTENSIONS = [
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'base.middleware.middleware.BackgroundMiddleware'
 ]
 
 ROOT_URLCONF = 'immortalfighters.urls'
@@ -144,5 +146,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_URL = '/login_required/'
 
 from .settings_local import *

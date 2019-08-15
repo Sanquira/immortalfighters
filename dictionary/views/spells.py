@@ -1,21 +1,21 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import Count, Q
 from django.forms import modelformset_factory
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
-from base.views import MenuWrapper, BaseProfession
+from base.views import BaseProfession
 from dictionary.forms import SpellForm, ProfessionLimitationForm, SpellFormEdit, BaseProfessionLimitationFormSet
 from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.spell import Spell
 
 
+@login_required
 def spells(request):
-    if not request.user.is_authenticated:
-        return redirect('base:index')
     dummy_spell = Spell()
-    return render(request, 'spells_list.html', {'dummy_spell': dummy_spell, 'menu_attrs': MenuWrapper()})
+    return render(request, 'spells_list.html', {'dummy_spell': dummy_spell})
 
 
 def spells_table(request):

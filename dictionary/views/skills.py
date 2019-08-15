@@ -3,7 +3,6 @@ from django.db.models.functions import Lower
 from django.shortcuts import redirect, render, get_object_or_404
 
 from base.models.stat import Stat
-from base.views import MenuWrapper
 from dictionary.forms import SkillForm, SkillFormEdit
 from dictionary.models.skill import Skill
 
@@ -26,7 +25,7 @@ def skills(request):
         if skill_list.count() > 0:
             skills[stat] = skill_list
     
-    return render(request, 'skill_list.html', {'skills': skills, 'order': order, 'sort': sort, 'menu_attrs': MenuWrapper()})
+    return render(request, 'skill_list.html', {'skills': skills, 'order': order, 'sort': sort})
 
 
 def skill_item(request, pk=None):

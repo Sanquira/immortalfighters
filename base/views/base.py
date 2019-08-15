@@ -1,4 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from base.forms import RegistrationForm
@@ -9,29 +12,40 @@ from dictionary.models.race import Race
 
 
 def index(request):
-    if request.user.is_authenticated:
-        return render(request, 'logged_base.html', {'menu_attrs': MenuWrapper()})
-    else:
-        return render(request, 'base.html', {'menu_attrs': MenuWrapper()})
+    return render(request, 'base.html')
 
 
 def banners(request):
-    return render(request, 'base.html', {'menu_attrs': MenuWrapper()})
+    return render(request, 'base.html')
 
 
 def log_in(request):
-    if request.user.is_anonymous:
+    next_page = None
+    if 'next' in request.GET:
+        next_page = request.GET['next']
+    if request.user.is_authenticated and next_page is not None:
+        return HttpResponseRedirect(next_page)
+
+    if request.user.is_anonymous and "username" in request.POST and "password" in request.POST:
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
+            if user.is_active:
+                login(request, user)
+                messages.success(request, "Vaše přihlášení proběhlo úspěšně")
+                if next_page is not None:
+                    return HttpResponseRedirect(next_page)
+            else:
+                messages.error(request, "Vás účet není aktivován")
+        else:
+            messages.error(request, "Neplatné uživatelské jměno nebo heslo")
     return redirect('base:index')
 
 
+@login_required
 def log_out(request):
-    if request.user.is_authenticated:
-        logout(request)
+    logout(request)
     return redirect('base:index')
 
 
@@ -50,30 +64,30 @@ def registration(request):
             login(request, user)
 
             return redirect('base:index')
-        return render(request, 'registration.html', {'menu_attrs': MenuWrapper(), 'form': form})
+        return render(request, 'registration.html', {'form': form})
     else:
         return redirect('base:index')
 
 
 def site_rules(request):
-    return render(request, 'site_rules.html', {'menu_attrs': MenuWrapper()})
+    return render(request, 'pages/site_rules.html')
 
 
-class MenuWrapper:
-    statistics = {
-        'race': list(),
-        'profession': list(),
-        'registered': 0,
-        'online': 0,
-        'last_day': 0,
+def statistics(request):
+    stats = {
+        'races': list(),
+        'professions': list(),
+        'registered': IFUser.objects.count(),
+        'online': IFUser.objects.filter(is_active=True).count()
     }
 
-    def __init__(self):
-        self.statistics['race'].clear()
-        self.statistics['profession'].clear()
-        for rac in Race.objects.all():
-            self.statistics['race'].append((rac.name, Character.objects.filter(race=rac).count()))
-        for pro in BaseProfession.objects.filter(parentProf=None):
-            self.statistics['profession'].append((pro.name, Character.objects.filter(profession=pro).count()))
+    for race in Race.objects.all():
+        stats['races'].append((race.name, Character.objects.filter(race=race).count()))
+    for profession in BaseProfession.objects.filter(parentProf=None):
+        stats['professions'].append((profession.name, Character.objects.filter(profession=profession).count()))
 
-    pass
+    return render(request, 'pages/statistics.html', {'statistics': stats})
+
+
+def login_required(request):
+    return render(request, 'login_required.html')
