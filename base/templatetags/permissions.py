@@ -43,7 +43,7 @@ class MyNode(Node):
         is_true = bool(test_var)
         # TODO perms
         if test_var == "delete_spell":
-            is_true = False
+            is_true = True
         else:
             is_true = True
 
