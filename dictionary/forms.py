@@ -1,11 +1,12 @@
 from django import forms
 from django.db import transaction
-from django.forms import ModelForm, BaseModelFormSet
+from django.forms import ModelForm, BaseModelFormSet, Form, BaseFormSet
 
+from base.fields import EmptyChoiceField
 from dictionary.models.profession import BaseProfession
 from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.skill import Skill
-from dictionary.models.spell import Spell
+from dictionary.models.spell import Spell, SpellDirection
 
 
 # Spells
@@ -65,7 +66,46 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
                 instance.delete()
 
 
-# Skills
+class SpellDirectionForm(Form):
+    direction = EmptyChoiceField(required=False, label="Směr magie", empty_label='---------',
+                                 choices=[(obj.pk, obj.get_form_label()) for obj in SpellDirection.objects.all()])
+
+
+class BaseSpellDirectionFormSet(BaseFormSet):
+    
+    def clean(self):
+        if any(self.errors):
+            return
+        dirs = []
+        for form in self.forms:
+            if self._should_delete_form(form):
+                continue
+            
+            if form.cleaned_data and 'direction' in form.cleaned_data:
+                dir = form.cleaned_data['direction']
+                if dir in dirs:
+                    raise forms.ValidationError(
+                        'Duplicita směrů není povolena.',
+                        code='duplicate_direction'
+                    )
+                dirs.append(dir)
+    
+    def save_all(self, spell):
+        if not self.has_changed():
+            return
+        with transaction.atomic():
+            spell.directions.clear()
+            for form in self.forms:
+                if 'direction' not in form.cleaned_data:
+                    continue
+                if form.cleaned_data['DELETE'] == True:
+                    continue
+                dir = SpellDirection.objects.get(pk=form.cleaned_data['direction'])
+                spell.directions.add(dir)
+    
+    # Skills
+
+
 class SkillFormEdit(ModelForm):
     class Meta:
         model = Skill

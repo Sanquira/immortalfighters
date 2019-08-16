@@ -2,12 +2,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import Count, Q
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, formset_factory
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
 from base.views import BaseProfession
-from dictionary.forms import SpellForm, ProfessionLimitationForm, SpellFormEdit, BaseProfessionLimitationFormSet
+from dictionary.forms import SpellForm, ProfessionLimitationForm, SpellFormEdit, BaseProfessionLimitationFormSet, SpellDirectionForm, BaseSpellDirectionFormSet
 from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.spell import Spell
 
@@ -95,14 +95,21 @@ def spell_edit(request, pk):
     ProfessionLimitationFormSet = modelformset_factory(ProfessionLimitation, form=ProfessionLimitationForm,
                                                        formset=BaseProfessionLimitationFormSet, min_num=1,
                                                        validate_min=True, validate_max=True, can_delete=True)
+    
+    SpellDirectionFormSet = formset_factory(SpellDirectionForm, min_num=0, validate_min=True,
+                                            validate_max=True, formset=BaseSpellDirectionFormSet,
+                                            can_delete=True)
+    
     if request.POST:
-        form_profs = ProfessionLimitationFormSet(request.POST)
+        form_profs = ProfessionLimitationFormSet(request.POST, prefix="profs")
+        form_dirs = SpellDirectionFormSet(request.POST, prefix="dirs")
         
-        if form_spell.is_valid() and form_profs.is_valid():
+        if form_spell.is_valid() and form_profs.is_valid() and form_dirs.is_valid():
             
             spell = form_spell.save()
             try:
                 form_profs.save_all(spell)
+                form_dirs.save_all(spell)
                 if is_adding:
                     messages.success(request, 'Nové kouzlo bylo uloženo.')
                 else:
@@ -113,7 +120,9 @@ def spell_edit(request, pk):
     
     else:
         profs = ProfessionLimitation.objects.filter(spell=spell)
-        form_profs = ProfessionLimitationFormSet(queryset=profs)
+        form_profs = ProfessionLimitationFormSet(queryset=profs, prefix="profs")
+        dirs = spell.directions.all()
+        form_dirs = SpellDirectionFormSet(initial=[{'direction': obj.pk} for obj in dirs], prefix="dirs")
     
     context = dict()
     context['add'] = is_adding
@@ -121,6 +130,7 @@ def spell_edit(request, pk):
     context['pk'] = pk
     context['form_spell'] = form_spell
     context['form_profs'] = form_profs
+    context['form_dirs'] = form_dirs
     
     return render(request, 'spell_item.html', context)
 

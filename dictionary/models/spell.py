@@ -5,12 +5,12 @@ from dictionary.models.profession import BaseProfession
 
 
 class SpellDiscipline(models.Model):
-    name = models.CharField(max_length=64, null=False, default="Nový obor magie", verbose_name="Název oboru magie")
+    name = models.CharField(max_length=64, null=False, default="Nový obor magie", verbose_name="Obor magie")
     label = models.CharField(max_length=4, null=False, default="NO", verbose_name="Zkratka")
-
+    
     def __str__(self):
         return self.name
-
+    
     class Meta:
         verbose_name = "Obor magie"
         verbose_name_plural = "Obory magie"
@@ -18,12 +18,15 @@ class SpellDiscipline(models.Model):
 
 class SpellDirection(models.Model):
     discipline = models.ForeignKey(SpellDiscipline, on_delete=models.CASCADE, verbose_name="Obor magie")
-    name = models.CharField(max_length=64, null=False, default="Nový směr magie", verbose_name="Název směru magie")
+    name = models.CharField(max_length=64, null=False, default="Nový směr magie", verbose_name="Směr magie")
     correct = models.SmallIntegerField(default=0, verbose_name="Oprava")
-
+    
+    def get_form_label(self):
+        return self.name + " (" + self.discipline.name + ")"
+    
     def __str__(self):
         return self.name
-
+    
     class Meta:
         verbose_name = "Směr magie"
         verbose_name_plural = "Směry magie"
@@ -38,20 +41,20 @@ class Spell(models.Model):
     duration = models.CharField(max_length=128, null=True, verbose_name="Trvání")
     note = MarkdownxField(null=True, verbose_name="Popis")
     directions = models.ManyToManyField(SpellDirection, verbose_name="Obory magie")
-
+    
     available_for_professions = models.ManyToManyField(BaseProfession, through='ProfessionLimitation',
                                                        verbose_name="Pro povolání")
-
+    
     def get_directions_str(self):
         return ", ".join(d.__str__() for d in self.directions.all())
-
+    
     def get_disciplines(self):
         discs = []
         for d in self.directions.all():
             if d.discipline not in discs:
                 discs.append(d.discipline)
         return discs
-
+    
     def get_directions_grouped(self):
         discs = {}
         for d in self.directions.all():
@@ -59,24 +62,24 @@ class Spell(models.Model):
                 discs[d.discipline] = list()
             discs[d.discipline].append(d)
         return discs
-
+    
     def get_disciplines_str(self):
         return ", ".join(p.name for p in self.get_disciplines())
-
+    
     # @staticmethod
     # def get_spells_for_discipline(disc: 'SpellDiscipline'):
     #     return Spell.objects.filter(discipline=disc)
-
+    
     @staticmethod
     def get_spells_for_profession(prof: 'BaseProfession' = None):
         if prof:
             return Spell.objects.filter(available_for_professions=prof)
         else:
             return Spell.objects.filter(available_for_professions=None)
-
+    
     def __str__(self):
         return self.name
-
+    
     class Meta:
         verbose_name = "Kouzlo"
         verbose_name_plural = "Kouzla"
@@ -119,7 +122,7 @@ def initialize_spell_directions(apps, schema_editor):
                    correct=-40).save()
     SpellDirection(name="Postavení prostoru mimo čas", discipline=SpellDiscipline.objects.filter(label="ČP")[0],
                    correct=-60).save()
-
+    
     SpellDirection(name="Prostý výboj", discipline=SpellDiscipline.objects.filter(label="EU")[0], correct=+10).save()
     SpellDirection(name="Zpomalený výboj", discipline=SpellDiscipline.objects.filter(label="EU")[0], correct=-10).save()
     SpellDirection(name="Zrychlený výboj (blesky)", discipline=SpellDiscipline.objects.filter(label="EU")[0],
@@ -130,7 +133,7 @@ def initialize_spell_directions(apps, schema_editor):
     SpellDirection(name="Proud energie", discipline=SpellDiscipline.objects.filter(label="EU")[0], correct=-15).save()
     SpellDirection(name="Naváděný výboj", discipline=SpellDiscipline.objects.filter(label="EU")[0], correct=-35).save()
     SpellDirection(name="Rušivý výboj", discipline=SpellDiscipline.objects.filter(label="EU")[0], correct=-55).save()
-
+    
     SpellDirection(name="Iluze smyslové - zrakové", discipline=SpellDiscipline.objects.filter(label="IL")[0],
                    correct=+6).save()
     SpellDirection(name="Iluze smyslové - sluchové", discipline=SpellDiscipline.objects.filter(label="IL")[0],
@@ -145,7 +148,7 @@ def initialize_spell_directions(apps, schema_editor):
                    correct=-22).save()
     SpellDirection(name="Iluze tělesné", discipline=SpellDiscipline.objects.filter(label="IL")[0], correct=-35).save()
     SpellDirection(name="Iluze komplexní", discipline=SpellDiscipline.objects.filter(label="IL")[0], correct=-45).save()
-
+    
     SpellDirection(name="Přeměna anorganické hmoty na anorganickou",
                    discipline=SpellDiscipline.objects.filter(label="MA")[0], correct=-20).save()
     SpellDirection(name="Přeměna anorganické hmoty na organickou",
@@ -162,7 +165,7 @@ def initialize_spell_directions(apps, schema_editor):
                    correct=-30).save()
     SpellDirection(name="Vytváření organické hmoty", discipline=SpellDiscipline.objects.filter(label="MA")[0],
                    correct=-45).save()
-
+    
     SpellDirection(name="Odebírání životní síly - odebírání úrovně",
                    discipline=SpellDiscipline.objects.filter(label="VI")[0], correct=-75).save()
     SpellDirection(name="Odebírání životní síly - snížení hranice životů",
@@ -183,14 +186,14 @@ def initialize_spell_directions(apps, schema_editor):
                    correct=-65).save()
     SpellDirection(name="Přenášení vědomí", discipline=SpellDiscipline.objects.filter(label="VI")[0],
                    correct=-82).save()
-
+    
     SpellDirection(name="Očarování působící na myšlenky", discipline=SpellDiscipline.objects.filter(label="PS")[0],
                    correct=-35).save()
     SpellDirection(name="Očarování působící na myšlenky a tělo",
                    discipline=SpellDiscipline.objects.filter(label="PS")[0], correct=-53).save()
     SpellDirection(name="Komplexní očarování", discipline=SpellDiscipline.objects.filter(label="PS")[0],
                    correct=-45).save()
-
+    
     SpellDirection(name="Ochrana před fyzickým útokem", discipline=SpellDiscipline.objects.filter(label="EO")[0],
                    correct=-12).save()
     SpellDirection(name="Ochrana před magií", discipline=SpellDiscipline.objects.filter(label="EO")[0],
@@ -199,7 +202,7 @@ def initialize_spell_directions(apps, schema_editor):
                    correct=-60).save()
     SpellDirection(name="Komplexní ochrana", discipline=SpellDiscipline.objects.filter(label="EO")[0],
                    correct=-72).save()
-
+    
     SpellDirection(name="Transformace dostupné informace", discipline=SpellDiscipline.objects.filter(label="PO")[0],
                    correct=-40).save()
     SpellDirection(name="Získávání smyslových informací - zrakové či sluchové",

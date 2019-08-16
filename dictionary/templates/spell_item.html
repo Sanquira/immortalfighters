@@ -16,13 +16,29 @@
                     <div class="col-9 ">{{ field }}</div>
                 </div>
             {% endfor %}
+
+            {# Směry a obory magie #}
+            <div class="row margin-bottom col-12">Směry magie (automaticky přidá odpovídající obor):</div>
+            {{ form_dirs.management_form }}
+            {% for form_dir in form_dirs %}
+                <div class="row margin-bottom form-dirs col-12">
+                    {{ form_dir }}
+                </div>
+            {% endfor %}
+            {% if form_dirs.non_form_errors %}
+                {% for error in form_dirs.non_form_errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {# Povolání #}
+            <div class="row margin-bottom col-12">Omezení povolání:</div>
             {{ form_profs.management_form }}
             {% for form_prof in form_profs %}
                 <div class="row margin-bottom form-profs col-12">
                     {{ form_prof }}
                 </div>
             {% endfor %}
-
             {% if form_profs.non_form_errors %}
                 {% for error in form_profs.non_form_errors %}
                     {{ error|escape }}
@@ -35,6 +51,10 @@
         </div>
     </form>
     <script>
+        $('.form-dirs').formset({
+            addText: 'Přidej směr',
+            deleteText: 'Smaž'
+        });
         $('.form-profs').formset({
             addText: 'Přidej povolání',
             deleteText: 'Smaž'
