@@ -1,52 +1,132 @@
 {% extends 'base.html' %}{% load static %}
 {% load verbose_names %}
+{% load permissions %}
+
+{% block extraHead %}
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            const groupColumn = 2;
+            let table = $('#data-list').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        url: "{% url 'dictionary:skills_table' %}",
+                        type: 'POST',
+                        data: {
+                            "csrfmiddlewaretoken": "{{ csrf_token }}"
+                        },
+                    },
+                    "stateSave": false,
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Vše"]],
+                    "bSortMulti": false,
+                    "order": [1, "asc"],
+                    "columns": [
+                        {"data": "pk", "visible": false},
+                        {"data": "name"},
+                        {"data": "stat", "visible": false},
+                        {"data": "difficulty"},
+                        {
+                            {% has_perm "edit_skill" %}
+                                "defaultContent": "<button class=\"btn_edit\">Uprav</button>",
+                                "orderable": false,
+                                {% else %}
+                                "data": "pk",
+                                "visible": false,
+                            {% endhas_perm %}
+                        },
+                        {
+                            {% has_perm "delete_skill" %}
+                                "defaultContent": "<button class=\"btn_delete\">Smaž</button>",
+                                "orderable": false,
+                                {% else %}
+                                "data": "pk",
+                                "visible": false,
+                            {% endhas_perm %}
+                        },
+
+                    ],
+                    "drawCallback":
+
+                        function (settings) {
+                            var api = this.api();
+                            var rows = api.rows({page: 'current'}).nodes();
+                            var last = null;
+
+                            api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                                if (last !== group) {
+                                    $(rows).eq(i).before(
+                                        '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                                    );
+
+                                    last = group;
+                                }
+                            });
+                        }
+
+                    ,
+                    "language":
+                        {
+                            "url":
+                                "//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json"
+                        }
+                })
+            ;
+            var tableObj = $('#data-list tbody');
+            {% has_perm "delete_spell" %}
+                tableObj.on('click', '.btn_delete', function (e) {
+                    if (confirm("Opravdu chcete smazat tuto dovednost?")) {
+                        var url = "{% url 'dictionary:skill_delete' %}";
+                        var row = table.row($(this).parents('tr'));
+                        var data = row.data();
+                        url = url.replace("999", data["pk"]);
+                        $.ajax(url, {
+                            success: function () {
+                                table.draw(false);
+                            },
+                        });
+                    }
+                    e.stopPropagation();
+                });
+            {% endhas_perm %}
+            {% has_perm "edit_skill" %}
+                tableObj.on('click', '.btn_edit', function (e) {
+                    var url = "{% url 'dictionary:skill_edit' %}";
+                    var data = table.row($(this).parents('tr')).data();
+                    url = url.replace("999", data["pk"]);
+                    window.location.href = url;
+                    e.stopPropagation();
+                });
+            {% endhas_perm %}
+            tableObj.on('click', 'tr', function () {
+                var url = "{% url 'dictionary:skill_item' %}";
+                var data = table.row(this).data();
+                url = url.replace("999", data["pk"]);
+                window.location.href = url;
+            });
+        });
+    </script>
+{% endblock %}
 
 
 {% block content %}
+
     <h1>Dovednosti</h1>
-    <div class="clearfix"><a class="align-right" href="{% url 'dictionary:skill_item' %}">Přidej dovednost</a></div>
-    {% for stat,skill_list in skills.items %}
-        <h2>{{ stat.value }}</h2>
-        <table class="framed_table">
-            <thead>
-            <tr>
-                {% if skill_list.count > 0 %}
-                    <td onclick="window.location.href=&quot;{% url 'dictionary:skills' %}?order=name&sort={% if sort == "ascend" %}descend{% else %}ascend{% endif %}&quot;">{% get_verbose_field_name skill_list.0 "name" %}
-                        {% if order == "name" %}
-                            {% if sort == "ascend" %}
-                                <img src={% static 'base/forms/w_1bdn.png' %} alt="">
-                            {% elif sort == "descend" %}
-                                <img src={% static 'base/forms/w_1bup.png' %} alt="">
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                    <td onclick="window.location.href=&quot;{% url 'dictionary:skills' %}?order=discipline&sort={% if sort == "ascend" %}descend{% else %}ascend{% endif %}&quot;">{% get_verbose_field_name skill_list.0 "difficulty" %}
-                        {% if order == "stat" %}
-                            {% if sort == "ascend" %}
-                                <img src={% static 'base/forms/w_1bdn.png' %} alt="">
-                            {% elif sort == "descend" %}
-                                <img src={% static 'base/forms/w_1bup.png' %} alt="">
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                    {% if user.is_authenticated %}
-                        <td></td>
-                    {% endif %}
-                {% else %}
-                    <td>Jméno</td>
-                {% endif %}
-            </tr>
-            </thead>
-            {% for item in skill_list %}
-                <tr onclick="window.location.href=&quot;{% url 'dictionary:skill_item' pk=item.id %}&quot;">
-                    <td>{{ item.name }}</td>
-                    <td>{% if item.stat %}{{ item.get_difficulty_display }}{% else %}-{% endif %}</td>
-                    {% if user.is_authenticated %}
-                        <td class="clearfix">
-                            <a class="align-right" href="{% url 'dictionary:skill_delete' pk=item.id %}">Smaž</a></td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </table>
-    {% endfor %}
+    {% has_perm "add_skill" %}
+        <div class="clearfix"><a class="align-right" href="{% url 'dictionary:skill_edit' %}">Přidej dovednost</a></div>
+    {% endhas_perm %}
+    <table id="data-list" class="display" style="width:100%">
+        <thead>
+        <tr>
+            <th>pk</th>
+            <th>{% get_verbose_field_name dummy_skill "name" %}</th>
+            <th>Stat</th>
+            <th>{% get_verbose_field_name dummy_skill "difficulty" %}</th>
+            <th>Uprav</th>
+            <th>Smaž</th>
+        </tr>
+        </thead>
+    </table>
+
 {% endblock %}

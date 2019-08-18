@@ -1,8 +1,5 @@
-from django.contrib.auth.decorators import login_required
-
 from .items import *
-from .professions import *
-from .races import *
+from .mobs import *
 from .skills import *
 from .spells import *
 

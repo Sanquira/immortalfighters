@@ -102,7 +102,8 @@
             tableObj.on('click', 'tr', function () {
                 var url = "{% url 'dictionary:spell_item' %}";
                 var data = table.row(this).data();
-                window.location.href = url + data["pk"];
+                url = url.replace("999", data["pk"]);
+                window.location.href = url;
             });
         });
     </script>
@@ -113,7 +114,7 @@
 
     <h1>Kouzla</h1>
     {% has_perm "add_spell" %}
-        <div class="clearfix"><a class="align-right" href="{% url 'dictionary:spell_item' %}">Přidej kouzlo</a></div>
+        <div class="clearfix"><a class="align-right" href="{% url 'dictionary:spell_edit' %}">Přidej kouzlo</a></div>
     {% endhas_perm %}
     <table id="data-list" class="display" style="width:100%">
         <thead>

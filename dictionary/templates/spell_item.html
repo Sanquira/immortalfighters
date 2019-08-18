@@ -7,7 +7,7 @@
 {% block content %}
     <h1>{% if add %}Přidání kouzla{% else %}Změna kouzla{% endif %}</h1>
     <form action=
-                  {% if add %}{% url 'dictionary:spell_item' %}{% else %}{% url 'dictionary:spell_edit' pk %}{% endif %} method=POST>
+                  {% if add %}{% url 'dictionary:spell_edit' %}{% else %}{% url 'dictionary:spell_edit' pk %}{% endif %} method=POST>
         {% csrf_token %}
         <div class="container">
             {% for field in form_spell %}

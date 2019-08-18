@@ -79,10 +79,8 @@ def spell_item_view(request, pk):
                   {'spell': spell, 'dirs': dirs, 'profs': profs})
 
 
-def spell_edit(request, pk):
-    if not request.user.is_authenticated:
-        return redirect('base:index')
-    
+@login_required
+def spell_edit(request, pk=None):
     if pk:
         spell = get_object_or_404(Spell, pk=pk)
         form_spell = SpellFormEdit(request.POST or None, instance=spell)
@@ -121,8 +119,11 @@ def spell_edit(request, pk):
     else:
         profs = ProfessionLimitation.objects.filter(spell=spell)
         form_profs = ProfessionLimitationFormSet(queryset=profs, prefix="profs")
-        dirs = spell.directions.all()
-        form_dirs = SpellDirectionFormSet(initial=[{'direction': obj.pk} for obj in dirs], prefix="dirs")
+        if not is_adding:
+            dirs = spell.directions.all()
+            form_dirs = SpellDirectionFormSet(initial=[{'direction': obj.pk} for obj in dirs], prefix="dirs")
+        else:
+            form_dirs = SpellDirectionFormSet(prefix="dirs")
     
     context = dict()
     context['add'] = is_adding
@@ -133,18 +134,6 @@ def spell_edit(request, pk):
     context['form_dirs'] = form_dirs
     
     return render(request, 'spell_item.html', context)
-
-
-def spell_item(request, pk=None):
-    if not request.user.is_authenticated:
-        return redirect('base:index')
-    
-    # TODO permission system
-    
-    if pk:
-        return spell_item_view(request, pk)
-    else:
-        return spell_edit(request, pk)
 
 
 def spell_delete(request, pk):
