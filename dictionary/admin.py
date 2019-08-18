@@ -9,7 +9,7 @@ from dictionary.models.items import Item, Artefact
 from dictionary.models.profession import BaseProfession, XPLevel
 from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.race import Race
-from dictionary.models.skill import Skill
+from dictionary.models.skill import Skill, SkillPoints
 from dictionary.models.spell import Spell, SpellDiscipline, SpellDirection
 
 
@@ -66,6 +66,11 @@ class CategoryResources(resources.ModelResource):
         model = Category
 
 
+class SkillPointsResources(resources.ModelResource):
+    class Meta:
+        model = SkillPoints
+
+
 class SkillResources(resources.ModelResource):
     class Meta:
         model = Skill
@@ -73,11 +78,6 @@ class SkillResources(resources.ModelResource):
 
 #######################################
 # Inlines
-# class SpellDisciplineLimitationInline(admin.TabularInline):
-#     model = SpellDisciplineLimitation
-#     extra = 0
-#     filter_horizontal = ('directions',)
-
 
 class ProfessionLimitationInline(admin.TabularInline):
     model = ProfessionLimitation
@@ -86,6 +86,7 @@ class ProfessionLimitationInline(admin.TabularInline):
 
 #######################################
 # Admins
+
 class SpellAdmin(ImportExportModelAdmin, MarkdownxModelAdmin):
     resource_class = SpellResource
     inlines = (ProfessionLimitationInline,)
@@ -132,20 +133,25 @@ class CategoryAdmin(ImportExportModelAdmin):
     resource_class = CategoryResources
 
 
+class SkillPointsAdmin(ImportExportModelAdmin):
+    resource_class = SkillPointsResources
+
+
 class SkillAdmin(ImportExportModelAdmin):
     resource_class = SkillResources
     ordering = ('name', 'stat',)
 
 
 admin.site.register(Spell, SpellAdmin)
-admin.site.register(SpellDiscipline, SpellDisciplineAdmin)
-admin.site.register(SpellDirection, SpellDirectionAdmin)
+# admin.site.register(SpellDiscipline, SpellDisciplineAdmin)
+# admin.site.register(SpellDirection, SpellDirectionAdmin)
 # admin.site.register(SpellDisciplineLimitation, SpellDisciplineLimitationAdmin)
-admin.site.register(ProfessionLimitation, ProfessionLimitationAdmin)
-admin.site.register(Race, RaceAdmin)
-admin.site.register(BaseProfession, BaseProfessionAdmin)
-admin.site.register(XPLevel, XPLevelAdmin)
+# admin.site.register(ProfessionLimitation, ProfessionLimitationAdmin)
+# admin.site.register(Race, RaceAdmin)
+# admin.site.register(BaseProfession, BaseProfessionAdmin)
+# admin.site.register(XPLevel, XPLevelAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Artefact, ArtefactAdmin)
 admin.site.register(Category, CategoryAdmin)
+# admin.site.register(SkillPoints, SkillPointsAdmin)
 admin.site.register(Skill, SkillAdmin)
