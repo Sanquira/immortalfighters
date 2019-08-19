@@ -1,8 +1,7 @@
 from django import forms
 from django.db import transaction
-from django.forms import ModelForm, BaseModelFormSet, Form, BaseFormSet
+from django.forms import ModelForm, BaseModelFormSet, Form, BaseFormSet, ChoiceField
 
-from base.fields import EmptyChoiceField
 from dictionary.models.profession import BaseProfession
 from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.skill import Skill
@@ -66,9 +65,12 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
                 instance.delete()
 
 
+def get_direction_choices(self):
+    return [(obj.pk, obj.get_form_label()) for obj in SpellDirection.objects.all()],
+
+
 class SpellDirectionForm(Form):
-    direction = EmptyChoiceField(required=False, label="Směr magie", empty_label='---------',
-                                 choices=[(obj.pk, obj.get_form_label()) for obj in SpellDirection.objects.all()])
+    direction = ChoiceField(required=False, label="Směr magie", choices=get_direction_choices)
 
 
 class BaseSpellDirectionFormSet(BaseFormSet):

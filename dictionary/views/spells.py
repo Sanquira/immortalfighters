@@ -96,7 +96,7 @@ def spell_edit(request, pk=None):
     
     SpellDirectionFormSet = formset_factory(SpellDirectionForm, min_num=0, validate_min=True,
                                             validate_max=True, formset=BaseSpellDirectionFormSet,
-                                            can_delete=True)
+                                            can_delete=True, extra=0)
     
     if request.POST:
         form_profs = ProfessionLimitationFormSet(request.POST, prefix="profs")

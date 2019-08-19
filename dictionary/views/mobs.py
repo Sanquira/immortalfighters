@@ -1,0 +1,3 @@
+
+def mobs(request):
+    pass

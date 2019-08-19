@@ -135,31 +135,6 @@ h2 {
   border-image-slice: 10 fill;
 }
 
-//.tooltip {
-//  position: relative;
-//  display: inline-block;
-//
-//  .tooltipblock {
-//    visibility: hidden;
-//    width: 120px;
-//    background-color: black;
-//    color: #fff;
-//    text-align: center;
-//    padding: 5px 0;
-//    border-radius: 6px;
-//
-//    /* Position the tooltip text - see examples below! */
-//    position: absolute;
-//    z-index: 1;
-//  }
-//
-//  &:hover {
-//    tooltipblock {
-//      visibility: visible;
-//    }
-//  }
-//}
-
 .center {
   text-align: center;
 }
@@ -199,6 +174,7 @@ input[type=number] {
   border: 1px solid #990000;
   background-color: black;
   vertical-align: baseline;
+  width: 100%;
 }
 
 textarea {
