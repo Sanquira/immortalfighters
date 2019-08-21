@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'base',
     'dictionary',
     'markdownx',
-    'menu'
+    'menu',
+    'tagging',
+    'tagging_autocomplete_new'
 ]
 
 MARKDOWNX_MARKDOWN_EXTENSIONS = [

@@ -4,7 +4,6 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from markdownx.admin import MarkdownxModelAdmin
 
-from dictionary.models.category import Category
 from dictionary.models.items import Item, Artefact
 from dictionary.models.profession import BaseProfession, XPLevel
 from dictionary.models.profession_limitation import ProfessionLimitation
@@ -59,11 +58,6 @@ class ItemResources(resources.ModelResource):
 class ArtefactResources(resources.ModelResource):
     class Meta:
         model = Artefact
-
-
-class CategoryResources(resources.ModelResource):
-    class Meta:
-        model = Category
 
 
 class SkillPointsResources(resources.ModelResource):
@@ -129,10 +123,6 @@ class ArtefactAdmin(ImportExportModelAdmin):
     filter_horizontal = ('spells',)
 
 
-class CategoryAdmin(ImportExportModelAdmin):
-    resource_class = CategoryResources
-
-
 class SkillPointsAdmin(ImportExportModelAdmin):
     resource_class = SkillPointsResources
 
@@ -152,6 +142,5 @@ admin.site.register(Spell, SpellAdmin)
 # admin.site.register(XPLevel, XPLevelAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Artefact, ArtefactAdmin)
-admin.site.register(Category, CategoryAdmin)
 # admin.site.register(SkillPoints, SkillPointsAdmin)
 admin.site.register(Skill, SkillAdmin)

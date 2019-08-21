@@ -17,6 +17,8 @@ django-polymorphic = "*"
 django-markdownx = "*"
 markdown-if = {editable = true,git = "https://Sanquira@bitbucket.org/Sanquira/markdown_if.git"}
 django-simple-menu = "*"
+django-tagging = "*"
+django-tagging-autocomplete-new = "*"
 
 [requires]
 python_version = "3.6"
