@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'markdownx',
     'menu',
     'tagging',
-    'tagging_autocomplete_new'
+    'tagging_autocomplete_new',
+    'permissions'
 ]
 
 MARKDOWNX_MARKDOWN_EXTENSIONS = [
