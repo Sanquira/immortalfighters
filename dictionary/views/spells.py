@@ -92,11 +92,11 @@ def spell_edit(request, pk=None):
     
     ProfessionLimitationFormSet = modelformset_factory(ProfessionLimitation, form=ProfessionLimitationForm,
                                                        formset=BaseProfessionLimitationFormSet, min_num=1,
-                                                       validate_min=True, validate_max=True, can_delete=True)
+                                                       validate_min=True, validate_max=True, can_delete=True,extra=0)
     
     SpellDirectionFormSet = formset_factory(SpellDirectionForm, min_num=0, validate_min=True,
                                             validate_max=True, formset=BaseSpellDirectionFormSet,
-                                            can_delete=True, extra=0)
+                                            can_delete=True, extra=1)
     
     if request.POST:
         form_profs = ProfessionLimitationFormSet(request.POST, prefix="profs")

@@ -99,6 +99,8 @@ def initialize_spell_disciplines(apps, schema_editor):
     SpellDiscipline(name="Vitální magie", label="VI").save()
     SpellDiscipline(name="Psychická magie", label="PS").save()
     SpellDiscipline(name="Magie poznávání", label="PO").save()
+    
+    initialize_spell_directions(apps, schema_editor)
 
 
 def initialize_spell_directions(apps, schema_editor):
@@ -107,8 +109,10 @@ def initialize_spell_directions(apps, schema_editor):
         migrations.RunPython(spell.initialize_spell_directions)
     Dont forget to import.
     """
+    if SpellDirection.objects.count() != 0:
+        return
     if SpellDiscipline.objects.count() == 0:
-        initialize_spell_directions(apps, schema_editor)
+        initialize_spell_disciplines(apps, schema_editor)
     SpellDirection(name="Zrychlení toku času", discipline=SpellDiscipline.objects.filter(label="ČP")[0],
                    correct=-35).save()
     SpellDirection(name="Zpomalení toku času", discipline=SpellDiscipline.objects.filter(label="ČP")[0],

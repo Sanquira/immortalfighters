@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(race.initialize_races),
         migrations.RunPython(profession.init_professions),
-        migrations.RunPython(spell.initialize_spell_disciplines),
+        migrations.RunPython(spell.initialize_spell_directions),
         migrations.RunPython(skill.init_skills),
     ]

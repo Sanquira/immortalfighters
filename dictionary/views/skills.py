@@ -11,7 +11,7 @@ from dictionary.models.skill import Skill
 @login_required
 def skills(request):
     dummy_skill = Skill()
-    return render(request, 'skill_list.html', {'dummy_skill': dummy_skill})
+    return render(request, 'skills_list.html', {'dummy_skill': dummy_skill})
 
 
 def skills_table(request):
@@ -80,9 +80,9 @@ def skill_edit(request, pk=None):
             
             spell = form_skill.save()
             if is_adding:
-                messages.success(request, 'Nové kouzlo bylo uloženo.')
+                messages.success(request, 'Nová dovednost byla uložena.')
             else:
-                messages.success(request, "Kouzlo bylo úspěšně editováno")
+                messages.success(request, "Dovednost byla úspěšně editována")
             return redirect("dictionary:skills")
     
     context = dict()

@@ -65,8 +65,10 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
                 instance.delete()
 
 
-def get_direction_choices(self):
-    return [(obj.pk, obj.get_form_label()) for obj in SpellDirection.objects.all()],
+def get_direction_choices():
+    ret = [(obj.pk, obj.get_form_label()) for obj in SpellDirection.objects.all()]
+    ret.insert(0, (None, '----------'))
+    return ret
 
 
 class SpellDirectionForm(Form):

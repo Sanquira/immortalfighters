@@ -7,7 +7,7 @@
 {% block content %}
     <h1>{% if add %}Přidání kouzla{% else %}Změna kouzla{% endif %}</h1>
     <form action=
-                  {% if add %}{% url 'dictionary:spell_edit' %}{% else %}{% url 'dictionary:spell_edit' pk %}{% endif %} method=POST>
+                  {% if add %}{% url 'dictionary:spell_add' %}{% else %}{% url 'dictionary:spell_edit' pk %}{% endif %} method=POST>
         {% csrf_token %}
         <div class="container">
             {% for field in form_spell %}
@@ -15,6 +15,12 @@
                     <div class="col-3 ">{{ field.label }}</div>
                     <div class="col-9 ">{{ field }}</div>
                 </div>
+                {% if field.errors %}
+                    <div class="row margin-bottom">
+                        <div class="col-3 "></div>
+                        <div class="col-9 ">{{ field.errors }}</div>
+                    </div>
+                {% endif %}
             {% endfor %}
 
             {# Směry a obory magie #}

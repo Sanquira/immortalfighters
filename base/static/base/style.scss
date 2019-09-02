@@ -174,7 +174,10 @@ input[type=number] {
   border: 1px solid #990000;
   background-color: black;
   vertical-align: baseline;
-  width: 100%;
+
+  .menu-side {
+    width: 100%;
+  }
 }
 
 textarea {
