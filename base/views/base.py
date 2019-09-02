@@ -9,6 +9,8 @@ from base.models import *
 from base.models.character import Character
 from dictionary.models.profession import BaseProfession
 from dictionary.models.race import Race
+from permissions.models import TestModel
+from permissions.utils import AbstractPermissionSystem
 
 
 def index(request):
@@ -56,10 +58,10 @@ def registration(request):
             user = IFUser(email=form.cleaned_data['email'],
                           username=form.cleaned_data['nickname'])
             user.set_password(form.cleaned_data['password'])
-            # TODO THIS HAVE TO BE REMOVED
+            # TODO THIS HAS TO BE REMOVED
             user.is_staff = True
             user.is_superuser = True
-            # TODO THIS HAVE TO BE REMOVED
+            # TODO THIS HAS TO BE REMOVED
             user.save()
             login(request, user)
 

@@ -11,13 +11,13 @@ class Character(models.Model):
     race = models.ForeignKey(Race, on_delete=models.CASCADE, null=True, verbose_name="Rasa")
     profession = models.ForeignKey(BaseProfession, on_delete=models.CASCADE, null=True, verbose_name="Povolání")
     
-    # stat_strength = models.PositiveSmallIntegerField(default=0)
-    # stat_dexterity = models.PositiveSmallIntegerField(default=0)
-    # stat_resistance = models.PositiveSmallIntegerField(default=0)
-    # stat_intelligence = models.PositiveSmallIntegerField(default=0)
-    # stat_charisma = models.PositiveSmallIntegerField(default=0)
-    # experience_points = models.PositiveIntegerField(default=0)
-    # level = models.PositiveSmallIntegerField(default=0)
+    strength = models.PositiveSmallIntegerField(default=0, verbose_name="Síla")
+    dexterity = models.PositiveSmallIntegerField(default=0, verbose_name="Obratnost")
+    resistance = models.PositiveSmallIntegerField(default=0, verbose_name="Odolnost")
+    intelligence = models.PositiveSmallIntegerField(default=0, verbose_name="Inteligence")
+    charisma = models.PositiveSmallIntegerField(default=0, verbose_name="Charisma")
+    experience_points = models.PositiveIntegerField(default=0, verbose_name="Zkušenosti")
+    level = models.PositiveSmallIntegerField(default=0, verbose_name="Úroven")
     
     class Meta:
         verbose_name = "Postava"
