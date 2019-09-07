@@ -6,8 +6,8 @@ from django.forms import modelformset_factory, formset_factory
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
-from base.views import BaseProfession
 from dictionary.forms import SpellForm, ProfessionLimitationForm, SpellFormEdit, BaseProfessionLimitationFormSet, SpellDirectionForm, BaseSpellDirectionFormSet
+from dictionary.models.profession import BaseProfession
 from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.spell import Spell
 

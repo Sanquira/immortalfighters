@@ -104,7 +104,16 @@ SASS_OUTPUT_STYLE = 'compact'
 STATIC_ROOT = "immortalfighters/static/"
 SASS_PROCESSOR_ROOT = STATIC_ROOT
 
-WSGI_APPLICATION = 'immortalfighters.wsgi.application'
+ASGI_APPLICATION = "immortalfighters.routing.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis-server-name", 6379)],
+        },
+    },
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
