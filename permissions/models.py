@@ -1,3 +1,5 @@
+from typing import List
+
 from django.db import models
 
 # Create your models here.
@@ -9,13 +11,13 @@ class PermissionManager(models.Model):
     def list_groups(self):
         return self.groups.all()
 
-    def get_group_by_name(self, group_name):
-        return self.groups.filter(name=group_name)
+    def get_group_by_name(self, group_name: str) -> 'Group':
+        return self.groups.get(name=group_name)
 
-    def has_group(self, group_name):
+    def has_group(self, group_name: str) -> bool:
         return self.groups.filter(name=group_name).exists()
 
-    def create_group(self, group_name) -> 'Group':
+    def create_group(self, group_name: str) -> 'Group':
         if self.has_group(group_name):
             return self.get_group_by_name(group_name)
 
@@ -23,25 +25,31 @@ class PermissionManager(models.Model):
         group.save()
         return group
 
-    def get_permission(self, subject, permission):
-        return self.permissions.filter(permission=permission, subject=subject)[0]
+    def get_permission(self, subject: Character, permission: str) -> 'Permission':
+        return self.permissions.get(permission=permission, subject=subject)
 
-    def has_permission(self, subject, permission):
-        return self.permissions.filter(permission=permission, subject=subject).exists()
+    def has_permission(self, subject: Character, permission: str) -> bool:
+        if self.permissions.filter(permission=permission, subject=subject).exists():
+            return True
 
-    def list_permissions(self, subject):
+        for group in self.groups.all():
+            if group.contains_subject(subject) and group.has_permission(permission):
+                return True
+        return False
+
+    def list_permissions(self, subject: Character) -> List['Permission']:
         return [perm.permission for perm in self.permissions.filter(subject=subject)]
 
-    def add_permission(self, subject, permission):
+    def add_permission(self, subject: Character, permission: str):
         if self.has_permission(subject, permission):
-            pass
+            return
 
         perm = Permission(permission=permission, subject=subject, manager=self)
         perm.save()
 
-    def remove_permission(self, subject, permission):
+    def remove_permission(self, subject: Character, permission: str):
         if not self.has_permission(subject, permission):
-            pass
+            return
 
         self.get_permission(subject, permission).delete()
 
@@ -51,30 +59,36 @@ class Group(models.Model):
     manager = models.ForeignKey(PermissionManager, related_name="groups", on_delete=models.CASCADE)
     subjects = models.ManyToManyField(Character)
 
-    def get_permission(self, permission) -> 'GroupPermission':
-        return self.permissions.filter(permission=permission)[0]
+    def get_permission(self, permission: str) -> 'GroupPermission':
+        return self.permissions.get(permission=permission)
 
-    def has_permission(self, permission):
+    def has_permission(self, permission: str) -> bool:
         return self.permissions.filter(permission=permission).exists()
 
-    def list_permissions(self):
+    def list_permissions(self) -> List['GroupPermission']:
         return [perm.permission for perm in self.permissions.all()]
 
-    def add_permission(self, permission):
+    def add_permission(self, permission: str):
         if self.has_permission(permission):
-            pass
+            return
 
         perm = GroupPermission(permission=permission, group=self)
         perm.save()
 
-    def remove_permission(self, permission):
+    def remove_permission(self, permission: str):
         if not self.has_permission(permission):
-            pass
+            return
 
         self.get_permission(permission).delete()
 
-    def contains_subject(self, subject) -> bool:
-        return subject in self.subjects
+    def contains_subject(self, subject: Character) -> bool:
+        return subject in self.subjects.all()
+
+    def add_subject(self, subject: Character):
+        return self.subjects.add(subject)
+
+    def remove_subject(self, subject: Character):
+        return self.subjects.remove(subject)
 
     class Meta:
         unique_together = [['name', 'manager']]
@@ -100,29 +114,29 @@ class GroupPermission(models.Model):
 class CharacterPermissions(models.Model):
     manager = models.ForeignKey(PermissionManager, on_delete=models.CASCADE)
 
-    def list_groups(self):
+    def list_groups(self) -> List[Group]:
         return self.manager.list_groups()
 
-    def has_group(self, group_name):
-        return self.has_group(group_name)
+    def has_group(self, group_name: str) -> bool:
+        return self.manager.has_group(group_name)
 
-    def get_group_by_name(self, group_name):
-        return self.get_group_by_name(group_name)
+    def get_group_by_name(self, group_name: str) -> Group:
+        return self.manager.get_group_by_name(group_name)
 
-    def create_group(self, group_name):
-        return self.create_group(group_name)
+    def create_group(self, group_name: str) -> Group:
+        return self.manager.create_group(group_name)
 
-    def has_permission(self, subject, permission):
-        return self.has_permission(subject, permission)
+    def has_permission(self, subject: Character, permission: str) -> bool:
+        return self.manager.has_permission(subject, permission)
 
-    def list_permissions(self, subject):
-        return self.list_permissions(subject)
+    def list_permissions(self, subject: Character) -> List[Permission]:
+        return self.manager.list_permissions(subject)
 
-    def add_permission(self, subject, permission):
-        return self.add_permission(subject, permission)
+    def add_permission(self, subject: Character, permission: str):
+        return self.manager.add_permission(subject, permission)
 
-    def remove_permission(self, subject, permission):
-        return self.remove_permission(subject, permission)
+    def remove_permission(self, subject: Character, permission: str):
+        return self.manager.remove_permission(subject, permission)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         try:
