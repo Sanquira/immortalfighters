@@ -114,7 +114,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         for arg in args:
             if arg not in data:
                 return self.raise_error("Parameter %s is required for message of type %s" % (arg, data["type"]))
-            if data[args] == "":
+            if data[arg] == "":
                 return self.raise_error("Parameter %s must be not null for message of type %s" % (arg, data["type"]))
         return True
 
