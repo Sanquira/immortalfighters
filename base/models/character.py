@@ -10,7 +10,7 @@ class Character(models.Model):
     character_name = models.CharField(max_length=50, null=True, verbose_name="Jméno postavy")
     race = models.ForeignKey(Race, on_delete=models.CASCADE, null=True, verbose_name="Rasa")
     profession = models.ForeignKey(BaseProfession, on_delete=models.CASCADE, null=True, verbose_name="Povolání")
-    
+
     # stat_strength = models.PositiveSmallIntegerField(default=0)
     # stat_dexterity = models.PositiveSmallIntegerField(default=0)
     # stat_resistance = models.PositiveSmallIntegerField(default=0)
