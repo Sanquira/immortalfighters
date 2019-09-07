@@ -30,3 +30,16 @@ class BackgroundMiddleware:
         # the view is called.
 
         return self.get_response(request)
+
+
+class CharacterMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+        user = request.user
+        request.character = user.active_char
+
+        return self.get_response(request)
