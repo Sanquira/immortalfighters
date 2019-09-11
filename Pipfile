@@ -19,6 +19,8 @@ markdown-if = {editable = true,git = "https://Sanquira@bitbucket.org/Sanquira/ma
 django-simple-menu = "*"
 django-tagging = "*"
 django-tagging-autocomplete-new = "*"
+daphne = "*"
+twisted = {extras = ["http2", "tls"],version = "*"}
 
 [requires]
 python_version = "3.6"
