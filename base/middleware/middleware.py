@@ -40,6 +40,9 @@ class CharacterMiddleware:
         # Code to be executed for each request before
         # the view (and later middleware) are called.
         user = request.user
-        request.character = user.active_char
+
+        request.character = None
+        if isinstance(user, IFUser):
+            request.character = user.active_char
 
         return self.get_response(request)

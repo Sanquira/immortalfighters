@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'dictionary',
     'markdownx',
     'tagging',
-    'tagging_autocomplete_new',
     'channels',
     'chat',
     'menu',
