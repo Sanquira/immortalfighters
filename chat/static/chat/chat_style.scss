@@ -1,0 +1,21 @@
+
+.chat-container {
+  height: 100%;
+
+  #chat-log {
+    height: 60vh;
+    background: black;
+    overflow-y: scroll;
+    border: solid 1px #990000;
+    overflow-wrap: break-word;
+  }
+
+  p {
+    margin: 0;
+    font-weight: normal;
+  }
+
+  #chat-message-input{
+  }
+
+}

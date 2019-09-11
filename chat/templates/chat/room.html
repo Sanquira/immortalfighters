@@ -1,54 +1,55 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load sass_tags %}
 
 {% block title %}ChatRoom - {{ room_name }}{% endblock %}
 {% block extraHead %}
-    <script src="{% static 'base/js/chatClient.js' %}"></script>
-{% endblock %}
-{% block content %}
-    <textarea id="chat-log" cols="65" rows="20" readonly="true"></textarea><br/>
-    <input id="chat-message-input" type="text" size="65"/><br/>
-    <input id="chat-message-submit" type="button" value="Send"/>
+    <link rel="stylesheet" href="{% sass_src 'chat/chat_style.scss' %}">
+    <script src="{% static 'chat/js/chatClient.js' %}"></script>
+
     <script>
-        $( document ).ready(function() {
+        var d = new Date();
+        $(document).ready(function () {
             var roomName = {{ room_name_json }};
             var log = document.querySelector('#chat-log');
             var client = new ChatClient('ws://' + window.location.host +
                 '/ws/chat/' + roomName + '/');
 
-            client.onchatmessage = function(message, user) {
-                log.value += (user + ': ' + message + '\n');
+            client.onchatmessage = function (message, user) {
+                var scrollValue = log.scrollTop;
+                log.appendChild(createMessage(message, user, "red"));
+                {#log.value += (user + ': ' + message + '\n');#}
                 log.scrollTop = log.scrollHeight;
             };
 
-            client.onpm = function(message, user) {
+            client.onpm = function (message, user) {
                 log.value += ('[PRIVATE] ' + user + ': ' + message + '\n');
                 log.scrollTop = log.scrollHeight;
             };
 
-            client.onjoinchannel = function(user) {
+            client.onjoinchannel = function (user) {
                 log.value += (user + ' se připojil\n');
                 log.scrollTop = log.scrollHeight;
             };
 
-            client.onleavechannel = function(user) {
+            client.onleavechannel = function (user) {
                 log.value += (user + ' se odpojil\n');
                 log.scrollTop = log.scrollHeight;
             };
 
-            client.onerror = function(e) {
+            client.onerror = function (e) {
                 alert("Websocket error");
                 //window.location.href = '{% url "base:index" %}';
             };
 
             document.querySelector('#chat-message-input').focus();
-            document.querySelector('#chat-message-input').onkeyup = function(e) {
+            document.querySelector('#chat-message-input').onkeyup = function (e) {
                 if (e.keyCode === 13) {  // enter, return
                     document.querySelector('#chat-message-submit').click();
                 }
             };
 
-            document.querySelector('#chat-message-submit').onclick = function(e) {
+            document.querySelector('#chat-message-submit').onclick = function (e) {
                 var messageInputDom = document.querySelector('#chat-message-input');
                 var message = messageInputDom.value;
                 if (message) {
@@ -58,5 +59,29 @@
                 messageInputDom.value = '';
             };
         });
+
+        function createMessage(message, user, color) {
+            var para = document.createElement("P");
+            para.setAttribute("class", "chat-message");
+            para.style.color = color;
+            var user_span = document.createElement("STRONG");
+            var user_text = document.createTextNode(d.toLocaleTimeString() + " " + user);
+            user_span.appendChild(user_text);
+            var message_text = document.createTextNode(": " + message);
+            para.appendChild(user_span);
+            para.appendChild(message_text);
+            return para;
+        }
     </script>
+
+{% endblock %}
+{% block content %}
+    <div class="chat-container">
+        <div id="chat-log"></div>
+        <input id="chat-message-input" type="text" maxlength="128"/><br/>
+        <input id="chat-message-submit" type="button" value="Send"/>
+    </div>
+
+
+
 {% endblock %}
