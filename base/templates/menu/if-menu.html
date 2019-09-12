@@ -1,7 +1,11 @@
 {% for item in menu %}
     {% if item.visible %}
         <tr>
-            <td><a href="{{ item.url }}">{{ item.title }}</a></td>
+            {% if item.slug == "newpage" %}
+                <td><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></td>
+            {% else %}
+                <td><a href="{{ item.url }}">{{ item.title }}</a></td>
+            {% endif %}
         </tr>
     {% endif %}
 {% endfor %}

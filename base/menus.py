@@ -3,9 +3,11 @@ from menu import MenuItem, Menu
 
 # Menu IF
 Menu.add_item("main", MenuItem("F.A.Q",
-                               reverse("base:index")))
-Menu.add_item("main", MenuItem("Pomoc",
-                               reverse("base:index")))
+                               "https://immortalfighters.fandom.com/cs/wiki/FAQ",
+                               slug="newpage"))
+Menu.add_item("main", MenuItem("IF Wiki",
+                               "https://immortalfighters.fandom.com/cs/wiki/Immortalfighters_Wikia",
+                               slug="newpage"))
 Menu.add_item("main", MenuItem("Web",
                                reverse("base:index")))
 Menu.add_item("main", MenuItem("Sestava",

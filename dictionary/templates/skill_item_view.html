@@ -20,19 +20,19 @@
             </div>
             <div class="row ">
                 <div class="col-3 ">{% get_verbose_field_name skill 'success_total' %}:</div>
-                <div class="col-9 ">{{ skill.success_total|show_markdown|safe }}</div>
+                <div class="col-9 ">{{ skill.success_total|show_markdown }}</div>
             </div>
             <div class="row ">
                 <div class="col-3 ">{% get_verbose_field_name skill 'success' %}:</div>
-                <div class="col-9 ">{{ skill.success|show_markdown|safe }}</div>
+                <div class="col-9 ">{{ skill.success|show_markdown }}</div>
             </div>
             <div class="row ">
                 <div class="col-3 ">{% get_verbose_field_name skill 'failure' %}:</div>
-                <div class="col-9 ">{{ skill.failure|show_markdown|safe }}</div>
+                <div class="col-9 ">{{ skill.failure|show_markdown }}</div>
             </div>
             <div class="row ">
                 <div class="col-3 ">{% get_verbose_field_name skill 'failure_total' %}:</div>
-                <div class="col-9 ">{{ skill.failure_total|show_markdown|safe }}</div>
+                <div class="col-9 ">{{ skill.failure_total|show_markdown }}</div>
             </div>
         </div>
     </div>
