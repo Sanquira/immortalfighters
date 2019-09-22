@@ -1,0 +1,13 @@
+image: python:3.7.3
+
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Django PyTest
+          caches: # Marks what will be in cache so it is not downloaded again.
+            - pip
+          script: # Modify the commands below to build your repository.
+            - pip install pipenv # Install all dependencies.
+            - pipenv update --dev
+            - pipenv run pytest --ds=immortalfighters.settings --junitxml=./test-reports/coverage.xml # Executes the tests 
