@@ -22,10 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '8yglz-x=_6ux+ffp!)3$#u$j2iijk(9+&k&e(h1&=p5-=ih%fq'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -166,5 +162,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/login_required/'
-
-from .settings_local import *

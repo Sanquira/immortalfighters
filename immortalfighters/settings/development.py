@@ -1,4 +1,9 @@
-from .settings import *
+"""
+Development settings
+Don't require specific configuration, are set as default ones
+"""
+# pylint: disable=wildcard-import,unused-wildcard-import
+from .base import *
 
 DEBUG = True
 
