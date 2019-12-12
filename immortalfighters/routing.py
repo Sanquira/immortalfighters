@@ -1,10 +1,15 @@
+"""
+ASGI config for immortalfighters project.
 
-from .wsgi import *
+It exposes the ASGI callable as a module-level variable named ``application``.
+"""
+
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 
 import chat.routing
 
+# pylint: disable=invalid-name
 application = ProtocolTypeRouter({
     'websocket': AuthMiddlewareStack(
         URLRouter(
