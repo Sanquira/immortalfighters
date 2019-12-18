@@ -1,53 +1,49 @@
+"""Form classes for Spell entity"""
 from django import forms
 from django.db import transaction
 from django.forms import ModelForm, BaseModelFormSet, Form, BaseFormSet, ChoiceField
 
-from dictionary.models.profession import BaseProfession
-from dictionary.models.profession_limitation import ProfessionLimitation
-from dictionary.models.skill import Skill
-from dictionary.models.spell import Spell, SpellDirection
+from dictionary.models.spell import Spell, SpellDirection, ProfessionLimitation
 
 
-# Spells
-class SpellFormEdit(ModelForm):
+class SpellForm(ModelForm):
+    """Form for basic Spell entity"""
+    
     class Meta:
         model = Spell
-        exclude = ('directions', 'available_for_professions',)
-
-
-class SpellForm(SpellFormEdit):
-    def clean_name(self):
-        clname = self.cleaned_data.get('name')
-        if Spell.objects.filter(name=clname).exists():
-            raise forms.ValidationError('Kouzlo s tímto jménem už existuje.')
-        return clname
+        fields = ('name',
+                  'mana',
+                  'range',
+                  'scope',
+                  'cast_time',
+                  'duration',
+                  'note',
+                  )
 
 
 class ProfessionLimitationForm(ModelForm):
-    profession = forms.ModelChoiceField(required=True, queryset=BaseProfession.objects.all(), label="Povolání")
+    """Form for ProfessionLimitation in Spell"""
     
     class Meta:
         model = ProfessionLimitation
-        exclude = ('spell',)
-    
-    def clean_profession(self):
-        data = self.cleaned_data['profession']
-        
-        return data
+        fields = ('profession',
+                  'from_level',
+                  )
 
 
 class BaseProfessionLimitationFormSet(BaseModelFormSet):
+    """Formset of ProfessionLimitation in Spell"""
+    
     def clean(self):
         if any(self.errors):
             return
         profs = []
         for form in self.forms:
-            if self.can_delete and self._should_delete_form(form):
+            if self._should_delete_form(form):
                 continue
             
             if form.cleaned_data and 'profession' in form.cleaned_data:
                 prof = form.cleaned_data['profession']
-                # TODO from_level empty, non-number value check??
                 if prof in profs:
                     raise forms.ValidationError(
                         'Duplicita povolání není povolena.',
@@ -56,6 +52,7 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
                 profs.append(prof)
     
     def save_all(self, spell):
+        """Saves formset. It has to be valid."""
         with transaction.atomic():
             instances = self.save(commit=False)
             for instance in instances:
@@ -66,35 +63,41 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
 
 
 def get_direction_choices():
+    """Return choices for Directions"""
     ret = [(obj.pk, obj.get_form_label()) for obj in SpellDirection.objects.all()]
     ret.insert(0, (None, '----------'))
     return ret
 
 
 class SpellDirectionForm(Form):
-    direction = ChoiceField(required=False, label="Směr magie", choices=get_direction_choices)
+    """Form for Direction in Spell"""
+    direction = ChoiceField(required=False,
+                            label=Spell._meta.get_field('directions').related_model._meta.verbose_name,
+                            choices=get_direction_choices)
 
 
 class BaseSpellDirectionFormSet(BaseFormSet):
+    """Formset of Direction in Spell"""
     
     def clean(self):
         if any(self.errors):
             return
-        dirs = []
+        frms = []
         for form in self.forms:
             if self._should_delete_form(form):
                 continue
             
             if form.cleaned_data and 'direction' in form.cleaned_data:
-                dir = form.cleaned_data['direction']
-                if dir in dirs:
+                frm = form.cleaned_data['direction']
+                if frm in frms:
                     raise forms.ValidationError(
                         'Duplicita směrů není povolena.',
                         code='duplicate_direction'
                     )
-                dirs.append(dir)
+                frms.append(frm)
     
     def save_all(self, spell):
+        """Saves formset. It has to be valid."""
         if not self.has_changed():
             return
         with transaction.atomic():
@@ -102,23 +105,7 @@ class BaseSpellDirectionFormSet(BaseFormSet):
             for form in self.forms:
                 if 'direction' not in form.cleaned_data:
                     continue
-                if form.cleaned_data['DELETE'] == True:
+                if form.cleaned_data['DELETE']:
                     continue
-                dir = SpellDirection.objects.get(pk=form.cleaned_data['direction'])
-                spell.directions.add(dir)
-    
-    # Skills
-
-
-class SkillFormEdit(ModelForm):
-    class Meta:
-        model = Skill
-        fields = '__all__'
-
-
-class SkillForm(SkillFormEdit):
-    def clean_name(self):
-        clname = self.cleaned_data.get('name')
-        if Skill.objects.filter(name=clname).exists():
-            raise forms.ValidationError('Dovednost s tímto jménem už existuje.')
-        return clname
+                drc = SpellDirection.objects.get(pk=form.cleaned_data['direction'])
+                spell.directions.add(drc)

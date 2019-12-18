@@ -1,0 +1,66 @@
+{% load static %}{% load markdown %}
+
+<h1>
+    {% if pk %}
+        Změna kouzla
+    {% else %}
+        Přidání kouzla
+    {% endif %}
+</h1>
+<form action=
+              {% if pk %}
+                  {% url 'dictionary:spell_edit' pk %}
+              {% else %}
+                  {% url 'dictionary:spell_edit' %}
+              {% endif %}
+              method=POST>
+    {% csrf_token %}
+    <div class="container">
+        {% for field in form_item %}
+            <div class="row margin-bottom">
+                <div class="col-3 ">{{ field.label }}</div>
+                <div class="col-9 ">{{ field }}</div>
+            </div>
+            {% if field.errors %}
+                <div class="row margin-bottom">
+                    <div class="col-3 "></div>
+                    <div class="col-9 ">{{ field.errors }}</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% for key, formset in formset_dict.items %}
+            {% if formset.title %}
+                <div class="row margin-bottom col-12">{{ formset.title }}:</div>
+            {% endif %}
+            {{ formset.management_form }}
+            {% for form in formset %}
+                <div class="row margin-bottom {{ formset.prefix }} col-12">
+                    {{ form }}
+                </div>
+            {% endfor %}
+            {% if formset.non_form_errors %}
+                {% for error in formset.non_form_errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+            {% if not forloop.last %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+        <div class="clearfix">
+            <div class="align-right"><input alt="Send" type="image" src={% static 'base/forms/send.png' %}></div>
+        </div>
+    </div>
+</form>
+<script>
+    {% for key,formset in formset_dict.items %}
+        $('.{{ formset.prefix }}').formset({
+            addText: 'Přidej',
+            deleteText: 'Smaž',
+            prefix: '{{ formset.prefix }}',
+            formCssClass: 'dynamic-{{ formset.prefix }}'
+        });
+    {% endfor %}
+</script>
+{{ form_item.media }}

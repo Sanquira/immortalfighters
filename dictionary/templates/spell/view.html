@@ -1,0 +1,55 @@
+{% load bootstrap4 %}{% load static %}{% load markdown %}{% load verbose_names %}
+
+<div class="item-div">
+    <h3>{{ item.name }}</h3>
+    <div class="row ">
+        <div class="col-3 ">{% get_verbose_field_name item 'mana' %}:</div>
+        <div class="col-9 ">{{ item.mana }}</div>
+    </div>
+    <div class="row ">
+        <div class="col-3 ">{% get_verbose_field_name item 'range' %}:</div>
+        <div class="col-9 ">{{ item.range }}</div>
+    </div>
+    <div class="row ">
+        <div class="col-3 ">{% get_verbose_field_name item 'scope' %}:</div>
+        <div class="col-9 ">{{ item.scope }}</div>
+    </div>
+    <div class="row ">
+        <div class="col-3 ">{% get_verbose_field_name item 'cast_time' %}:</div>
+        <div class="col-9 ">{{ item.cast_time }}</div>
+    </div>
+    <div class="row ">
+        <div class="col-3 ">{% get_verbose_field_name item 'duration' %}:</div>
+        <div class="col-9 ">{{ item.duration }}</div>
+    </div>
+    <div class="row ">
+        <div class="col-3 ">{% get_verbose_field_name item 'note' %}:</div>
+        <div class="col-9 ">{{ item.note|show_markdown|safe }}</div>
+    </div>
+    {% if dirs %}
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'directions' %}:</div>
+            <div class="col-9 row inline">
+                {% for disc, ds in dirs.items %}
+                    <div class="col-6 " style="padding: 0">{{ disc }}</div>
+                    <div class="col-6 " style="padding: 0">
+                        {% for d in ds %}
+                            <p class="inline">{{ d }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    {% if profs %}
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'available_for_professions' %}:</div>
+            <div class="col-9 ">
+                {% for pl in profs %}
+                    <p class="inline">{{ pl.profession }} ({{ pl.from_level }}+)</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{{ form_item.media }}

@@ -1,0 +1,12 @@
+{% load static %}
+
+
+<link rel="stylesheet" type="text/css" href={% static "tooltipster/css/tooltipster.bundle.min.css" %}/>
+<script type="text/javascript" src={% static "tooltipster/js/tooltipster.bundle.min.js" %}></script>
+<script>
+    $(document).ready(function () {
+        $('.mytooltip').tooltipster({
+            contentCloning: true
+        });
+    });
+</script>

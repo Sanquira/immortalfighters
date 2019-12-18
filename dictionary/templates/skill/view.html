@@ -1,0 +1,39 @@
+{% load bootstrap4 %}{% load static %}{% load markdown %}{% load verbose_names %}
+
+<div class="item-div">
+    <div class="container">
+        <h3>{{ item.name }}</h3>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'stat' %}:</div>
+            <div class="col-9 ">{{ item.stat }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'difficulty' %}:</div>
+            <div class="col-9 ">{{ item.difficulty }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'duration' %}:</div>
+            <div class="col-9 ">{{ item.duration }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'success_total' %}:</div>
+            <div class="col-9 ">{{ item.success_total|show_markdown|safe }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'success' %}:</div>
+            <div class="col-9 ">{{ item.success|show_markdown|safe }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'failure' %}:</div>
+            <div class="col-9 ">{{ item.failure|show_markdown|safe }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'failure_total' %}:</div>
+            <div class="col-9 ">{{ item.failure_total|show_markdown|safe }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'note' %}:</div>
+            <div class="col-9 ">{{ item.note|show_markdown|safe }}</div>
+        </div>
+    </div>
+</div>
