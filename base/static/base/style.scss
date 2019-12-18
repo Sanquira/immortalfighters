@@ -174,8 +174,11 @@ input[type=number] {
   border: 1px solid #990000;
   background-color: black;
   vertical-align: baseline;
+}
 
-  .menu-side {
+.menu-side {
+  input[type=password],
+  input[type=text] {
     width: 100%;
   }
 }
@@ -228,7 +231,7 @@ label {
   float: right;
 }
 
-.spell_div {
+.item-div {
   border: 20px solid transparent;
   border-image-source: url($spell_bg);
   border-image-repeat: stretch;
@@ -242,7 +245,29 @@ label {
     margin-bottom: 20px;
   }
 
+  h4 {
+    text-align: center;
+    font-family: boecklins-universe, sans-serif;
+    font-size: 12pt;
+  }
+
   .row {
     margin: 0 0 10px;
   }
+
+  .inline {
+    margin-bottom: 0;
+  }
+}
+
+.tooltip-content {
+  display: none;
+}
+
+.mytooltip {
+  border-bottom: black dotted 1px;
+}
+
+hr {
+  border-color: #990000;
 }
