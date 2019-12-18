@@ -1,11 +1,14 @@
+"""Module for Profession entity and corresponding objects."""
 from django.db import models
 from polymorphic.models import PolymorphicModel
 
 
+# pylint: disable=too-many-instance-attributes
 class BaseProfession(PolymorphicModel):
+    """Model for Profession"""
     name = models.CharField(max_length=50, null=False, default="Název povolání", verbose_name="Název povolání")
-    parentProf = models.ForeignKey('BaseProfession', on_delete=models.CASCADE, null=True, blank=True,
-                                   verbose_name="Vychází z povolání")
+    parent_prof = models.ForeignKey('BaseProfession', on_delete=models.CASCADE, null=True, blank=True,
+                                    verbose_name="Vychází z povolání")
     str_min = models.SmallIntegerField(default=0, verbose_name="Síla minimum")
     str_max = models.SmallIntegerField(default=0, verbose_name="Síla maximum")
     dex_min = models.SmallIntegerField(default=0, verbose_name="Obratnost minimum")
@@ -20,7 +23,7 @@ class BaseProfession(PolymorphicModel):
     hp_dice = models.SmallIntegerField(default=0, verbose_name="Kostka na životy")
     hp_dice_fix = models.SmallIntegerField(default=0, verbose_name="Oprava kostky na životy")
     hp_9 = models.SmallIntegerField(default=0, verbose_name="Životy od 9 úrovně")
-
+    
     # def get_level_from_xp(self, xp: int) -> int:
     #     pass
     #
@@ -29,25 +32,31 @@ class BaseProfession(PolymorphicModel):
     #
     # def get_level_price(self, level: int) -> int:
     #     pass
-
+    
     def get_hp(self) -> int:
+        """Returns initial HP."""
         return self.hp_start
-
+    
     def get_hp_dice(self) -> int:
+        """Returns what dice use to HP generation."""
         return self.hp_dice
-
+    
     def get_dice_fix(self) -> int:
+        """Returns dice fix for HP generation."""
         return self.hp_dice_fix
-
+    
     def get_hp_9(self) -> int:
+        """Returns HP add after lvl 9."""
         return self.hp_9
-
+    
+    # pylint: disable=too-many-locals,too-many-arguments
     def profession_factory(self, name: str, parent_prof: 'BaseProfession', str_min=0, str_max=0, dex_min=0, dex_max=0,
                            res_min=0, res_max=0, int_min=0, int_max=0, cha_min=0, cha_max=0, hp_start=0, hp_dice=0,
                            hp_dice_fix=0, hp_9=0):
+        """Factory for Profession"""
         self.name = name
         if parent_prof is not None:
-            self.parentProf = parent_prof
+            self.parent_prof = parent_prof
             self.str_min = parent_prof.str_min
             self.str_max = parent_prof.str_max
             self.dex_min = parent_prof.dex_min
@@ -77,44 +86,47 @@ class BaseProfession(PolymorphicModel):
             self.hp_dice = hp_dice
             self.hp_dice_fix = hp_dice_fix
             self.hp_9 = hp_9
-
+    
     def __str__(self):
         return self.name
-
+    
     class Meta:
         verbose_name = "Povolání"
         verbose_name_plural = verbose_name
 
 
 class XPLevel(models.Model):
+    """Model for XPLevel."""
     profession = models.ForeignKey(BaseProfession, on_delete=models.CASCADE)
     level = models.SmallIntegerField(default=0, verbose_name="Úroveň")
     xp_needed = models.IntegerField(default=0, verbose_name="Zkušenosti")
     money_needed = models.IntegerField(default=0, verbose_name="Cena")
-
-    def xp_level_factory(self, prof: BaseProfession, level: int, xp: int, money: int):
+    
+    def xp_level_factory(self, prof: BaseProfession, level: int, xp_needed: int, money: int):
+        """Factory for XPLevel init."""
         self.profession = prof
         self.level = level
-        self.xp_needed = xp
+        self.xp_needed = xp_needed
         self.money_needed = money
-
+    
     def __str__(self):
         return self.profession.name + "_" + str(self.level)
-
+    
     class Meta:
         verbose_name = "Úroveň"
         verbose_name_plural = "Úrovně"
 
 
-class MagicUser(models.Model):
+# class MagicUser(models.Model):
+#
+#     def get_mana(self):
+#         pass
+#
+#     class Meta:
+#         abstract = True
 
-    def get_mana(self):
-        pass
 
-    class Meta:
-        abstract = True
-
-
+# pylint: disable=unused-argument,too-many-statements,too-many-locals
 def init_professions(apps, schema_editor):
     """To init professions, just call this method in migration.
         Like this:

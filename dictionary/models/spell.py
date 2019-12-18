@@ -1,3 +1,4 @@
+"""Module for Spell entity and corresponding objects."""
 from django.db import models
 from markdownx.models import MarkdownxField
 
@@ -5,6 +6,7 @@ from dictionary.models.profession import BaseProfession
 
 
 class SpellDiscipline(models.Model):
+    """Model for Spell discipline."""
     name = models.CharField(max_length=64, null=False, default="Nový obor magie", verbose_name="Obor magie")
     label = models.CharField(max_length=4, null=False, default="NO", verbose_name="Zkratka")
     
@@ -17,11 +19,13 @@ class SpellDiscipline(models.Model):
 
 
 class SpellDirection(models.Model):
+    """Model for Spell direction."""
     discipline = models.ForeignKey(SpellDiscipline, on_delete=models.CASCADE, verbose_name="Obor magie")
     name = models.CharField(max_length=64, null=False, default="Nový směr magie", verbose_name="Směr magie")
     correct = models.SmallIntegerField(default=0, verbose_name="Oprava")
     
     def get_form_label(self):
+        """Returns string concatenated from name of direction and name of discipline."""
         return self.name + " (" + self.discipline.name + ")"
     
     def __str__(self):
@@ -33,7 +37,9 @@ class SpellDirection(models.Model):
 
 
 class Spell(models.Model):
-    name = models.CharField(max_length=128, null=False, default="Nové kouzlo", verbose_name="Jméno kouzla")
+    """Model for Spell."""
+    name = models.CharField(max_length=128, null=False, unique=True,
+                            default="Nové kouzlo", verbose_name="Jméno kouzla")
     mana = models.CharField(max_length=128, null=True, verbose_name="Mana")
     range = models.CharField(max_length=128, null=True, verbose_name="Dosah")
     scope = models.CharField(max_length=128, null=True, verbose_name="Rozsah")
@@ -43,39 +49,39 @@ class Spell(models.Model):
     directions = models.ManyToManyField(SpellDirection, verbose_name="Obory magie")
     
     available_for_professions = models.ManyToManyField(BaseProfession, through='ProfessionLimitation',
-                                                       verbose_name="Pro povolání")
+                                                       verbose_name="Povolání")
     
     def get_directions_str(self):
+        """Returns string concatenated from all Spell directions."""
         return ", ".join(d.__str__() for d in self.directions.all())
     
     def get_disciplines(self):
+        """Returns disciplines on Spell."""
         discs = []
-        for d in self.directions.all():
-            if d.discipline not in discs:
-                discs.append(d.discipline)
+        for disc in self.directions.all():
+            if disc.discipline not in discs:
+                discs.append(disc.discipline)
         return discs
     
     def get_directions_grouped(self):
+        """Group directions on Spell by disciplines."""
         discs = {}
-        for d in self.directions.all():
-            if d.discipline not in discs:
-                discs[d.discipline] = list()
-            discs[d.discipline].append(d)
+        for dirc in self.directions.all():
+            if dirc.discipline not in discs:
+                discs[dirc.discipline] = list()
+            discs[dirc.discipline].append(dirc)
         return discs
     
     def get_disciplines_str(self):
+        """Returns string concatenated from all Spell disciplines."""
         return ", ".join(p.name for p in self.get_disciplines())
-    
-    # @staticmethod
-    # def get_spells_for_discipline(disc: 'SpellDiscipline'):
-    #     return Spell.objects.filter(discipline=disc)
     
     @staticmethod
     def get_spells_for_profession(prof: 'BaseProfession' = None):
+        """Returns Spells which are available for profession."""
         if prof:
             return Spell.objects.filter(available_for_professions=prof)
-        else:
-            return Spell.objects.filter(available_for_professions=None)
+        return Spell.objects.filter(available_for_professions=None)
     
     def __str__(self):
         return self.name
@@ -83,6 +89,20 @@ class Spell(models.Model):
     class Meta:
         verbose_name = "Kouzlo"
         verbose_name_plural = "Kouzla"
+
+
+class ProfessionLimitation(models.Model):
+    """Model for Spell profession limitation."""
+    spell = models.ForeignKey(Spell, on_delete=models.CASCADE, verbose_name="Kouzlo")
+    profession = models.ForeignKey(BaseProfession, on_delete=models.CASCADE, verbose_name="Povolání")
+    from_level = models.PositiveSmallIntegerField(default=1, verbose_name="Od úrovně")
+    
+    def __str__(self):
+        return self.profession.name + " - " + self.spell.name
+    
+    class Meta:
+        verbose_name = "Povolání - kouzlo omezení"
+        verbose_name_plural = verbose_name
 
 
 def initialize_spell_disciplines(apps, schema_editor):
@@ -103,6 +123,7 @@ def initialize_spell_disciplines(apps, schema_editor):
     initialize_spell_directions(apps, schema_editor)
 
 
+# pylint: disable=too-many-statements
 def initialize_spell_directions(apps, schema_editor):
     """To init spell directions, just call this method in migration.
     Like this:
