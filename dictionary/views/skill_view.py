@@ -1,4 +1,4 @@
-"""Implementation of GenenericView for Skill entity"""
+"""Implementation of GenericView for Skill entity"""
 from django.db.models import Count
 from django.shortcuts import redirect
 
@@ -8,7 +8,7 @@ from dictionary.views.generic_view import GenericView
 
 
 class SkillView(GenericView):
-    """Implementation of GenenericView for Skill entity"""
+    """Implementation of GenericView for Skill entity"""
     
     def __init__(self):
         super().__init__(Skill, SkillForm, 'skill/view.html', 'skill/edit.html')

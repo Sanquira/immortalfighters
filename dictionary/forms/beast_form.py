@@ -43,7 +43,7 @@ class WeaknessForm(Form):
 
 
 class BaseWeaknessFormSet(BaseFormSet):
-    """Formset of Weakness in Beast"""
+    """Formset of WeaknessForm"""
     
     def clean(self):
         if any(self.errors):
@@ -86,7 +86,7 @@ class AttackForm(ModelForm):
 
 
 class BaseAttackFormSet(BaseModelFormSet):
-    """Formset of Attack in Beast"""
+    """Formset of AttackForm"""
     
     def save_all(self, beast):
         """Saves formset. It has to be valid."""
@@ -108,7 +108,7 @@ class MobilityForm(ModelForm):
 
 
 class BaseMobilityFormSet(BaseModelFormSet):
-    """Formset of Mobility in Beast"""
+    """Formset of MobilityForm"""
     
     def save_all(self, beast):
         """Saves formset. It has to be valid."""

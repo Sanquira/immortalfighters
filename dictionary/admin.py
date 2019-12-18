@@ -12,7 +12,7 @@ from dictionary.models.race import Race
 from dictionary.models.sizes import CreatureSize
 from dictionary.models.skill import Skill, SkillPoints
 from dictionary.models.spell import Spell, SpellDiscipline, SpellDirection, ProfessionLimitation
-from immortalfighters.settings import DEBUG
+from django.conf import settings
 
 
 # pylint: disable=all
@@ -208,7 +208,7 @@ class SkillAdmin(ImportExportModelAdmin):
     ordering = ('name', 'stat',)
 
 
-if DEBUG:
+if settings.DEBUG:
     admin.site.register(BeastMobility, MobilityAdmin)
     admin.site.register(BeastAttack, AttackAdmin)
     admin.site.register(BeastCategory, CategoryAdmin)

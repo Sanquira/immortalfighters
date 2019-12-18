@@ -1,4 +1,4 @@
-"""Implementation of GenenericView for Spell entity"""
+"""Implementation of GenericView for Spell entity"""
 from django.db.models import Count, Q
 from django.forms import modelformset_factory, formset_factory
 from django.shortcuts import redirect
@@ -11,7 +11,7 @@ from dictionary.views.generic_view import GenericView
 
 
 class SpellView(GenericView):
-    """Implementation of GenenericView for Spell entity"""
+    """Implementation of GenericView for Spell entity"""
     ProfessionLimitationFormSet = modelformset_factory(ProfessionLimitation, form=ProfessionLimitationForm,
                                                        formset=BaseProfessionLimitationFormSet, min_num=1,
                                                        validate_min=True, validate_max=True, can_delete=True, extra=1)

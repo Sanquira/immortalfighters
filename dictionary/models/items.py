@@ -1,3 +1,4 @@
+"""Module for Item entity and corresponding objects."""
 from django.db import models
 from polymorphic.models import PolymorphicModel
 
