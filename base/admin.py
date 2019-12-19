@@ -4,8 +4,8 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from base.models import IFUser
 from base.models.character import Character
+from base.models.ifuser import IFUser
 from base.models.profession import BaseProfession, XPLevel
 from base.models.race import Race
 from base.models.sizes import CreatureSize

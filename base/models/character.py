@@ -1,6 +1,6 @@
 from django.db import models
 
-from base.models import IFUser
+from base.models.ifuser import IFUser
 from base.models.profession import BaseProfession
 from base.models.race import Race
 

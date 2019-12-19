@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'bootstrap4',
     'sass_processor',
+    'utils',
     'base',
     'dictionary',
     'markdownx',

@@ -10,4 +10,6 @@ urlpatterns = [
     path('login_required/', views.login_required, name='login_required'),
     path('site_rules/', views.site_rules, name='site_rules'),
     path('statistics/', views.statistics, name='statistics'),
+    
+    path('user_change_color/', views.user_change_color, name='change_color'),
 ]
