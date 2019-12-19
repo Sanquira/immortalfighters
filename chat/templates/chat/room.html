@@ -1,45 +1,130 @@
-{% extends 'base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 {% load sass_tags %}
 
-{% block title %}ChatRoom - {{ room_name }}{% endblock %}
-{% block extraHead %}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>ImmortalFighters - Hospůdka - {{ room_name }}</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous">
+    </script>
+    <script src={% static 'utils/js/bootstrap-show-modal.js' %}></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"
+            integrity="sha256-CJWfUCeP3jLdUMVNUll6yQx37gh9AKmXTRxvRf7jzro="
+            crossorigin="anonymous">
+    </script>
+
+    <link rel="stylesheet" href="{% sass_src 'base/style.scss' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'base/favicon.ico' %}"/>
+
     <link rel="stylesheet" href="{% sass_src 'chat/chat_style.scss' %}">
     <script src="{% static 'chat/js/chatClient.js' %}"></script>
 
     <script>
-        var d = new Date();
+        MAX_CLIENT_MESSAGES = 500;
+        let userList = {};
+        let my_user;
+        let roomName = {{ room_name_json }};
+        let logEle, usersEle;
+        let bartender = {name: "Hospodský", color: "#A57542"};
+
+        let audio_enabled = true;
+        let audio_join = new Audio("{% static 'chat/sounds/in64.mp3' %}");
+        let audio_left = new Audio("{% static 'chat/sounds/out64.mp3' %}");
+        let audio_msg = new Audio("{% static 'chat/sounds/public_message96.mp3' %}");
+        audio_msg.volume = 0.5;
         $(document).ready(function () {
-            var roomName = {{ room_name_json }};
-            var log = document.querySelector('#chat-log');
-            var client = new ChatClient('ws://' + window.location.host +
+            logEle = document.querySelector('#chat-log');
+            usersEle = document.querySelector('#chat-users');
+            const client = new ChatClient('ws://' + window.location.host +
                 '/ws/chat/' + roomName + '/');
 
-            client.onchatmessage = function (message, user) {
-                var scrollValue = log.scrollTop;
-                log.appendChild(createMessage(message, user, "red"));
-                {#log.value += (user + ': ' + message + '\n');#}
-                log.scrollTop = log.scrollHeight;
+            /**
+             * Called when new message received.
+             * @param user - string name of user
+             * @param time - time in seconds
+             * @param message
+             */
+            client.onChatMessage = function ({user, time, message}) {
+                publishMessage(logEle, createMessage(message, user, time * 1000, userList[user].color));
+                userList[user].messageRef.nodeValue = new Date(time * 1000).toLocaleTimeString();
+                if (audio_enabled)
+                    audio_msg.play()
             };
 
-            client.onpm = function (message, user) {
-                log.value += ('[PRIVATE] ' + user + ': ' + message + '\n');
-                log.scrollTop = log.scrollHeight;
+            /**
+             * Called when new private message received.
+             * @param target_user - string name of user
+             * @param user - string name of user
+             * @param time - time in seconds
+             * @param message
+             */
+            client.onPrivateMessage = function ({target_user, user, time, message}) {
+                publishMessage(logEle, createPrivateMessage(message, user, target_user, time * 1000, userList[user].color));
+                userList[user].messageRef.nodeValue = new Date(time * 1000).toLocaleTimeString();
+                if (audio_enabled)
+                    audio_msg.play()
             };
 
-            client.onjoinchannel = function (user) {
-                log.value += (user + ' se připojil\n');
-                log.scrollTop = log.scrollHeight;
+            /**
+             * Called when user joined the channel.
+             * Called even on your user.
+             * @param user - {name:str, color:str}
+             * @param time - time in seconds
+             */
+            client.onUserJoinChannel = function ({user, time}) {
+                publishMessage(logEle, createMessage(user.name + " vstupuje do hospody.", bartender.name, time * 1000, bartender.color));
+                createUsersEntry(user, time * 1000);
+                if (audio_enabled)
+                    audio_join.play()
             };
 
-            client.onleavechannel = function (user) {
-                log.value += (user + ' se odpojil\n');
-                log.scrollTop = log.scrollHeight;
+            /**
+             * Called when user leaves channel.
+             * @param user - string name of user
+             * @param time - time in seconds
+             */
+            client.onUserLeaveChannel = function ({user, time}) {
+                publishMessage(logEle, createMessage(user + " se potácí pryč.", bartender.name, time * 1000, bartender.color));
+                removeUsersEntry(user);
+                if (audio_enabled)
+                    audio_left.play()
             };
 
-            client.onerror = function (e) {
-                alert("Websocket error");
-                //window.location.href = '{% url "base:index" %}';
+            /**
+             * Called when error occurs. See chatClient for details.
+             * @param e - error object
+             */
+            client.onErrorMessage = function (e) {
+                console.debug(e);
+                if (e.error_type === "user_already_connected") {
+                    handleError("Pozor zlý klon!", "Někdo s tvým ksichtem už v hospodě popíjí. Vejít teď by bylo vážně divné.");
+                } else if (e.error_type === "websocket_closed") {
+                    handleError("Hospoda zavírá!", "Hospoda je zavřená, nebo možná tlačíš, když máš táhnout. Takže táhni.");
+                } else if (e.error_type === "invalid_message") {
+                    handleError("Cože?", "V hospodě je takový hluk, že ti není rozumět, nebo je to tím, že meleš kraviny?");
+                } else {
+                    handleError("Něco je špatně.", string(e));
+                }
+            };
+
+            /**
+             * Calls first when you join the room.
+             * @param user - Your user
+             * @param time - When you joined (ms)
+             * @param users - All users in room ({name:str, color:str})
+             */
+            client.onJoinChannel = function ({user, time, users}) {
+                my_user = user;
+                for (let i = 0; i < users.length; i++) {
+                    createUsersEntry(users[i], time * 1000)
+                }
+                document.querySelector('#chat-color').jscolor.fromString(user.color);
             };
 
             document.querySelector('#chat-message-input').focus();
@@ -51,37 +136,299 @@
 
             document.querySelector('#chat-message-submit').onclick = function (e) {
                 var messageInputDom = document.querySelector('#chat-message-input');
+                var pmDom = document.querySelector('#chat-message-pm');
                 var message = messageInputDom.value;
                 if (message) {
-                    client.sendChatMessage(message);
+                    if (pmDom.selectedOptions[0] === pmDom[0]) {
+                        client.sendChatMessage(message);
+                    } else {
+                        client.sendPrivateMessage(message, pmDom.selectedOptions[0].innerText);
+                        publishMessage(logEle, createPrivateMessage(message, my_user.name, pmDom.selectedOptions[0].innerText, new Date().getTime(), userList[my_user.name].color));
+                        userList[my_user.name].messageRef.nodeValue = new Date().toLocaleTimeString();
+                    }
                 }
 
                 messageInputDom.value = '';
             };
+            document.querySelector('#new-messages').onclick = function (e) {
+                logEle.scrollTop = logEle.scrollHeight;
+                setNewMessagesVisibility(false);
+            };
+
+            logEle.onscroll = function () {
+                if ((logEle.clientHeight + logEle.scrollTop) >= logEle.scrollHeight) {
+                    setNewMessagesVisibility(false);
+                }
+            };
+
+            let chat_mute_icon = document.querySelector('#chat-mute-icon');
+            chat_mute_icon.onclick = function (e) {
+                audio_enabled = !audio_enabled;
+                e.target.classList.toggle('icon-volume-off');
+                e.target.classList.toggle('icon-volume-on');
+            };
+
+            if (audio_enabled) {
+                chat_mute_icon.classList.remove('icon-volume-off');
+                chat_mute_icon.classList.add('icon-volume-on');
+            } else {
+                chat_mute_icon.classList.remove('icon-volume-on');
+                chat_mute_icon.classList.add('icon-volume-off');
+            }
+
         });
 
-        function createMessage(message, user, color) {
-            var para = document.createElement("P");
+        /**
+         * Create <p> element containing colored message in format:
+         * <time> <user>: <message>
+         *
+         * @param message - string message
+         * @param user - string name of user
+         * @param time - time in milliseconds
+         * @param color - color of message
+         */
+        function createMessage(message, user, time, color) {
+            return createPrivateMessage(message, user, null, time, color);
+        }
+
+        /**
+         * Create <p> element containing colored private message in format:
+         * <time> <from_user>-><to_user>: <message>
+         *
+         * @param message - string message
+         * @param from_user - string name of user sending message
+         * @param to_user - string name of user receiving message
+         * @param time - time in milliseconds
+         * @param color - color of message
+         */
+        function createPrivateMessage(message, from_user, to_user, time, color) {
+            const para = document.createElement("P");
             para.setAttribute("class", "chat-message");
             para.style.color = color;
-            var user_span = document.createElement("STRONG");
-            var user_text = document.createTextNode(d.toLocaleTimeString() + " " + user);
+            const user_span = document.createElement("STRONG");
+            let user_text;
+            if (to_user == null) {
+                user_text = document.createTextNode(new Date(time).toLocaleTimeString() + " " + from_user);
+            } else {
+                user_text = document.createTextNode(new Date(time).toLocaleTimeString() + " " + from_user + "->" + to_user);
+            }
             user_span.appendChild(user_text);
-            var message_text = document.createTextNode(": " + message);
+            const message_text = document.createTextNode(": " + message);
             para.appendChild(user_span);
             para.appendChild(message_text);
             return para;
         }
+
+        /**
+         * Open modal alert with custom title and body.
+         * Also modal return in history on dispose or move to index page if there is no history.
+         *
+         * @param titleLabel - HTML of title
+         * @param bodyHTML - HTML of body
+         */
+        function handleError(titleLabel, bodyHTML) {
+            $.showAlert({
+                title: titleLabel,
+                body: bodyHTML,
+                options: {
+                    keyboard: false,
+                    backdrop: 'static'
+                },
+                onDispose: function () {
+                    if (history.length !== 0) {
+                        history.go(-1);
+                    } else {
+                        window.location.replace(window.location.host);
+                    }
+                }
+            });
+        }
+
+        /**
+         * Handle visibility of new messages element.
+         * Also when not at the end of scrollable element, keep position.
+         *
+         * @param log - scrollable element
+         * @param currentScroll - scroll value before new content
+         */
+        function handleScroll(log, currentScroll) {
+            let ch = log.clientHeight;
+            let sho = currentScroll;
+            let shn = log.scrollHeight;
+            let st = log.scrollTop;
+
+            if (sho === (st + ch)) {
+                setNewMessagesVisibility(false);
+                log.scrollTop = shn - ch;
+            } else {
+                setNewMessagesVisibility(true);
+            }
+        }
+
+        /**
+         * Show or hide new message element.
+         *
+         * @param visible - boolean value of visibility
+         */
+        function setNewMessagesVisibility(visible = false) {
+            let x = document.querySelector('#new-messages');
+            if (visible === true) {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+        /**
+         * Append message element to scrollable element.
+         * Handle scroll position.
+         * Remove exceed messages.
+         *
+         * @param log - scrollable element
+         * @param message - message element
+         */
+        function publishMessage(log, message) {
+            let scrollValue = log.scrollHeight;
+            log.appendChild(message);
+            handleScroll(log, scrollValue);
+            if (log.childElementCount > MAX_CLIENT_MESSAGES) {
+                log.removeChild(log.childNodes[0]);
+            }
+        }
+
+        /**
+         * Handle change of color. Send new value to server. Server response with set color value or code 400.
+         *
+         * @param clr - instance of jscolor (can be converted into color by toString()
+         */
+        function updateColor(clr) {
+            $.ajax({
+                url: "{% url 'base:change_color' %}",
+                method: 'POST',
+                data: {
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                    'newColor': clr.toString(),
+                },
+                success: function (data) {
+                    userList[data['user']].color = data['newColor'];
+                },
+                error: function (data) {
+                    console.debug(data);
+                    if (data.status === 400) {
+                        handleError("Barvy, barvičky!", "Chyba v nastavení barvy. Přesněji řečeno: 400!");
+                    }
+                }
+            });
+        }
+
+        /**
+         * Add user into userList and PM dropdown menu.
+         * Calls revalidate users.
+         *
+         * @param user - {name:str, color:str}
+         * @param time - time in milliseconds
+         */
+        function createUsersEntry(user, time) {
+            var msg = document.createTextNode(new Date(time).toLocaleTimeString());
+            userList[user.name] = {
+                "color": user.color,
+                "messageRef": msg,
+            };
+            if (user.name !== my_user.name) {
+                document.querySelector("#chat-message-pm").appendChild(new Option(user.name));
+            }
+            revalidateUsers();
+        }
+
+        /**
+         * Removes user from userList and dropdown menu for PM messages.
+         * @param user - string name of user
+         */
+        function removeUsersEntry(user) {
+            const nodes = document.querySelector("#chat-message-pm");
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].innerText === user) {
+                    nodes.removeChild(nodes[i]);
+                }
+            }
+            delete userList[user];
+            revalidateUsers();
+        }
+
+        /**
+         * Clear user list element and recreate it from userList.
+         */
+        function revalidateUsers() {
+            while (usersEle.firstChild) {
+                usersEle.removeChild(usersEle.firstChild);
+            }
+            let usersArr = Object.keys(userList).map(function (key) {
+                return [key, userList[key]];
+            });
+            usersArr.sort((a, b) => a[0].localeCompare(b[0]));
+            for (let i = 0; i < usersArr.length; i++) {
+                let user = usersArr[i];
+                const para = document.createElement("P");
+                para.setAttribute("class", "user-message");
+                para.style.color = user[1].color;
+                const user_span = document.createElement("STRONG");
+                let user_text = document.createTextNode(user[0]);
+                user_span.appendChild(user_text);
+                user_text = document.createTextNode(": ");
+                user_span.appendChild(user_text);
+                user_span.appendChild(user[1].messageRef);
+                para.appendChild(user_span);
+                usersEle.appendChild(para);
+            }
+        }
     </script>
 
-{% endblock %}
-{% block content %}
-    <div class="chat-container">
-        <div id="chat-log"></div>
-        <input id="chat-message-input" type="text" maxlength="128"/><br/>
-        <input id="chat-message-submit" type="button" value="Send"/>
+</head>
+
+<body>
+<div id="hospudka" class="chat-container container-fluid" style="height: 100vh">
+    <div class="row no-gutters" style="height: 4vh">
+        <div class="col-10 row no-gutters">
+            <h1 class="col-auto"><a href="{% url "base:index" %}">Immortal Fighters</a></h1>
+        </div>
+        <div class="col-2">
+            <i id="chat-mute-icon" class="icon-volume-off align-right chat-icon"></i>
+        </div>
     </div>
+    <div class="row no-gutters" style="height: 92vh">
+        <div class="col-10" style="height: 100%;">
+            <div id="chat-log"></div>
+            <div style="position: absolute; left: 50%; bottom: 0">
+                <div id="new-messages"
+                     style="position: relative; left: -50%;"
+                     unselectable="on"
+                     onselectstart="return false;"
+                     onmousedown="return false;">Nové zprávy dole.
+                </div>
+            </div>
+        </div>
+        <div class="col-2" id="chat-users"></div>
+    </div>
+    <div id="chat-input" class="row no-gutters" style="height: 4vh;">
+        <div class="row no-gutters col-12">
+            <div class="col-9">
+                <input id="chat-message-input" type="text" maxlength="128"/>
+            </div>
+            <div class="col-1">
+                <select id="chat-message-pm">
+                    <option>-----</option>
+                </select>
+            </div>
+            <div class="col-1">
+                <input id="chat-message-submit" type="button" value="Send"/>
+            </div>
+            <div class="col-1">
+                <input id="chat-color" class="jscolor" onchange="updateColor(this.jscolor)" value="#FFFFFF">
+            </div>
+        </div>
+    </div>
+</div>
 
+</body>
 
-
-{% endblock %}
+</html>

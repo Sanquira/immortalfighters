@@ -7,8 +7,9 @@ $title_image_green: "/static/base/menu/title_green.png";
 
   height: 100%;
   width: 100%;
+  font-size: 1rem;
 
-  .chat-h1 {
+  h1 {
     font-family: boecklins-universe, sans-serif;
     font-size: 20px;
     color: white;
@@ -24,11 +25,6 @@ $title_image_green: "/static/base/menu/title_green.png";
     overflow-wrap: break-word;
   }
 
-  p {
-    margin: 0;
-    font-weight: normal;
-  }
-
   #chat-users {
     background: black;
     height: 100%;
@@ -37,20 +33,6 @@ $title_image_green: "/static/base/menu/title_green.png";
     border-image: url($menu_border_image) 15 round;
     overflow-wrap: break-word;
   }
-
-  #chat-message-input {
-  }
-
-  .chat-room {
-    color: #999999;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 1;
-    border: 10px solid transparent;
-    border-image: url($title_image_brown) 10 round;
-    border-image-slice: 10 fill;
-  }
-
 
   #new-messages {
     border: 10px solid transparent;
@@ -62,17 +44,51 @@ $title_image_green: "/static/base/menu/title_green.png";
     -ms-user-select: none;
     user-select: none;
     bottom: 15px;
+    display: none;
+  }
+
+  #chat-input {
+    font-size: 2vh;
+  }
+
+  #chat-message-input {
+    width: 100%;
+    font-size: 2vh;
+  }
+
+  #chat-message-pm {
+    width: 100%;
+    font-size: 2vh;
   }
 
   #chat-message-submit {
-    border: 1px solid #330000;
+    width: 100%;
+    border: 2px solid #330000;
     background-color: #660000;
     color: black;
   }
 
   #chat-color {
-    border: 1px solid #990000;
+    width: 100%;
+    border: 1px solid black;
     text-align: center;
+  }
+
+  p {
+    margin: 0;
+    font-weight: normal;
+  }
+
+  .chat-icon {
+    font-size: 3vh;
+  }
+
+  .icon-volume-on {
+    color: green;
+  }
+
+  .icon-volume-off {
+    color: red;
   }
 
 }

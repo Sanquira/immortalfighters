@@ -1,14 +1,20 @@
+import re
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 
 from base.forms import RegistrationForm
 from base.models import *
 from base.models.character import Character
+from base.models.ifuser import IFUser
 from base.models.profession import BaseProfession
 from base.models.race import Race
+
+COLOR_PATTERN = re.compile("^#(?:[0-9a-fA-F]{3}){1,2}$")
 
 
 def index(request):
@@ -56,17 +62,17 @@ def registration(request):
             user = IFUser(email=form.cleaned_data['email'],
                           username=form.cleaned_data['nickname'])
             user.set_password(form.cleaned_data['password'])
-            # TODO THIS HAS TO BE REMOVED
-            user.is_staff = True
-            user.is_superuser = True
-            # TODO THIS HAS TO BE REMOVED
+            # TODO THIS HAS TO BE REMOVED, OR THERE SHOULD BE SPECIAL CHECK FOR DEBUG
+            if settings.DEBUG:
+                user.is_staff = True
+                user.is_superuser = True
+            # TODO THIS HAS TO BE REMOVED, OR THERE SHOULD BE SPECIAL CHECK FOR DEBUG
             user.save()
             login(request, user)
 
             return redirect('base:index')
         return render(request, 'registration.html', {'form': form})
-    else:
-        return redirect('base:index')
+    return redirect('base:index')
 
 
 def site_rules(request):
@@ -89,5 +95,19 @@ def statistics(request):
     return render(request, 'pages/statistics.html', {'statistics': stats})
 
 
+@login_required
+def user_change_color(request):
+    if request.POST and 'newColor' in request.POST:
+        color = request.POST['newColor']
+        if not color.startswith('#'):
+            color = '#' + color
+        if COLOR_PATTERN.match(color):
+            request.user.chat_color = color
+            request.user.save()
+        return JsonResponse({'user': request.user.username, 'newColor': request.user.chat_color})
+    return HttpResponseBadRequest()
+
+
+# FIXME name collision
 def login_required(request):
     return render(request, 'login_required.html')
