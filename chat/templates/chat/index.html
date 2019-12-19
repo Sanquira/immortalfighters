@@ -5,6 +5,6 @@
 {% block content %}
     <h1>Dostupné místnosti</h1>
     {% for room in rooms %}
-        <a href="{% url 'chat:room' room_name=room.name %}">{{ room.name|title }}</a>
+        <a href="{% url 'chat:single_room' room_name=room.name %}">{{ room.name|title }}</a>
     {% endfor %}
 {% endblock %}

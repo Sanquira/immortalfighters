@@ -1,11 +1,17 @@
 class ChatClient {
   constructor(wsUrl) {
     // Dummy attributes
-    this.onpm = function(message, user) {};
-    this.onchatmessage = function(message, user) {};
-    this.onjoinchannel = function(user) {};
-    this.onleavechannel = function(user) {};
-    this.onerror = function(e) {};
+    // More info on these types of messages can be found in chat/components/messages.py
+    this.onPrivateMessage = function({target_user, user, time, message}) {};
+    this.onChatMessage = function({user, time, message}) {};
+    this.onJoinChannel = function({user, time, users}) {};
+    this.onUserJoinChannel = function({user, time}) {};
+    this.onUserLeaveChannel = function({user, time}) {};
+
+    // All error handling will be in this function, list of possible errors can be found in chat/components/messages.py
+    // It contains one additional possible error and that is websocket_error that is created on the client when the
+    // websocket stream is closed
+    this.onErrorMessage = function(error) {};
 
     this.webSocket = new WebSocket(wsUrl);
     this.webSocket.onerror = this.socketClosedHandler.bind(this);
@@ -13,32 +19,48 @@ class ChatClient {
 
   }
 
+  // Simulates websocket_error message as it would arrive from server in case of socket closure
   socketClosedHandler(e) {
     console.error(e);
-    this.onerror(e);
+    var error = {
+        "type": "error",
+        "error_type": "websocket_closed",
+        "message": e.data,
+        "time": new Date().getTime() / 1000,
+    };
+    this.onErrorMessage(error)
   }
 
   messageHandler(e) {
     let data = JSON.parse(e.data);
     if(typeof data['type'] === 'undefined') {
-        console.log("Received message without type parameter, ignoring")
+        console.debug("Received message without type parameter, ignoring")
     }
     else {
-        switch(data['type']){
+        console.debug("Received message with type " + data['type'] + ", processing");
+        var message_type = data["type"];
+        delete data.type;
+        switch(message_type){
+            case 'user_join_channel':
+                this.onUserJoinChannel(data);
+                break;
+            case 'user_leave_channel':
+                this.onUserLeaveChannel(data);
+                break;
+            case 'private_message':
+                this.onPrivateMessage(data);
+                break;
+            case 'chat_message':
+                this.onChatMessage(data);
+                break;
             case 'join_channel':
-                this.onjoinchannel(data['user']);
+                this.onJoinChannel(data);
                 break;
-            case 'leave_channel':
-                this.onleavechannel(data['user']);
-                break;
-            case 'pm':
-                this.onpm(data['message'], data['user']);
-                break;
-            case 'message':
-                this.onchatmessage(data['message'], data['user']);
+            case 'error':
+                this.onErrorMessage(data);
                 break;
             default:
-                console.log("Received message with invalid type " + data['type'] + ",ignoring");
+                console.debug("Received message with invalid type " + data['type'] + ", ignoring");
         }
     }
   }
@@ -58,7 +80,7 @@ class ChatClient {
       this._sendMessage({
           'type': "private_message",
           'message': message,
-          'target': target
+          'target_user': target
       });
   }
 

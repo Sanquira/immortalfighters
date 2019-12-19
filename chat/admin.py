@@ -1,3 +1,8 @@
+"""
+Resources for Django administration
+"""
+# pylint: disable=all
+
 from django.contrib import admin
 #######################################
 # Resources
