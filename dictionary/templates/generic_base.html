@@ -1,0 +1,19 @@
+{% extends 'base.html' %}{% load bootstrap4 %}{% load static %}
+
+
+{% block extraHead %}
+    {% for incl in header_includes %}
+        {% include incl %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    {% if action == "view" %}
+        {% if title %}
+            <h1>{{ title }}</h1>
+        {% endif %}
+        {% include view_template with item=item %}
+    {% else %}
+        {% include edit_template with pk=pk form_item=form_item formset_dict=formset_dict %}
+    {% endif %}
+{% endblock %}

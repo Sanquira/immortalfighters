@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from dictionary.models import race, profession, spell, skill
+from dictionary.models import race, profession, spell
 
 
 class Migration(migrations.Migration):
@@ -15,5 +15,4 @@ class Migration(migrations.Migration):
         migrations.RunPython(race.initialize_races),
         migrations.RunPython(profession.init_professions),
         migrations.RunPython(spell.initialize_spell_directions),
-        migrations.RunPython(skill.init_skills),
     ]

@@ -1,19 +1,54 @@
+"""Admin module for dictionary."""
 from django.contrib import admin
 # Register your models here.
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from markdownx.admin import MarkdownxModelAdmin
 
+from dictionary.models.beast import BeastWeakness, BeastCategory, Beast, BeastAttack, BeastMobility
 from dictionary.models.items import Item, Artefact
 from dictionary.models.profession import BaseProfession, XPLevel
-from dictionary.models.profession_limitation import ProfessionLimitation
 from dictionary.models.race import Race
+from dictionary.models.sizes import CreatureSize
 from dictionary.models.skill import Skill, SkillPoints
-from dictionary.models.spell import Spell, SpellDiscipline, SpellDirection
+from dictionary.models.spell import Spell, SpellDiscipline, SpellDirection, ProfessionLimitation
+from django.conf import settings
 
+
+# pylint: disable=all
 
 #######################################
 # Resources
+
+class MobilityResource(resources.ModelResource):
+    class Meta:
+        model = BeastMobility
+
+
+class AttackResource(resources.ModelResource):
+    class Meta:
+        model = BeastAttack
+
+
+class BeastResource(resources.ModelResource):
+    class Meta:
+        model = Beast
+
+
+class CategoryResource(resources.ModelResource):
+    class Meta:
+        model = BeastCategory
+
+
+class WeaknessResource(resources.ModelResource):
+    class Meta:
+        model = BeastWeakness
+
+
+class CreatureSizeResource(resources.ModelResource):
+    class Meta:
+        model = CreatureSize
+
 
 class SpellResource(resources.ModelResource):
     class Meta:
@@ -78,8 +113,48 @@ class ProfessionLimitationInline(admin.TabularInline):
     extra = 0
 
 
+class AttackInline(admin.TabularInline):
+    model = BeastAttack
+    extra = 0
+
+
+class MobilityInline(admin.TabularInline):
+    model = BeastMobility
+    extra = 0
+
+
 #######################################
 # Admins
+
+
+class MobilityAdmin(ImportExportModelAdmin):
+    resource_class = MobilityResource
+
+
+class AttackAdmin(ImportExportModelAdmin):
+    resource_class = AttackResource
+
+
+class BeastAdmin(ImportExportModelAdmin, MarkdownxModelAdmin):
+    resource_class = BeastResource
+    filter_horizontal = ('weakness',)
+    inlines = (AttackInline, MobilityInline)
+
+
+class CategoryAdmin(ImportExportModelAdmin):
+    resource_class = CategoryResource
+    ordering = ('name',)
+
+
+class WeaknessAdmin(ImportExportModelAdmin):
+    resource_class = WeaknessResource
+    ordering = ('group',)
+
+
+class CreatureSizeAdmin(ImportExportModelAdmin):
+    resource_class = CreatureSizeResource
+    ordering = ('name',)
+
 
 class SpellAdmin(ImportExportModelAdmin, MarkdownxModelAdmin):
     resource_class = SpellResource
@@ -106,11 +181,12 @@ class RaceAdmin(ImportExportModelAdmin):
 
 class BaseProfessionAdmin(ImportExportModelAdmin):
     resource_class = BaseProfessionResource
-    ordering = ('parentProf', 'name',)
+    ordering = ('parent_prof', 'name',)
 
 
 class XPLevelAdmin(ImportExportModelAdmin):
     resource_class = XPLevelResource
+    ordering = ('profession', 'level')
 
 
 class ItemAdmin(ImportExportModelAdmin):
@@ -132,15 +208,21 @@ class SkillAdmin(ImportExportModelAdmin):
     ordering = ('name', 'stat',)
 
 
+if settings.DEBUG:
+    admin.site.register(BeastMobility, MobilityAdmin)
+    admin.site.register(BeastAttack, AttackAdmin)
+    admin.site.register(BeastCategory, CategoryAdmin)
+    admin.site.register(BeastWeakness, WeaknessAdmin)
+    admin.site.register(CreatureSize, CreatureSizeAdmin)
+    admin.site.register(SpellDiscipline, SpellDisciplineAdmin)
+    admin.site.register(SpellDirection, SpellDirectionAdmin)
+    admin.site.register(ProfessionLimitation, ProfessionLimitationAdmin)
+    admin.site.register(Race, RaceAdmin)
+    admin.site.register(BaseProfession, BaseProfessionAdmin)
+    admin.site.register(XPLevel, XPLevelAdmin)
+    admin.site.register(SkillPoints, SkillPointsAdmin)
+admin.site.register(Beast, BeastAdmin)
 admin.site.register(Spell, SpellAdmin)
-# admin.site.register(SpellDiscipline, SpellDisciplineAdmin)
-# admin.site.register(SpellDirection, SpellDirectionAdmin)
-# admin.site.register(SpellDisciplineLimitation, SpellDisciplineLimitationAdmin)
-# admin.site.register(ProfessionLimitation, ProfessionLimitationAdmin)
-# admin.site.register(Race, RaceAdmin)
-# admin.site.register(BaseProfession, BaseProfessionAdmin)
-# admin.site.register(XPLevel, XPLevelAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Artefact, ArtefactAdmin)
-# admin.site.register(SkillPoints, SkillPointsAdmin)
 admin.site.register(Skill, SkillAdmin)

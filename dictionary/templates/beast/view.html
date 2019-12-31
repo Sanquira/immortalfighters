@@ -1,0 +1,101 @@
+{% load bootstrap4 %}{% load static %}{% load markdown %}{% load verbose_names %}
+
+<div class="item-div">
+    <div class="container">
+        <h3>{{ item.name }}</h3>
+        <h4>{{ item.category }}</h4>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'life' %}:</div>
+            <div class="col-9 ">{{ item.life }}</div>
+        </div>
+        {% if item.beastattack_set %}
+            <div class="row ">
+                <div class="col-3 ">{% get_verbose_field_name item 'attack' %}:</div>
+                <div class="col-9">
+                    {% for att in item.beastattack_set.all %}
+                        <p class="inline">{{ att.dmg }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'defense' %}:</div>
+            <div class="col-9 ">{{ item.defense }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'resist' %}:</div>
+            <div class="col-9 ">{{ item.resist }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'size' %}:</div>
+            <div class="col-9 ">{{ item.size }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'fury' %}:</div>
+            <div class="col-9 ">{{ item.fury }}</div>
+        </div>
+        {% if item.weakness %}
+            <div class="row ">
+                <div class="col-3 ">{% get_verbose_field_name item 'weakness' %}:</div>
+                <div class="col-9">
+                    {% for wkns in item.weakness.all %}
+                        <span class="mytooltip" data-tooltip-content="#tooltipContent{{ wkns.id }}">{{ wkns.group }}</span>
+                        {% if not forloop.last %}
+                            ,
+                        {% endif %}
+                        <div class="tooltip-content">
+                            <div id="tooltipContent{{ wkns.id }}">
+                                <span>{{ wkns.note }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        {% endif %}
+        {% if item.beastmobility_set %}
+            <div class="row ">
+                <div class="col-3 ">{% get_verbose_field_name item 'mobility' %}:</div>
+                <div class="col-9">
+                    {% for att in item.beastmobility_set.all %}
+                        <p class="inline">{{ att.mob }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'endurance' %}:</div>
+            <div class="col-9 ">{{ item.endurance }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'inteligence' %}:</div>
+            <div class="col-9 ">{{ item.inteligence }}</div>
+        </div>
+        {% if item.treasure %}
+            <div class="row ">
+                <div class="col-3 ">{% get_verbose_field_name item 'treasure' %}:</div>
+                <div class="col-9 ">{{ item.treasure }}</div>
+            </div>
+        {% endif %}
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'exp' %}:</div>
+            <div class="col-9 ">{{ item.exp }}</div>
+        </div>
+        <div class="row ">
+            <div class="col-3 ">{% get_verbose_field_name item 'note' %}:</div>
+            <div class="col-9 ">{{ item.note|show_markdown|safe }}</div>
+        </div>
+        {% if item.note_pj %}
+            <div class="row ">
+                <div class="col-3 ">{% get_verbose_field_name item 'note_pj' %}:</div>
+                <div class="col-9 ">{{ item.note_pj|show_markdown|safe }}</div>
+            </div>
+        {% endif %}
+        {% if item.powers %}
+            <div class="row ">
+                <div class="col-3 ">{% get_verbose_field_name item 'powers' %}:</div>
+                <div class="col-9 ">{{ item.powers|show_markdown|safe }}</div>
+            </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,3 +1,0 @@
-
-def mobs(request):
-    pass

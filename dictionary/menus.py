@@ -1,3 +1,4 @@
+"""Menu module for dictionary."""
 from django.urls import reverse
 from menu import Menu, MenuItem
 
