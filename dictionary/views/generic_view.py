@@ -130,7 +130,8 @@ class GenericView():
     
     def generate_edit(self):
         """Generator for edit and add."""
-        
+
+        # pylint: disable=too-many-branches
         @login_required
         def _method(request, primary_key: int = None):
             if primary_key:
@@ -272,7 +273,8 @@ class GenericView():
             })
         
         return _method
-    
+
+    # pylint: disable=line-too-long
     def generate_path(self) -> list:
         """Generate path for urls.
         Create path for table (GET and POST), edit, view and delete of entity.
