@@ -1,6 +1,6 @@
 import datetime
 
-from base.models import IFUser
+from base.models.ifuser import IFUser
 
 
 class BackgroundMiddleware:
