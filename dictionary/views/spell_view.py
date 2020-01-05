@@ -3,9 +3,9 @@ from django.db.models import Count, Q
 from django.forms import modelformset_factory, formset_factory
 from django.shortcuts import redirect
 
+from base.models.profession import BaseProfession
 from dictionary.forms.spell_form import SpellForm, ProfessionLimitationForm, \
     BaseProfessionLimitationFormSet, BaseSpellDirectionFormSet, SpellDirectionForm
-from dictionary.models.profession import BaseProfession
 from dictionary.models.spell import Spell, ProfessionLimitation
 from dictionary.views.generic_view import GenericView
 

@@ -2,7 +2,7 @@
 from django.db import models
 from markdownx.models import MarkdownxField
 
-from dictionary.models.profession import BaseProfession
+from base.models.profession import BaseProfession
 
 
 class SpellDiscipline(models.Model):
