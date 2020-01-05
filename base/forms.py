@@ -1,6 +1,6 @@
 from django import forms
 
-from base.models import IFUser
+from base.models.ifuser import IFUser
 
 
 class RegistrationForm(forms.Form):

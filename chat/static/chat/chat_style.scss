@@ -1,13 +1,77 @@
+$menu_border_image: "/static/base/menu/menu_border.png";
+$title_image_brown: "/static/base/menu/title_brown.png";
+$title_image_green: "/static/base/menu/title_green.png";
+
 
 .chat-container {
+
   height: 100%;
+  width: 100%;
+  font-size: 1rem;
+
+  h1 {
+    font-family: boecklins-universe, sans-serif;
+    font-size: 20px;
+    color: white;
+    text-shadow: 2px 2px 0 green, -1px -1px 0 green, 1px -1px 0 green, -1px 1px 0 green, 1px 1px 0 green;
+  }
 
   #chat-log {
-    height: 60vh;
+    height: 100%;
     background: black;
-    overflow-y: scroll;
-    border: solid 1px #990000;
+    overflow-y: auto;
+    border: 15px solid transparent;
+    border-image: url($menu_border_image) 15 round;
     overflow-wrap: break-word;
+  }
+
+  #chat-users {
+    background: black;
+    height: 100%;
+    overflow-y: auto;
+    border: 15px solid transparent;
+    border-image: url($menu_border_image) 15 round;
+    overflow-wrap: break-word;
+  }
+
+  #new-messages {
+    border: 10px solid transparent;
+    border-image: url($title_image_green) 10 round;
+    border-image-slice: 10 fill;
+    color: #999999;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    bottom: 15px;
+    display: none;
+  }
+
+  #chat-input {
+    font-size: 2vh;
+  }
+
+  #chat-message-input {
+    width: 100%;
+    font-size: 2vh;
+  }
+
+  #chat-message-pm {
+    width: 100%;
+    font-size: 2vh;
+  }
+
+  #chat-message-submit {
+    width: 100%;
+    border: 2px solid #330000;
+    background-color: #660000;
+    color: black;
+  }
+
+  #chat-color {
+    width: 100%;
+    border: 1px solid black;
+    text-align: center;
   }
 
   p {
@@ -15,7 +79,16 @@
     font-weight: normal;
   }
 
-  #chat-message-input{
+  .chat-icon {
+    font-size: 3vh;
+  }
+
+  .icon-volume-on {
+    color: green;
+  }
+
+  .icon-volume-off {
+    color: red;
   }
 
 }

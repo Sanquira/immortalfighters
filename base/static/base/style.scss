@@ -1,4 +1,5 @@
 @import "fonts";
+@import "fonts/symbols/css/symbols.css";
 
 $menu_border_image: "menu/menu_border.png";
 $menu_bg: "menu/menu_lbg.png";
@@ -177,8 +178,11 @@ input[type=number] {
 }
 
 .menu-side {
+  input[type=email],
   input[type=password],
-  input[type=text] {
+  input[type=text],
+  input[type=search],
+  input[type=number] {
     width: 100%;
   }
 }
@@ -270,4 +274,40 @@ label {
 
 hr {
   border-color: #990000;
+}
+
+
+.modal-content {
+  border: 20px solid transparent;
+  border-image-source: url($spell_bg);
+  border-image-repeat: stretch;
+  border-image-slice: 20 fill;
+  color: #B07344;
+
+  .modal-header, .modal-body, .modal-footer {
+    border: none;
+  }
+
+  .modal-title {
+    color: #B07344;
+    font-weight: bold;
+  }
+
+  .btn {
+    background: none;
+    border: solid 2px #B07344;
+    color: #B07344;
+
+    &:hover {
+      border: solid 2px #794f2f;
+    }
+  }
+
+  .close {
+    color: #B07344;
+
+    &:hover {
+      color: #794f2f;
+    }
+  }
 }

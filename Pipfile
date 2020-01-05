@@ -6,6 +6,11 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 pylint-django = "*"
+pytest-pylint = "*"
+pytest-django = "*"
+pytest-asyncio = "*"
+coverage = "*"
+pytest-cov = "*"
 
 [packages]
 django = "==2.2.8"

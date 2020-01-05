@@ -10,4 +10,4 @@ pipelines:
           script: # Modify the commands below to build your repository.
             - pip install pipenv # Install all dependencies.
             - pipenv update --dev
-            - pipenv run pytest --ds=immortalfighters.settings --junitxml=./test-reports/coverage.xml # Executes the tests 
+            - pipenv run pytest --ds=immortalfighters.settings.tests --junitxml=./test-reports/coverage.xml # Executes the tests

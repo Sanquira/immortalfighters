@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'bootstrap4',
     'sass_processor',
+    'utils',
     'base',
     'dictionary',
     'markdownx',
@@ -104,14 +105,16 @@ SASS_PROCESSOR_ROOT = STATIC_ROOT
 
 ASGI_APPLICATION = "immortalfighters.routing.application"
 CHANNEL_LAYERS = {
+    # "default": {
+    #     "BACKEND": "channels_redis.core.RedisChannelLayer",
+    #     "CONFIG": {
+    #         "hosts": [("localhost", 6379)],
+    #     },
+    # },
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 6379)],
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
