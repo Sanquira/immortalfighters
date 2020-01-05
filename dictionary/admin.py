@@ -1,18 +1,14 @@
 """Admin module for dictionary."""
+from django.conf import settings
 from django.contrib import admin
-# Register your models here.
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from markdownx.admin import MarkdownxModelAdmin
 
 from dictionary.models.beast import BeastWeakness, BeastCategory, Beast, BeastAttack, BeastMobility
 from dictionary.models.items import Item, Artefact
-from dictionary.models.profession import BaseProfession, XPLevel
-from dictionary.models.race import Race
-from dictionary.models.sizes import CreatureSize
 from dictionary.models.skill import Skill, SkillPoints
 from dictionary.models.spell import Spell, SpellDiscipline, SpellDirection, ProfessionLimitation
-from django.conf import settings
 
 
 # pylint: disable=all
@@ -45,11 +41,6 @@ class WeaknessResource(resources.ModelResource):
         model = BeastWeakness
 
 
-class CreatureSizeResource(resources.ModelResource):
-    class Meta:
-        model = CreatureSize
-
-
 class SpellResource(resources.ModelResource):
     class Meta:
         model = Spell
@@ -68,21 +59,6 @@ class SpellDirectionResource(resources.ModelResource):
 class ProfessionLimitationResource(resources.ModelResource):
     class Meta:
         model = ProfessionLimitation
-
-
-class RaceResource(resources.ModelResource):
-    class Meta:
-        model = Race
-
-
-class BaseProfessionResource(resources.ModelResource):
-    class Meta:
-        model = BaseProfession
-
-
-class XPLevelResource(resources.ModelResource):
-    class Meta:
-        model = XPLevel
 
 
 class ItemResources(resources.ModelResource):
@@ -151,11 +127,6 @@ class WeaknessAdmin(ImportExportModelAdmin):
     ordering = ('group',)
 
 
-class CreatureSizeAdmin(ImportExportModelAdmin):
-    resource_class = CreatureSizeResource
-    ordering = ('name',)
-
-
 class SpellAdmin(ImportExportModelAdmin, MarkdownxModelAdmin):
     resource_class = SpellResource
     inlines = (ProfessionLimitationInline,)
@@ -172,21 +143,6 @@ class SpellDirectionAdmin(ImportExportModelAdmin):
 
 class ProfessionLimitationAdmin(ImportExportModelAdmin):
     resource_class = ProfessionLimitationResource
-
-
-class RaceAdmin(ImportExportModelAdmin):
-    resource_class = RaceResource
-    ordering = ('name',)
-
-
-class BaseProfessionAdmin(ImportExportModelAdmin):
-    resource_class = BaseProfessionResource
-    ordering = ('parent_prof', 'name',)
-
-
-class XPLevelAdmin(ImportExportModelAdmin):
-    resource_class = XPLevelResource
-    ordering = ('profession', 'level')
 
 
 class ItemAdmin(ImportExportModelAdmin):
@@ -213,13 +169,9 @@ if settings.DEBUG:
     admin.site.register(BeastAttack, AttackAdmin)
     admin.site.register(BeastCategory, CategoryAdmin)
     admin.site.register(BeastWeakness, WeaknessAdmin)
-    admin.site.register(CreatureSize, CreatureSizeAdmin)
     admin.site.register(SpellDiscipline, SpellDisciplineAdmin)
     admin.site.register(SpellDirection, SpellDirectionAdmin)
     admin.site.register(ProfessionLimitation, ProfessionLimitationAdmin)
-    admin.site.register(Race, RaceAdmin)
-    admin.site.register(BaseProfession, BaseProfessionAdmin)
-    admin.site.register(XPLevel, XPLevelAdmin)
     admin.site.register(SkillPoints, SkillPointsAdmin)
 admin.site.register(Beast, BeastAdmin)
 admin.site.register(Spell, SpellAdmin)

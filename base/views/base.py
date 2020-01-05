@@ -7,10 +7,8 @@ from django.shortcuts import render, redirect
 from base.forms import RegistrationForm
 from base.models import *
 from base.models.character import Character
-from dictionary.models.profession import BaseProfession
-from dictionary.models.race import Race
-from permissions.models import TestModel
-from permissions.utils import AbstractPermissionSystem
+from base.models.profession import BaseProfession
+from base.models.race import Race
 
 
 def index(request):

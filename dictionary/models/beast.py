@@ -2,7 +2,7 @@
 from django.db import models
 from markdownx.models import MarkdownxField
 
-from dictionary.models.sizes import CreatureSize
+from base.models.sizes import CreatureSize
 
 
 class BeastWeakness(models.Model):

@@ -1,8 +1,8 @@
 from django.db import models
 
 from base.models import IFUser
-from dictionary.models.profession import BaseProfession
-from dictionary.models.race import Race
+from base.models.profession import BaseProfession
+from base.models.race import Race
 
 
 class Character(models.Model):

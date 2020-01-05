@@ -1,9 +1,6 @@
 import datetime
 
 from base.models import IFUser
-from base.models.character import Character
-from dictionary.models.profession import BaseProfession
-from dictionary.models.race import Race
 
 
 class BackgroundMiddleware:
