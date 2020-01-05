@@ -281,6 +281,6 @@ class GenericView():
         return [path(model_name_l + '/', self.generate_list(), name=model_name_l),
                 path(model_name_l + '_table/', self.generate_list_post(), name=model_name_l + '_table'),
                 path(model_name_l + '/item/', self.generate_edit(), name=model_name_l + '_edit'),
-                path(model_name_l + '/item/<int:pk>/edit/', self.generate_edit(), name=model_name_l + '_edit'),
-                path(model_name_l + '/item/<int:pk>/', self.generate_view(), name=model_name_l + '_view'),
-                path(model_name_l + '/item/<int:pk>/delete/', self.generate_delete(), name=model_name_l + '_delete')]
+                path(model_name_l + '/item/<int:primary_key>/edit/', self.generate_edit(), name=model_name_l + '_edit'),
+                path(model_name_l + '/item/<int:primary_key>/', self.generate_view(), name=model_name_l + '_view'),
+                path(model_name_l + '/item/<int:primary_key>/delete/', self.generate_delete(), name=model_name_l + '_delete')]
