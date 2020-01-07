@@ -41,7 +41,8 @@
         $(document).ready(function () {
             logEle = document.querySelector('#chat-log');
             usersEle = document.querySelector('#chat-users');
-            const client = new ChatClient('ws://' + window.location.host +
+            const protocol = window.location.protocol == "https:" ? "wss" : "ws";
+            const client = new ChatClient(protocol + '://' + window.location.host +
                 '/ws/chat/' + roomName + '/');
 
             /**
