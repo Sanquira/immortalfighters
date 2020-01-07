@@ -74,7 +74,7 @@ BOOTSTRAP4 = {
         "integrity": "sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=",
         "crossorigin": "anonymous",
     },
-    'include_jquery': False,
+    'include_jquery': True,
 }
 TEMPLATES = [
     {
