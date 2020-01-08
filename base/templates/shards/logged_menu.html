@@ -1,6 +1,14 @@
-<tr>
-    <td class="center">- ÚČET -</td>
-</tr>
-<tr>
-    <td class="last"><a href={% url 'base:log_out' %}>Odhlásit</a></td>
-</tr>
+<table class="menu-side">
+    <tr>
+        <td class="center">- ÚČET -</td>
+    </tr>
+    <tr>
+        <td class="collapsed">{{ user.username }}</td>
+    </tr>
+    <tr>
+        <td class="collapsed"><a href={% url 'base:password_change' %}>Změnit heslo</a></td>
+    </tr>
+    <tr>
+        <td class="collapsed last"><a href={% url 'base:logout' %}>Odhlásit</a></td>
+    </tr>
+</table>

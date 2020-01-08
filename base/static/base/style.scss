@@ -11,12 +11,18 @@ $list_image: "menu/if_sipka.png";
 
 $spell_bg: "forms/paper_texture.png";
 
+$color_dark_brown: #794f2f;
+$color_brown: #B07344;
+$color_gray: #999999;
+$color_red: #900;
+$color_coal: #303030;
+
 @import "datatables";
 @import "markdown";
 
 body {
   background-color: black;
-  color: #B07344;
+  color: $color_brown;
   font-family: Georgia, sans-serif;
   font-size: 12px;
   font-weight: bold;
@@ -118,7 +124,7 @@ body {
 
 @mixin title-base {
   border: 10px solid transparent;
-  color: #999999;
+  color: $color_gray;
   font-weight: bold;
   font-size: 16px;
   line-height: 1;
@@ -144,7 +150,7 @@ a {
   color: white;
 
   &:hover {
-    color: #B0A49B;
+    color: $color_gray;
     text-decoration: transparent;
   }
 
@@ -172,26 +178,16 @@ input[type=number] {
   font-family: "Arial", sans-serif;
   font-size: 10pt;
   color: white;
-  border: 1px solid #990000;
+  border: 1px solid $color_dark_brown;
   background-color: black;
   vertical-align: baseline;
-}
-
-.menu-side {
-  input[type=email],
-  input[type=password],
-  input[type=text],
-  input[type=search],
-  input[type=number] {
-    width: 100%;
-  }
 }
 
 textarea {
   font-family: "Arial", sans-serif;
   font-size: 10pt;
   color: white;
-  border: 1px solid #990000;
+  border: 1px solid $color_dark_brown;
   background-color: black;
   width: 100%;
 }
@@ -200,7 +196,7 @@ select {
   font-family: "Arial", sans-serif;
   font-size: 10pt;
   color: white;
-  border: 1px solid #990000;
+  border: 1px solid $color_dark_brown;
   background-color: black;
 }
 
@@ -208,14 +204,43 @@ form {
   table {
     width: 100%;
   }
+
+  .form-group {
+    label {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .form-control {
+    color: white;
+
+    &:focus {
+      background: $color_coal;
+      color: white;
+
+      border-color: $color_brown;
+      box-shadow: 0 0 0 .2rem change_color($color_brown, $alpha: 0.25);
+    }
+  }
+
+  .btn {
+    float: right;
+  }
+
+  .btn {
+    background: none;
+    border: solid 2px $color_brown;
+    color: $color_brown;
+
+    &:hover {
+      border: solid 2px $color_dark_brown;
+    }
+
+  }
 }
 
 label {
   margin: 0;
-}
-
-.warning {
-  color: #990000;
 }
 
 .white-text {
@@ -223,9 +248,8 @@ label {
 }
 
 .gray-text {
-  color: #999;
+  color: $color_gray;
 }
-
 
 .clearfix {
   overflow: auto;
@@ -241,7 +265,7 @@ label {
   border-image-repeat: stretch;
   border-image-slice: 20 fill;
 
-  color: #794f2f;
+  color: $color_dark_brown;
 
   h3 {
     text-align: center;
@@ -273,7 +297,7 @@ label {
 }
 
 hr {
-  border-color: #990000;
+  border-color: $color_dark_brown;
 }
 
 
@@ -282,32 +306,32 @@ hr {
   border-image-source: url($spell_bg);
   border-image-repeat: stretch;
   border-image-slice: 20 fill;
-  color: #B07344;
+  color: $color_brown;
 
   .modal-header, .modal-body, .modal-footer {
     border: none;
   }
 
   .modal-title {
-    color: #B07344;
+    color: $color_brown;
     font-weight: bold;
   }
 
   .btn {
     background: none;
-    border: solid 2px #B07344;
-    color: #B07344;
+    border: solid 2px $color_brown;
+    color: $color_brown;
 
     &:hover {
-      border: solid 2px #794f2f;
+      border: solid 2px $color_dark_brown;
     }
   }
 
   .close {
-    color: #B07344;
+    color: $color_brown;
 
     &:hover {
-      color: #794f2f;
+      color: $color_dark_brown;
     }
   }
 }

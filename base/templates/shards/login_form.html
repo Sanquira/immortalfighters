@@ -1,36 +1,12 @@
 {% load static %}
-
-<form method="post" action="{% url 'base:log_in'%}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" name="prihlaseni" id="login_form">
-    {% csrf_token %}
-</form>
-<tr>
-    <td class="center">- PŘIHLÁŠENÍ -</td>
-</tr>
-<tr>
-    <td>Uživatel:</td>
-</tr>
-<tr>
-    <td class="collapsed"><input form="login_form" name="username" type="text"/></td>
-</tr>
-<tr>
-    <td class="collapsed">Heslo:</td>
-</tr>
-<tr>
-    <td class="collapsed"><input form="login_form" name="password" type="password"/>
-    </td>
-</tr>
-<tr>
-    <td class="collapsed"><input form="login_form" type="image" src={% static 'base/forms/send.png' %}>
-    </td>
-</tr>
-<tr>
-    <td class="collapsed"><img
-            src={% static 'base/menu/facebook-icon-preview-1-400x400.png' %} height="12" width="12"><a
-            href="http://immortalfighters.net">Facebook login</a></td>
-</tr>
-<tr>
-    <td class="collapsed"><a href={% url "base:registration" %}>Nová registrace</a></td>
-</tr>
-<tr>
-    <td class="collapsed last"><a href="http://immortalfighters.net">Obnovit heslo</a></td>
-</tr>
+<table class="menu-side">
+    <tr>
+        <td class="center">- Přihlášení -</td>
+    </tr>
+    <tr>
+        <td class="collapsed"><a href={% url "base:login" %}>Přihlásit se</a></td>
+    </tr>
+    <tr>
+        <td class="collapsed last"><a href={% url "base:registration" %}>Nová registrace</a></td>
+    </tr>
+</table>

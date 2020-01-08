@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% load static %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <h1>Registrace</h1>
+    <form action={% url 'base:registration' %} method='POST'>
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <div class="clearfix">
+                <button type="submit" class="btn">Odeslat</button>
+            </div>
+        {% endbuttons %}
+    </form>
+    <div>Užíváním služeb tohoto portálu vyjadřujete souhlas s <a
+            href={% url 'base:site_rules' %}>pravidly portálu</a> a zavazujete se k jejich dodržování.
+    </div>
+{% endblock %}

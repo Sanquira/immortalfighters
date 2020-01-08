@@ -27,26 +27,28 @@ ALLOWED_HOSTS = []
 # Application definition
 APPEND_SLASH = True
 INSTALLED_APPS = [
+    'base',
+    'utils',
+    'permissions',
+    'dictionary',
+    'chat',
+    
+    'markdownx',
+    'import_export',
+    'polymorphic',
+    'bootstrap4',
+    'sass_processor',
+    'tagging',
+    'tagging_autocomplete_new',
+    'menu',
+    'channels',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'import_export',
-    'polymorphic',
-    'bootstrap4',
-    'sass_processor',
-    'utils',
-    'base',
-    'dictionary',
-    'markdownx',
-    'tagging',
-    'channels',
-    'chat',
-    'menu',
-    'tagging_autocomplete_new',
-    'permissions'
 ]
 
 MARKDOWNX_MARKDOWN_EXTENSIONS = [
@@ -164,4 +166,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = '/login_required/'
+# LOGIN_URL = '/login_required/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

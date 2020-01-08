@@ -1,14 +1,15 @@
+"""Module for Base views."""
 import re
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
+from django.contrib.auth.views import PasswordChangeDoneView
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 
-from base.forms import RegistrationForm
-from base.models import *
+from base.forms.auth_form import IFUserCreationForm
 from base.models.character import Character
 from base.models.ifuser import IFUser
 from base.models.profession import BaseProfession
@@ -18,68 +19,30 @@ COLOR_PATTERN = re.compile("^#(?:[0-9a-fA-F]{3}){1,2}$")
 
 
 def index(request):
+    """Renders index page."""
     return render(request, 'base.html')
 
 
 def banners(request):
+    """Renders banners page."""
     return render(request, 'base.html')
 
 
-def log_in(request):
-    next_page = None
-    if 'next' in request.GET:
-        next_page = request.GET['next']
-    if request.user.is_authenticated and next_page is not None:
-        return HttpResponseRedirect(next_page)
-
-    if request.user.is_anonymous and "username" in request.POST and "password" in request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                messages.success(request, "Vaše přihlášení proběhlo úspěšně")
-                if next_page is not None:
-                    return HttpResponseRedirect(next_page)
-            else:
-                messages.error(request, "Vás účet není aktivován")
-        else:
-            messages.error(request, "Neplatné uživatelské jměno nebo heslo")
-    return redirect('base:index')
-
-
-@login_required
-def log_out(request):
-    logout(request)
-    return redirect('base:index')
-
-
-def registration(request):
-    if request.user.is_anonymous:
-        form = RegistrationForm(request.POST or None)
-        if request.POST and form.is_valid():
-            user = IFUser(email=form.cleaned_data['email'],
-                          username=form.cleaned_data['nickname'])
-            user.set_password(form.cleaned_data['password'])
-            # TODO THIS HAS TO BE REMOVED, OR THERE SHOULD BE SPECIAL CHECK FOR DEBUG
-            if settings.DEBUG:
-                user.is_staff = True
-                user.is_superuser = True
-            # TODO THIS HAS TO BE REMOVED, OR THERE SHOULD BE SPECIAL CHECK FOR DEBUG
-            user.save()
-            login(request, user)
-
-            return redirect('base:index')
-        return render(request, 'registration.html', {'form': form})
-    return redirect('base:index')
-
-
 def site_rules(request):
+    """Renders site rules page."""
     return render(request, 'pages/site_rules.html')
 
 
 def statistics(request):
+    """
+    View for statistics.
+    
+    Data:
+    Number of individual race members.
+    Number of individual proffesion members.
+    Number of registered users.
+    Number of online users.
+    """
     stats = {
         'races': list(),
         'professions': list(),
@@ -95,8 +58,45 @@ def statistics(request):
     return render(request, 'pages/statistics.html', {'statistics': stats})
 
 
+def registration(request):
+    """View for registration."""
+    if request.POST:
+        form = IFUserCreationForm(request.POST or None)
+        if form.is_valid():
+            user = form.save()
+            if settings.DEBUG:
+                user.is_staff = True
+                user.is_superuser = True
+            login(request, user)
+            
+            return redirect('base:index')
+    else:
+        form = IFUserCreationForm()
+    return render(request, 'registration/registration.html', {'form': form})
+
+
+class CustomPasswordChangeDoneView(PasswordChangeDoneView):
+    """
+    Class based view for password change.
+    
+    Inherits from PasswordChangeDoneView.
+    Change behavior of default view from rendering template into showing message and redirect to index.
+    """
+    
+    def get(self, request, *args, **kwargs):
+        messages.success(request, "Heslo úspěšně změněno.")
+        return redirect('base:index')
+
+
 @login_required
 def user_change_color(request):
+    """
+    View for user chat color change.
+    
+    Check if request contains newColor field.
+    Check if color value is valid.
+    Returns color and name of current user or BadRequest.
+    """
     if request.POST and 'newColor' in request.POST:
         color = request.POST['newColor']
         if not color.startswith('#'):
@@ -106,8 +106,3 @@ def user_change_color(request):
             request.user.save()
         return JsonResponse({'user': request.user.username, 'newColor': request.user.chat_color})
     return HttpResponseBadRequest()
-
-
-# FIXME name collision
-def login_required(request):
-    return render(request, 'login_required.html')
