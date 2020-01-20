@@ -1,0 +1,15 @@
+{% extends 'base.html' %}{% load static %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <h1>Přihlášení</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <div class="clearfix">
+                <button type="submit" class="btn">Odeslat</button>
+            </div>
+        {% endbuttons %}
+    </form>
+{% endblock %}

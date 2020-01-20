@@ -91,13 +91,11 @@
         </div>
     </div>
     <div class="col-md-2">
-        <table class="menu-side">
-            {% if user.is_anonymous %}
-                {% include "shards/login_form.html" %}
-            {% else %}
-                {% include "shards/logged_menu.html" %}
-            {% endif %}
-        </table>
+        {% if user.is_anonymous %}
+            {% include "shards/login_form.html" %}
+        {% else %}
+            {% include "shards/logged_menu.html" %}
+        {% endif %}
     </div>
 </div>
 </body>

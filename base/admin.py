@@ -1,9 +1,11 @@
 """Admin module for base."""
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
+from base.forms.auth_form import IFUserCreationForm, IFUserChangeForm
 from base.models.character import Character
 from base.models.ifuser import IFUser
 from base.models.profession import BaseProfession, XPLevel
@@ -60,10 +62,18 @@ class XPLevelAdmin(ImportExportModelAdmin):
     ordering = ('profession', 'level')
 
 
+class IFUserAdmin(UserAdmin):
+    add_form = IFUserCreationForm
+    form = IFUserChangeForm
+    model = IFUser
+    list_display = ['username', 'email']
+    ordering = ('username',)
+
+
 if settings.DEBUG:
     admin.site.register(CreatureSize, CreatureSizeAdmin)
     admin.site.register(Race, RaceAdmin)
     admin.site.register(BaseProfession, BaseProfessionAdmin)
     admin.site.register(XPLevel, XPLevelAdmin)
 admin.site.register(Character)
-admin.site.register(IFUser)
+admin.site.register(IFUser, IFUserAdmin)

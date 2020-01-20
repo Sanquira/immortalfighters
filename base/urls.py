@@ -1,15 +1,22 @@
+"""Url module for base."""
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.urls import path
 
-from base import views
+from base.views import base
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('registration/', views.registration, name='registration'),
-    path('accounts/log_in/', views.log_in, name='log_in'),
-    path('accounts/log_out/', views.log_out, name='log_out'),
-    path('login_required/', views.login_required, name='login_required'),
-    path('site_rules/', views.site_rules, name='site_rules'),
-    path('statistics/', views.statistics, name='statistics'),
+    path('', base.index, name='index'),
     
-    path('user_change_color/', views.user_change_color, name='change_color'),
+    path('accounts/login/', LoginView.as_view(), name='login'),
+    path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    
+    path('accounts/password_change/done/', base.CustomPasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('accounts/password_change/', PasswordChangeView.as_view(success_url='done'), name='password_change'),
+    
+    path('accounts/registration/', base.registration, name='registration'),
+    
+    path('site_rules/', base.site_rules, name='site_rules'),
+    path('statistics/', base.statistics, name='statistics'),
+    
+    path('user_change_color/', base.user_change_color, name='change_color'),
 ]
