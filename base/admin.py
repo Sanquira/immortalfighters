@@ -11,6 +11,7 @@ from base.models.ifuser import IFUser
 from base.models.profession import BaseProfession, XPLevel
 from base.models.race import Race
 from base.models.sizes import CreatureSize
+from django.utils.translation import gettext, gettext_lazy as _
 
 
 # pylint: disable=all
@@ -62,12 +63,20 @@ class XPLevelAdmin(ImportExportModelAdmin):
     ordering = ('profession', 'level')
 
 
-class IFUserAdmin(UserAdmin):
-    add_form = IFUserCreationForm
-    form = IFUserChangeForm
+class IFUserAdmin(ImportExportModelAdmin, UserAdmin):
     model = IFUser
-    list_display = ['username', 'email']
+    list_display = ['username', 'last_login', 'active_char', 'email']
     ordering = ('username',)
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        (_('Personal info'), {'fields': ('email',)}),
+        (_('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        }),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        ('Postava', {'fields': ('active_char',)}),
+        ('Další', {'fields': ('chat_color',)}),
+    )
 
 
 if settings.DEBUG:
