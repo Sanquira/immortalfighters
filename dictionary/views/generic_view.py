@@ -220,10 +220,6 @@ class GenericView():
             dummy_item = self.model_class()
             context['dummy_item'] = dummy_item
             model_name_l = lower(self.model_class.__name__)
-            context['perms'] = {
-                'delete': model_name_l + '_delete',
-                'add': model_name_l + '_add',
-                'view': model_name_l + '_view'}
             context['urls'] = {
                 'ajax_url': 'dictionary:' + model_name_l + '_table',
                 'delete': 'dictionary:' + model_name_l + '_delete',

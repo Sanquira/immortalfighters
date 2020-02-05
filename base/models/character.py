@@ -1,3 +1,4 @@
+"""Module for Character entity."""
 from django.db import models
 
 from base.models.ifuser import IFUser
@@ -6,6 +7,9 @@ from base.models.race import Race
 
 
 class Character(models.Model):
+    """
+    Model for Character.
+    """
     owner = models.ForeignKey(IFUser, on_delete=models.CASCADE, verbose_name="Vlastník")
     character_name = models.CharField(max_length=50, null=True, verbose_name="Jméno postavy")
     race = models.ForeignKey(Race, on_delete=models.CASCADE, null=True, verbose_name="Rasa")

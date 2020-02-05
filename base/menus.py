@@ -1,3 +1,4 @@
+"""Menu module for base."""
 from django.urls import reverse
 from menu import MenuItem, Menu
 
