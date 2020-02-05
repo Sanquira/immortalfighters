@@ -1,7 +1,11 @@
+"""Module for Stat entity."""
 from django.db import models
 
 
 class Stat(models.Model):
+    """
+    Model for Stat.
+    """
     name = models.CharField(max_length=20, null=False, blank=False, default="Jméno", verbose_name="Jméno statu")
     shortcut = models.CharField(max_length=3, null=False, blank=False, default="BLK", verbose_name="Zkratka statu")
     
@@ -9,6 +13,7 @@ class Stat(models.Model):
         return self.name
 
 
+# pylint: disable=unused-argument
 def init_stats(apps, schema_editor):
     """To init stats, just call this method in migration.
         Like this:

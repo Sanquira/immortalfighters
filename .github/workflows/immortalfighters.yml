@@ -22,7 +22,7 @@ jobs:
         pipenv update --dev
     - name: Lint with Pylint
       run: |
-        pipenv run pylint --load-plugins pylint_django chat/ dictionary/ immortalfighters/
+        pipenv run pylint --load-plugins pylint_django chat/ dictionary/ immortalfighters/ base/ utils/
     - name: Test with pytest
       run: |
         pipenv run pytest --ds=immortalfighters.settings.tests

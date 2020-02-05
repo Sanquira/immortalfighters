@@ -24,6 +24,7 @@ class BaseProfession(PolymorphicModel):
     hp_dice_fix = models.SmallIntegerField(default=0, verbose_name="Oprava kostky na životy")
     hp_9 = models.SmallIntegerField(default=0, verbose_name="Životy od 9 úrovně")
 
+    # pylint: disable=fixme
     # TODO code stub for upcoming user implementation.
     # def get_level_from_xp(self, xp: int) -> int:
     #     pass
@@ -117,6 +118,8 @@ class XPLevel(models.Model):
         verbose_name = "Úroveň"
         verbose_name_plural = "Úrovně"
 
+
+# pylint: disable=fixme
 # TODO code stub for upcoming user implementation.
 # class MagicUser(models.Model):
 #
