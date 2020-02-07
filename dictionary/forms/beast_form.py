@@ -8,7 +8,7 @@ from dictionary.models.beast import Beast, BeastWeakness, BeastAttack, BeastMobi
 
 class BeastForm(ModelForm):
     """Form for basic Beast entity"""
-    
+
     class Meta:
         model = Beast
         fields = ('name',
@@ -44,7 +44,7 @@ class WeaknessForm(Form):
 
 class BaseWeaknessFormSet(BaseFormSet):
     """Formset of WeaknessForm"""
-    
+
     def clean(self):
         if any(self.errors):
             return
@@ -52,7 +52,7 @@ class BaseWeaknessFormSet(BaseFormSet):
         for form in self.forms:
             if self._should_delete_form(form):
                 continue
-            
+
             if form.cleaned_data and 'weakness' in form.cleaned_data:
                 frm = form.cleaned_data['weakness']
                 if frm in frms:
@@ -61,7 +61,7 @@ class BaseWeaknessFormSet(BaseFormSet):
                         code='duplicate_weakness'
                     )
                 frms.append(frm)
-    
+
     def save_all(self, beast):
         """Saves formset. It has to be valid."""
         if not self.has_changed():
@@ -79,7 +79,7 @@ class BaseWeaknessFormSet(BaseFormSet):
 
 class AttackForm(ModelForm):
     """Form for Attack in Beast"""
-    
+
     class Meta:
         model = BeastAttack
         fields = ('dmg',)
@@ -87,7 +87,7 @@ class AttackForm(ModelForm):
 
 class BaseAttackFormSet(BaseModelFormSet):
     """Formset of AttackForm"""
-    
+
     def save_all(self, beast):
         """Saves formset. It has to be valid."""
         with transaction.atomic():
@@ -101,7 +101,7 @@ class BaseAttackFormSet(BaseModelFormSet):
 
 class MobilityForm(ModelForm):
     """Form for Mobility in Beast"""
-    
+
     class Meta:
         model = BeastMobility
         fields = ('mob',)
@@ -109,7 +109,7 @@ class MobilityForm(ModelForm):
 
 class BaseMobilityFormSet(BaseModelFormSet):
     """Formset of MobilityForm"""
-    
+
     def save_all(self, beast):
         """Saves formset. It has to be valid."""
         with transaction.atomic():

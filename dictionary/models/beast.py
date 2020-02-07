@@ -9,14 +9,14 @@ class BeastWeakness(models.Model):
     """Model for Beast weakness."""
     group = models.CharField(max_length=16, null=False, default='A', verbose_name="Skupina")
     note = models.TextField(null=True, verbose_name="Popis")
-    
+
     def get_form_label(self):
         """Returns string concatenated from group and note."""
         return self.group + " - " + self.note
-    
+
     def __str__(self):
         return self.group
-    
+
     class Meta:
         verbose_name = "Zranitelnost"
         verbose_name_plural = "Zranitelnosti"
@@ -25,10 +25,10 @@ class BeastWeakness(models.Model):
 class BeastCategory(models.Model):
     """Model for Beast category."""
     name = models.CharField(max_length=64, null=False, default="Příšera", verbose_name="Jméno kategorie")
-    
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = "Kategorie"
         verbose_name_plural = verbose_name
@@ -54,10 +54,10 @@ class Beast(models.Model):
     note_pj = MarkdownxField(null=True, blank=True, verbose_name="Popis pro PJ")
     powers = MarkdownxField(null=True, blank=True, verbose_name="Zvláštní schopnosti")
     category = models.ForeignKey(BeastCategory, on_delete=models.CASCADE, verbose_name="Kategorie")
-    
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = "Příšera"
         verbose_name_plural = "Příšery"
@@ -67,10 +67,10 @@ class BeastAttack(models.Model):
     """Model for Beast attack."""
     beast = models.ForeignKey(Beast, on_delete=models.CASCADE)
     dmg = models.CharField(max_length=128, null=False, default='', verbose_name="Útočné číslo")
-    
+
     def __str__(self):
         return self.beast.name + " - " + self.dmg
-    
+
     class Meta:
         verbose_name = "Útočné číslo"
         verbose_name_plural = "Útočná čísla"
@@ -80,10 +80,10 @@ class BeastMobility(models.Model):
     """Model for Beast mobility."""
     beast = models.ForeignKey(Beast, on_delete=models.CASCADE)
     mob = models.SmallIntegerField(null=False, default=0, verbose_name="Pohyblivost")
-    
+
     def __str__(self):
         return self.beast.name + " - " + str(self.mob)
-    
+
     class Meta:
         verbose_name = "Pohyblivost"
         verbose_name_plural = "Pohyblivosti"
@@ -108,8 +108,10 @@ def init_weakness(apps, schema_editor):
     BeastWeakness(group='H', note="Jed, kyselina, alchymistické lektvary, protijedy.").save()
     BeastWeakness(group='I',
                   note="1. skupina kouzel (hraničářská) - úder varování, úder zloby, úder nenávisti, uzdrav lehká zranění, uzdrav těžká zranění, uzdrav nemocného, ošetři zranění chladem, ošetři zranění kyselinou, ošetři zranění ohněm, neutralizuj jed, odstraň únavu.").save()
-    BeastWeakness(group='J', note="2. skupina kouzel (útočná) - modré, zelené, černé, fialové, rudé, žluté, bílé a bledé blesky; všechny typy kulových a průrazných blesků, sršatec, temný úder.").save()
-    BeastWeakness(group='K', note="3. skupina kouzel (ohnivá a mrazivá) - nebezpečné ovoce, oheň, ohnivý déšť, chlad hvězd, ledový blesk, lomeny plamen, ohnivý bič, pekelný oheň, zmrzlý blesk, granátové jablko, ohnivá koule.").save()
+    BeastWeakness(group='J',
+                  note="2. skupina kouzel (útočná) - modré, zelené, černé, fialové, rudé, žluté, bílé a bledé blesky; všechny typy kulových a průrazných blesků, sršatec, temný úder.").save()
+    BeastWeakness(group='K',
+                  note="3. skupina kouzel (ohnivá a mrazivá) - nebezpečné ovoce, oheň, ohnivý déšť, chlad hvězd, ledový blesk, lomeny plamen, ohnivý bič, pekelný oheň, zmrzlý blesk, granátové jablko, ohnivá koule.").save()
     BeastWeakness(group='L',
                   note="4. skupina kouzel (fyzická) - améba, břichomluvectví, cizí oči, cizí uši, dlouhá ruka, hyperprostor, hyperprostor 2, mágův velký mix, Melenina krása, metamorfóza, metamorfóza 2, mrak smrti, neslyšitelnost, neviditelnost, nevycítitelnost, ochrom bleskem, orlí oči, plošný hyperprostor, procházení zdí, protoplazma, převtělení, přežij, rozptyl kouzla, rychlost, smrtící déšť, soví oči, vodní dech, všepronikání, zabij, zapůjčení, zažeň únavu, zesměšni, zlom kouzlo, zmiz, zpomalení.").save()
     BeastWeakness(group='M',

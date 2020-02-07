@@ -15,19 +15,19 @@ class SpellView(GenericView):
     ProfessionLimitationFormSet = modelformset_factory(ProfessionLimitation, form=ProfessionLimitationForm,
                                                        formset=BaseProfessionLimitationFormSet, min_num=1,
                                                        validate_min=True, validate_max=True, can_delete=True, extra=1)
-    
+
     SpellDirectionFormSet = formset_factory(SpellDirectionForm, min_num=0, validate_min=True,
                                             validate_max=True, formset=BaseSpellDirectionFormSet,
                                             can_delete=True, extra=1)
-    
+
     def __init__(self):
         super().__init__(Spell, SpellForm, 'spell/view.html', 'spell/edit.html')
         self.add_successful_msg = "Nové kouzlo bylo uloženo."
         self.edit_successful_msg = "Kouzlo bylo úspěšně upraveno."
-    
+
     def get_success_response(self):
         return redirect("dictionary:spell")
-    
+
     # pylint: disable=unexpected-keyword-arg
     # Disabled because of queryset in formset.
     def get_default_formset_dict(self, item, is_adding: bool) -> dict:
@@ -44,7 +44,7 @@ class SpellView(GenericView):
         ret['formset_profs'] = self.ProfessionLimitationFormSet(queryset=profs, prefix="formset-prof")
         ret['formset_profs'].title = "Omezení povolání"
         return ret
-    
+
     def get_formset_dict(self, post) -> dict:
         ret = dict()
         ret['formset_dirs'] = self.SpellDirectionFormSet(post, prefix="formset-dir")
@@ -52,7 +52,7 @@ class SpellView(GenericView):
         ret['formset_profs'] = self.ProfessionLimitationFormSet(post, prefix="formset-prof")
         ret['formset_profs'].title = "Omezení povolání"
         return ret
-    
+
     # pylint: disable=duplicate-code
     def get_edit_context(self):
         ret = dict()
@@ -60,12 +60,12 @@ class SpellView(GenericView):
             "includes/formset.html"
         ]
         return ret
-    
+
     def get_view_context(self):
         return {
             'title': "Kouzlo"
         }
-    
+
     def get_data_list(self, search: str):
         data = [
             {
@@ -85,11 +85,11 @@ class SpellView(GenericView):
             } for spell in Spell.get_spells_for_profession(None).filter(name__contains=search)
         )
         return data
-    
+
     def get_data_total(self):
         return Spell.objects.aggregate(noRestriction=Count('pk', filter=Q(available_for_professions=None)),
                                        restriction=Count('available_for_professions'))
-    
+
     def get_table_context(self):
         return {
             'columns': [{"data": 'pk', "visible": False},

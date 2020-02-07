@@ -5,6 +5,7 @@ from permissions.models import TestModel, CharacterPermissions
 from permissions.utils import AbstractPermissionSystem
 from tests.permission.conftest import PERMISSION_ONE, PERMISSION_TWO, PERMISSION_UNUSED
 
+
 def test_default_permission_manager(model2):
     """Tests that manager is automatically created if he is not provided"""
     assert model2.manager is not None

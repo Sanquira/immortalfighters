@@ -21,6 +21,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     """
     Async JSON Consumer for chat application
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.connected = False

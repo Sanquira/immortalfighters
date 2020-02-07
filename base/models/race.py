@@ -21,14 +21,14 @@ class Race(models.Model):
     cha_min = models.SmallIntegerField(default=0, verbose_name="Charisma minimum")
     cha_max = models.SmallIntegerField(default=0, verbose_name="Charisma maximum")
     cha_fix = models.SmallIntegerField(default=0, verbose_name="Charisma oprava")
-    
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = "Rasa"
         verbose_name_plural = "Rasy"
-    
+
     # pylint: disable=too-many-locals, too-many-arguments
     def race_factory(self, name: str, str_min: int, str_max: int, dex_min: int, dex_max: int, res_min: int,
                      res_max: int, int_min: int, int_max: int, cha_min: int, cha_max: int, str_fix: int, dex_fix: int,

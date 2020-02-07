@@ -68,7 +68,7 @@ def registration(request):
                 user.is_staff = True
                 user.is_superuser = True
             login(request, user)
-            
+
             return redirect('base:index')
     else:
         form = IFUserCreationForm()
@@ -82,7 +82,7 @@ class CustomPasswordChangeDoneView(PasswordChangeDoneView):
     Inherits from PasswordChangeDoneView.
     Change behavior of default view from rendering template into showing message and redirect to index.
     """
-    
+
     def get(self, request, *args, **kwargs):
         messages.success(request, "Heslo úspěšně změněno.")
         return redirect('base:index')

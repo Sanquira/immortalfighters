@@ -6,6 +6,7 @@ from base.models.ifuser import IFUser
 
 class IFUserCreationForm(UserCreationForm):
     """Form for creating user."""
+
     class Meta:
         model = IFUser
         fields = ('username', 'email')
@@ -13,6 +14,7 @@ class IFUserCreationForm(UserCreationForm):
 
 class IFUserChangeForm(UserChangeForm):
     """Form for changing user parameters."""
+
     class Meta:
         model = IFUser
         fields = ('username', 'email')

@@ -8,7 +8,7 @@ from dictionary.models.spell import Spell, SpellDirection, ProfessionLimitation
 
 class SpellForm(ModelForm):
     """Form for basic Spell entity"""
-    
+
     class Meta:
         model = Spell
         fields = ('name',
@@ -23,7 +23,7 @@ class SpellForm(ModelForm):
 
 class ProfessionLimitationForm(ModelForm):
     """Form for ProfessionLimitation in Spell"""
-    
+
     class Meta:
         model = ProfessionLimitation
         fields = ('profession',
@@ -33,7 +33,7 @@ class ProfessionLimitationForm(ModelForm):
 
 class BaseProfessionLimitationFormSet(BaseModelFormSet):
     """Formset of ProfessionLimitation in Spell"""
-    
+
     def clean(self):
         if any(self.errors):
             return
@@ -41,7 +41,7 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
         for form in self.forms:
             if self._should_delete_form(form):
                 continue
-            
+
             if form.cleaned_data and 'profession' in form.cleaned_data:
                 prof = form.cleaned_data['profession']
                 if prof in profs:
@@ -50,7 +50,7 @@ class BaseProfessionLimitationFormSet(BaseModelFormSet):
                         code='duplicate_profession'
                     )
                 profs.append(prof)
-    
+
     def save_all(self, spell):
         """Saves formset. It has to be valid."""
         with transaction.atomic():
@@ -78,7 +78,7 @@ class SpellDirectionForm(Form):
 
 class BaseSpellDirectionFormSet(BaseFormSet):
     """Formset of Direction in Spell"""
-    
+
     def clean(self):
         if any(self.errors):
             return
@@ -86,7 +86,7 @@ class BaseSpellDirectionFormSet(BaseFormSet):
         for form in self.forms:
             if self._should_delete_form(form):
                 continue
-            
+
             if form.cleaned_data and 'direction' in form.cleaned_data:
                 frm = form.cleaned_data['direction']
                 if frm in frms:
@@ -95,7 +95,7 @@ class BaseSpellDirectionFormSet(BaseFormSet):
                         code='duplicate_direction'
                     )
                 frms.append(frm)
-    
+
     def save_all(self, spell):
         """Saves formset. It has to be valid."""
         if not self.has_changed():

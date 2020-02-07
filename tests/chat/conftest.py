@@ -59,10 +59,12 @@ async def user_communicator(settings):
 @pytest.fixture
 async def connected_communicator(user_communicator, additional_messages: int = 0):
     """Return communicator for specific user and room with filtered initial login messages"""
+
     async def _connector(user, room, autoclean=True) -> WebsocketCommunicator:
         communicator = user_communicator(user, room, autoclean)
         await communicator.connect()
         await ignore_messages(communicator, 2 + additional_messages)
 
         return communicator
+
     yield _connector
