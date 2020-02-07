@@ -22,13 +22,13 @@
     <script src="{% static 'chat/js/chatClient.js' %}"></script>
 
     <script>
-        MAX_CLIENT_MESSAGES = 500;
+        const MAX_CLIENT_MESSAGES = 500;
+        const DEFAULT_COLOR = '#FFFFFF';
         let userList = {};
         let my_user;
         let roomName = {{ room_name_json }};
         let logEle, usersEle;
         let bartender = {name: "Hospodský", color: "#A57542"};
-
         let audio_enabled = {{ user.chat_sounds|yesno:"true,false" }};
         let audio_join = new Audio("{% static 'chat/sounds/in64.mp3' %}");
         let audio_left = new Audio("{% static 'chat/sounds/out64.mp3' %}");
@@ -48,10 +48,14 @@
              * @param message
              */
             client.onChatMessage = function ({user, time, message}) {
-                publishMessage(logEle, createMessage(message, userList[user], time * 1000));
-                userList[user].messageRef.nodeValue = new Date(time * 1000).toLocaleTimeString();
-                if (audio_enabled && document.visibilityState === "hidden")
-                    audio_msg.play()
+                publishMessage(logEle, createMessage(message, getUser(user), time * 1000));
+                if (user in userList) {
+                    userList[user].messageRef.nodeValue = new Date(time * 1000).toLocaleTimeString();
+                }
+                if (client.hasJoined()) {
+                    if (audio_enabled && document.visibilityState === "hidden")
+                        audio_msg.play()
+                }
             };
 
             /**
@@ -62,10 +66,14 @@
              * @param message
              */
             client.onPrivateMessage = function ({target_user, user, time, message}) {
-                publishMessage(logEle, createPrivateMessage(message, userList[user], userList[target_user], time * 1000));
-                userList[user].messageRef.nodeValue = new Date(time * 1000).toLocaleTimeString();
-                if (audio_enabled && document.visibilityState === "hidden")
-                    audio_msg.play()
+                publishMessage(logEle, createPrivateMessage(message, getUser(user), getUser(target_user), time * 1000));
+                if (user in userList) {
+                    userList[user].messageRef.nodeValue = new Date(time * 1000).toLocaleTimeString();
+                }
+                if (client.hasJoined()) {
+                    if (audio_enabled && document.visibilityState === "hidden")
+                        audio_msg.play()
+                }
             };
 
             /**
@@ -76,9 +84,11 @@
              */
             client.onUserJoinChannel = function ({user, time}) {
                 publishMessage(logEle, createMessage(user.name + " vstupuje do hospody.", bartender, time * 1000));
-                createUsersEntry(user, time * 1000);
-                if (audio_enabled)
-                    audio_join.play()
+                if (client.hasJoined()) {
+                    createUsersEntry(user, time * 1000);
+                    if (audio_enabled)
+                        audio_join.play()
+                }
             };
 
             /**
@@ -88,9 +98,11 @@
              */
             client.onUserLeaveChannel = function ({user, time}) {
                 publishMessage(logEle, createMessage(user + " se potácí pryč.", bartender, time * 1000));
-                removeUsersEntry(user);
-                if (audio_enabled)
-                    audio_left.play()
+                if (client.hasJoined()) {
+                    removeUsersEntry(user);
+                    if (audio_enabled)
+                        audio_left.play()
+                }
             };
 
             /**
@@ -115,13 +127,15 @@
              * @param user - Your user
              * @param time - When you joined (ms)
              * @param users - All users in room ({name:str, color:str})
+             * @param history - History sent from the server
              */
-            client.onJoinChannel = function ({user, time, users}) {
+            client.onJoinChannel = function ({user, time, users, history}) {
                 my_user = user;
                 for (let i = 0; i < users.length; i++) {
                     createUsersEntry(users[i], time * 1000)
                 }
                 document.querySelector('#chat-color').jscolor.fromString(user.color);
+                client.simulateHistory(history)
             };
 
             document.querySelector('#chat-message-input').focus();
@@ -189,14 +203,25 @@
 
         });
 
+         /**
+         * Return user by name, returns new user with default color, if user is not connected:
+         *
+         * @param user - username
+         */
+        function getUser(user) {
+             if (!(user in userList)) {
+                 return {name: user, color: DEFAULT_COLOR, messageRef: ""};
+             }
+             return userList[user];
+         }
+
         /**
          * Create <p> element containing colored message in format:
          * <time> <user>: <message>
          *
          * @param message - string message
-         * @param user - user object {name:str, color:str}
+         * @param user - user object {name:str, color:str, messageRef:str}
          * @param time - time in milliseconds
-         * @param color - color of message
          */
         function createMessage(message, user, time) {
             return createPrivateMessage(message, user, null, time);
@@ -207,10 +232,9 @@
          * <time> <from_user>-><to_user>: <message>
          *
          * @param message - string message
-         * @param from_user - user object sending message {name:str, color:str}
-         * @param to_user - user object receiving message {name:str, color:str}
+         * @param from_user - user object sending message {name:str, color:str, messageRef:str}
+         * @param to_user - user object receiving message {name:str, color:str, messageRef:str}
          * @param time - time in milliseconds
-         * @param color - color of message
          */
         function createPrivateMessage(message, from_user, to_user, time) {
             let para = document.createElement("P");

@@ -29,6 +29,14 @@ def room2(transactional_db):
 
 
 @pytest.fixture
+def room3(transactional_db):
+    """Test room number three"""
+    room = Room.objects.create(name="test_room3")
+    room.save()
+    return room
+
+
+@pytest.fixture
 def non_existing_room():
     """Not persisted room"""
     return Room(name="nope_room")

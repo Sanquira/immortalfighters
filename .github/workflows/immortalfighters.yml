@@ -9,6 +9,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:10.5
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+        - 5433:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - uses: actions/checkout@v1
       - name: Set up Python 3.7
@@ -22,7 +34,7 @@ jobs:
           pipenv update --dev
       - name: Lint with Pylint
         run: |
-          pipenv run pylint --load-plugins pylint_django chat/ dictionary/ immortalfighters/ base/ utils/
+          pipenv run pylint --load-plugins pylint_django chat/ dictionary/ immortalfighters/ base/ utils/ tests/
       - name: Test with pytest
         run: |
           pipenv run pytest --ds=immortalfighters.settings.tests

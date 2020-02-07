@@ -4,7 +4,7 @@ class ChatClient {
         // More info on these types of messages can be found in chat/components/messages.py
         this.onPrivateMessage = function ({target_user, user, time, message}) {};
         this.onChatMessage = function ({user, time, message}) {};
-        this.onJoinChannel = function ({user, time, users}) {};
+        this.onJoinChannel = function ({user, time, users, history}) {};
         this.onUserJoinChannel = function ({user, time}) {};
         this.onUserLeaveChannel = function ({user, time}) {};
 
@@ -16,6 +16,7 @@ class ChatClient {
         this.webSocket = new WebSocket(wsUrl);
         this.webSocket.onerror = this.socketClosedHandler.bind(this);
         this.webSocket.onmessage = this.messageHandler.bind(this);
+        this.joined = false;
 
     }
 
@@ -37,30 +38,35 @@ class ChatClient {
             console.debug("Received message without type parameter, ignoring")
         } else {
             console.debug("Received message with type " + data['type'] + ", processing");
-            var message_type = data["type"];
-            delete data.type;
-            switch (message_type) {
-                case 'user_join_channel':
-                    this.onUserJoinChannel(data);
-                    break;
-                case 'user_leave_channel':
-                    this.onUserLeaveChannel(data);
-                    break;
-                case 'private_message':
-                    this.onPrivateMessage(data);
-                    break;
-                case 'chat_message':
-                    this.onChatMessage(data);
-                    break;
-                case 'join_channel':
-                    this.onJoinChannel(data);
-                    break;
-                case 'error':
-                    this.onErrorMessage(data);
-                    break;
-                default:
-                    console.debug("Received message with invalid type " + data['type'] + ", ignoring");
-            }
+            this._process_message(data);
+        }
+    }
+
+    _process_message(message) {
+        var message_type = message["type"];
+        delete message.type;
+        switch (message_type) {
+            case 'user_join_channel':
+                this.onUserJoinChannel(message);
+                break;
+            case 'user_leave_channel':
+                this.onUserLeaveChannel(message);
+                break;
+            case 'private_message':
+                this.onPrivateMessage(message);
+                break;
+            case 'chat_message':
+                this.onChatMessage(message);
+                break;
+            case 'join_channel':
+                this.onJoinChannel(message);
+                this.joined = true;
+                break;
+            case 'error':
+                this.onErrorMessage(message);
+                break;
+            default:
+                console.debug("Received message with invalid type " + message['type'] + ", ignoring");
         }
     }
 
@@ -68,6 +74,7 @@ class ChatClient {
         this.webSocket.send(JSON.stringify(data));
     }
 
+    // Public methods
     sendChatMessage(message) {
         this._sendMessage({
             'type': "chat_message",
@@ -83,4 +90,13 @@ class ChatClient {
         });
     }
 
+    simulateHistory(history) {
+        for (const message of history) {
+            this._process_message(message)
+        }
+    }
+
+    hasJoined() {
+        return this.joined;
+    }
 }

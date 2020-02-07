@@ -4,6 +4,9 @@ Util methods for use in tests
 
 from channels.testing import WebsocketCommunicator
 
+from chat.components.messages import BaseMessage
+from chat.models import Room, HistoryRecord
+
 
 def is_valid_message(message) -> bool:
     """Checks if message has all basic fields"""
@@ -21,6 +24,22 @@ def is_valid_error_message(message) -> bool:
         return False
 
     return message["type"] == "error" and "error_type" in message
+
+
+def valid_history(history, expected_count, expected_messages=None):
+    """Checks if history is valid"""
+    expected_messages = expected_messages or []
+    if len(history) != expected_count:
+        return False
+    for i in range(len(expected_messages)):
+        if history[i]["type"] != expected_messages[i]:
+            return False
+    return True
+
+
+def create_history_record(room: Room, message: BaseMessage):
+    record = HistoryRecord(room=room, time=message.time, message=message.to_dict())
+    record.save()
 
 
 def is_error(message, expected_error: str) -> bool:
