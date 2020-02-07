@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'permissions',
     'dictionary',
     'chat',
-    
+
     'markdownx',
     'import_export',
     'polymorphic',
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'tagging_autocomplete_new',
     'menu',
     'channels',
-    
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

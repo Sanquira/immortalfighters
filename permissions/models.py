@@ -16,6 +16,7 @@ class PermissionManager(models.Model):
     or use groups of subjects and attach permissions to them.
     To use this class, simply create model than inherits from this model.
     """
+
     def list_groups(self):
         """Lists all the groups that exist in this manager"""
         return self.groups.all()

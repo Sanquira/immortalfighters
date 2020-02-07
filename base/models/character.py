@@ -22,7 +22,7 @@ class Character(models.Model):
     # stat_charisma = models.PositiveSmallIntegerField(default=0)
     # experience_points = models.PositiveIntegerField(default=0)
     # level = models.PositiveSmallIntegerField(default=0)
-    
+
     class Meta:
         verbose_name = "Postava"
         verbose_name_plural = "Postavy"

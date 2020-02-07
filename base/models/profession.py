@@ -34,23 +34,23 @@ class BaseProfession(PolymorphicModel):
     #
     # def get_level_price(self, level: int) -> int:
     #     pass
-    
+
     def get_hp(self) -> int:
         """Returns initial HP."""
         return self.hp_start
-    
+
     def get_hp_dice(self) -> int:
         """Returns what dice use to HP generation."""
         return self.hp_dice
-    
+
     def get_dice_fix(self) -> int:
         """Returns dice fix for HP generation."""
         return self.hp_dice_fix
-    
+
     def get_hp_9(self) -> int:
         """Returns HP add after lvl 9."""
         return self.hp_9
-    
+
     # pylint: disable=too-many-locals,too-many-arguments
     def profession_factory(self, name: str, parent_prof: 'BaseProfession', str_min=0, str_max=0, dex_min=0, dex_max=0,
                            res_min=0, res_max=0, int_min=0, int_max=0, cha_min=0, cha_max=0, hp_start=0, hp_dice=0,
@@ -88,10 +88,10 @@ class BaseProfession(PolymorphicModel):
             self.hp_dice = hp_dice
             self.hp_dice_fix = hp_dice_fix
             self.hp_9 = hp_9
-    
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = "Povolání"
         verbose_name_plural = verbose_name
@@ -103,17 +103,17 @@ class XPLevel(models.Model):
     level = models.SmallIntegerField(default=0, verbose_name="Úroveň")
     xp_needed = models.IntegerField(default=0, verbose_name="Zkušenosti")
     money_needed = models.IntegerField(default=0, verbose_name="Cena")
-    
+
     def xp_level_factory(self, prof: BaseProfession, level: int, xp_needed: int, money: int):
         """Factory for XPLevel init."""
         self.profession = prof
         self.level = level
         self.xp_needed = xp_needed
         self.money_needed = money
-    
+
     def __str__(self):
         return self.profession.name + "_" + str(self.level)
-    
+
     class Meta:
         verbose_name = "Úroveň"
         verbose_name_plural = "Úrovně"

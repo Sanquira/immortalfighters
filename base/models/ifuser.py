@@ -12,7 +12,7 @@ class IFUser(AbstractUser, models.Model):
     active_char = models.ForeignKey("Character", on_delete=models.CASCADE, null=True, blank=True,
                                     verbose_name="Aktivní postava")
     chat_color = ColorField(default='#ffffff', null=False, blank=False, verbose_name="Barva chatu")
-    
+
     class Meta:
         verbose_name = "Uživatel"
         verbose_name_plural = "Uživatelé"

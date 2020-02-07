@@ -8,7 +8,7 @@ from base.models.stat import Stat
 class SkillDifficulty(models.Model):
     """Model for Difficulty."""
     name = models.CharField(max_length=20, verbose_name="Obtížnost")
-    
+
     def __str__(self):
         return self.name
 
@@ -17,7 +17,7 @@ class SkillRank(models.Model):
     """Model for Rank."""
     name = models.CharField(max_length=20, verbose_name="Stupeň")
     trap = models.SmallIntegerField(null=False, verbose_name="Past")
-    
+
     def __str__(self):
         return self.name
 
@@ -27,10 +27,10 @@ class SkillPoints(models.Model):
     difficulty = models.ForeignKey(SkillDifficulty, on_delete=models.CASCADE, verbose_name="Obtížnost")
     rank = models.ForeignKey(SkillRank, null=False, on_delete=models.CASCADE, verbose_name="Stupeň")
     points = models.SmallIntegerField(null=False, verbose_name="Body")
-    
+
     def __str__(self):
         return self.difficulty.name + " - " + self.rank.__str__()
-    
+
     class Meta:
         verbose_name = "Dovednostní body"
         verbose_name_plural = verbose_name
@@ -48,10 +48,10 @@ class Skill(models.Model):
     failure = MarkdownxField(null=True, verbose_name="Neúspěch")
     failure_total = MarkdownxField(null=True, verbose_name="Totální neúspěch")
     note = MarkdownxField(null=True, verbose_name="Poznámka")
-    
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = "Dovednost"
         verbose_name_plural = "Dovednosti"
@@ -72,7 +72,7 @@ def init_ranks_and_difficulty(apps, schema_editor):
     SkillRank(name="Dobře", trap=2).save()
     SkillRank(name="Velmi dobře", trap=-1).save()
     SkillRank(name="Dokonale", trap=-4).save()
-    
+
     SkillDifficulty(name='Lehká').save()
     SkillDifficulty(name='Střední').save()
     SkillDifficulty(name='Těžká').save()

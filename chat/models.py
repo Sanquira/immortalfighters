@@ -6,6 +6,7 @@ from django.db import models
 
 class LowerCaseCharField(models.CharField):
     """CharField that contains only lowercase symbols"""
+
     def get_prep_value(self, value):
         return str(value).lower()
 
@@ -16,7 +17,7 @@ class Room(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = "Místnost"
         verbose_name_plural = "Místnosti"

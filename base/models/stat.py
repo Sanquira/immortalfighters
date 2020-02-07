@@ -8,7 +8,7 @@ class Stat(models.Model):
     """
     name = models.CharField(max_length=20, null=False, blank=False, default="Jméno", verbose_name="Jméno statu")
     shortcut = models.CharField(max_length=3, null=False, blank=False, default="BLK", verbose_name="Zkratka statu")
-    
+
     def __str__(self):
         return self.name
 

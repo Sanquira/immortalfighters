@@ -6,6 +6,7 @@ from base.models.ifuser import IFUser
 
 class Serializable:
     """Any serializable object"""
+
     def __init__(self, **kwargs) -> None:
         self.fields = {**kwargs}
 
@@ -24,5 +25,6 @@ class Serializable:
 
 class ChatUser(Serializable):
     """Serializable version of IFUser, without all the unnecessary fields"""
+
     def __init__(self, user: IFUser) -> None:
         super().__init__(name=user.username, color=user.chat_color)
