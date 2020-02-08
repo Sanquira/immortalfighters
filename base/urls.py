@@ -3,6 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.urls import path
 
 from base.views import base
+from base.views import user
 
 urlpatterns = [
     path('', base.index, name='index'),
@@ -18,5 +19,6 @@ urlpatterns = [
     path('site_rules/', base.site_rules, name='site_rules'),
     path('statistics/', base.statistics, name='statistics'),
 
-    path('user_change_color/', base.user_change_color, name='change_color'),
+    path('user/color/', user.change_user_color, name='change_color'),
+    path('user/sounds/', user.change_sound_setting, name='chat_sound')
 ]
