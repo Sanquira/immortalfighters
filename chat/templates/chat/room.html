@@ -9,10 +9,6 @@
     <title>ImmortalFighters - Hospůdka - {{ room_name }}</title>
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous">
-    </script>
     <script src={% static 'utils/js/bootstrap-show-modal.js' %}></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"
             integrity="sha256-CJWfUCeP3jLdUMVNUll6yQx37gh9AKmXTRxvRf7jzro="
@@ -37,7 +33,7 @@
         let audio_join = new Audio("{% static 'chat/sounds/in64.mp3' %}");
         let audio_left = new Audio("{% static 'chat/sounds/out64.mp3' %}");
         let audio_msg = new Audio("{% static 'chat/sounds/public_message96.mp3' %}");
-        audio_msg.volume = 0.5;
+        audio_msg.volume = 0.2;
         $(document).ready(function () {
             logEle = document.querySelector('#chat-log');
             usersEle = document.querySelector('#chat-users');
@@ -54,7 +50,7 @@
             client.onChatMessage = function ({user, time, message}) {
                 publishMessage(logEle, createMessage(message, user, time * 1000, userList[user].color));
                 userList[user].messageRef.nodeValue = new Date(time * 1000).toLocaleTimeString();
-                if (audio_enabled)
+                if (audio_enabled && document.visibilityState === "hidden")
                     audio_msg.play()
             };
 
@@ -68,7 +64,7 @@
             client.onPrivateMessage = function ({target_user, user, time, message}) {
                 publishMessage(logEle, createPrivateMessage(message, user, target_user, time * 1000, userList[user].color));
                 userList[user].messageRef.nodeValue = new Date(time * 1000).toLocaleTimeString();
-                if (audio_enabled)
+                if (audio_enabled && document.visibilityState === "hidden")
                     audio_msg.play()
             };
 
@@ -211,7 +207,7 @@
             if (to_user == null) {
                 user_text = document.createTextNode(new Date(time).toLocaleTimeString() + " " + from_user);
             } else {
-                user_text = document.createTextNode(new Date(time).toLocaleTimeString() + " " + from_user + "->" + to_user);
+                user_text = document.createTextNode(new Date(time).toLocaleTimeString() + " " + from_user + " \u21D2 " + to_user);
             }
             user_span.appendChild(user_text);
             const message_text = document.createTextNode(": " + message);
@@ -377,8 +373,8 @@
                 user_span.appendChild(user_text);
                 user_text = document.createTextNode(": ");
                 user_span.appendChild(user_text);
-                user_span.appendChild(user[1].messageRef);
                 para.appendChild(user_span);
+                para.appendChild(user[1].messageRef);
                 usersEle.appendChild(para);
             }
         }
@@ -413,7 +409,7 @@
     <div id="chat-input" class="row no-gutters" style="height: 4vh;">
         <div class="row no-gutters col-12">
             <div class="col-9">
-                <input id="chat-message-input" type="text" maxlength="128"/>
+                <input id="chat-message-input" type="text" maxlength="512"/>
             </div>
             <div class="col-1">
                 <select id="chat-message-pm">
