@@ -1,12 +1,8 @@
 """Module for Base views."""
-import re
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeDoneView
-from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 
 from base.forms.auth_form import IFUserCreationForm
@@ -14,8 +10,6 @@ from base.models.character import Character
 from base.models.ifuser import IFUser
 from base.models.profession import BaseProfession
 from base.models.race import Race
-
-COLOR_PATTERN = re.compile("^#(?:[0-9a-fA-F]{3}){1,2}$")
 
 
 def index(request):
@@ -86,23 +80,3 @@ class CustomPasswordChangeDoneView(PasswordChangeDoneView):
     def get(self, request, *args, **kwargs):
         messages.success(request, "Heslo úspěšně změněno.")
         return redirect('base:index')
-
-
-@login_required
-def user_change_color(request):
-    """
-    View for user chat color change.
-    
-    Check if request contains newColor field.
-    Check if color value is valid.
-    Returns color and name of current user or BadRequest.
-    """
-    if request.POST and 'newColor' in request.POST:
-        color = request.POST['newColor']
-        if not color.startswith('#'):
-            color = '#' + color
-        if COLOR_PATTERN.match(color):
-            request.user.chat_color = color
-            request.user.save()
-        return JsonResponse({'user': request.user.username, 'newColor': request.user.chat_color})
-    return HttpResponseBadRequest()

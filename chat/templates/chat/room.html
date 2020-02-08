@@ -29,7 +29,7 @@
         let logEle, usersEle;
         let bartender = {name: "Hospodský", color: "#A57542"};
 
-        let audio_enabled = true;
+        let audio_enabled = {{ user.chat_sounds|yesno:"true,false" }};
         let audio_join = new Audio("{% static 'chat/sounds/in64.mp3' %}");
         let audio_left = new Audio("{% static 'chat/sounds/out64.mp3' %}");
         let audio_msg = new Audio("{% static 'chat/sounds/public_message96.mp3' %}");
@@ -37,7 +37,7 @@
         $(document).ready(function () {
             logEle = document.querySelector('#chat-log');
             usersEle = document.querySelector('#chat-users');
-            const protocol = window.location.protocol == "https:" ? "wss" : "ws";
+            const protocol = window.location.protocol === "https:" ? "wss" : "ws";
             const client = new ChatClient(protocol + '://' + window.location.host +
                 '/ws/chat/' + roomName + '/');
 
@@ -163,6 +163,20 @@
                 audio_enabled = !audio_enabled;
                 e.target.classList.toggle('icon-volume-off');
                 e.target.classList.toggle('icon-volume-on');
+                $.ajax({
+                    url: "{% url 'base:chat_sound' %}",
+                    method: 'POST',
+                    data: {
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                        "newSound": audio_enabled,
+                    },
+                    success: function (data) {
+
+                    },
+                    error: function (data) {
+                        console.debug(data);
+                    }
+                });
             };
 
             if (audio_enabled) {
@@ -319,9 +333,6 @@
                 },
                 error: function (data) {
                     console.debug(data);
-                    if (data.status === 400) {
-                        handleError("Barvy, barvičky!", "Chyba v nastavení barvy. Přesněji řečeno: 400!");
-                    }
                 }
             });
         }
