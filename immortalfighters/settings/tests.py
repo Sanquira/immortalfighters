@@ -2,7 +2,7 @@
 Settings used for tests
 """
 # pylint: disable=wildcard-import,unused-wildcard-import
-from .development import *
+from .base import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
