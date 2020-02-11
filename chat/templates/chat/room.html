@@ -403,18 +403,21 @@
 </head>
 
 <body>
-<div id="hospudka" class="chat-container container-fluid" style="height: 100vh">
-    <div class="row no-gutters" style="height: 4vh">
+<div id="hospudka" class="chat-container container-fluid">
+    <div class="row no-gutters chat-header">
         <div class="col-10 row no-gutters">
-            <h1 class="col-auto"><a href="{% url "base:index" %}">Immortal Fighters</a></h1>
+            <div class="col-auto">
+                <h1><a href="{% url "base:index" %}">Immortal Fighters</a></h1>
+            </div>
         </div>
         <div class="col-2">
             <i id="chat-mute-icon" class="icon-volume-off align-right chat-icon"></i>
         </div>
     </div>
-    <div class="row no-gutters" style="height: 92vh">
-        <div class="col-10" style="height: 100%;">
+    <div class="row no-gutters chat-body">
+        <div class="col-10" style="height: 100%">
             <div id="chat-log"></div>
+            {#New messages box#}
             <div style="position: absolute; left: 50%; bottom: 0">
                 <div id="new-messages"
                      style="position: relative; left: -50%;"
@@ -426,26 +429,23 @@
         </div>
         <div class="col-2" id="chat-users"></div>
     </div>
-    <div id="chat-input" class="row no-gutters" style="height: 4vh;">
-        <div class="row no-gutters col-12">
-            <div class="col-9">
-                <input id="chat-message-input" type="text" maxlength="512"/>
-            </div>
-            <div class="col-1">
-                <select id="chat-message-pm">
-                    <option>-----</option>
-                </select>
-            </div>
-            <div class="col-1">
-                <input id="chat-message-submit" type="button" value="Send"/>
-            </div>
-            <div class="col-1">
-                <input id="chat-color" class="jscolor" onchange="updateColor(this.jscolor)" value="#FFFFFF">
-            </div>
+    <div class="row no-gutters chat-footer">
+        <div class="col-9">
+            <input id="chat-message-input" type="text" maxlength="512"/>
+        </div>
+        <div class="col-1">
+            <select id="chat-message-pm">
+                <option>-----</option>
+            </select>
+        </div>
+        <div class="col-1">
+            <input id="chat-message-submit" type="button" value="Send"/>
+        </div>
+        <div class="col-1">
+            <input id="chat-color" class="jscolor" onchange="updateColor(this.jscolor)" value="#FFFFFF">
         </div>
     </div>
 </div>
-
 </body>
 
 </html>

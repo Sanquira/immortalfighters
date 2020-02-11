@@ -2,11 +2,48 @@ $menu_border_image: "/static/base/menu/menu_border.png";
 $title_image_brown: "/static/base/menu/title_brown.png";
 $title_image_green: "/static/base/menu/title_green.png";
 
-
-.chat-container {
-
+html, body {
   height: 100%;
   width: 100%;
+}
+
+@mixin container-align-vertically {
+  display: -webkit-flexbox;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  justify-content: center;
+}
+
+/// Stroke font-character
+/// @param  {Integer} $stroke - Stroke width
+/// @param  {Color}   $color  - Stroke color
+/// @return {List}            - text-shadow list
+@function stroke($stroke, $color) {
+  $shadow: ();
+  $from: $stroke*-1;
+  @for $i from $from through $stroke {
+    @for $j from $from through $stroke {
+      $shadow: append($shadow, $i*1px $j*1px 0 $color, comma);
+    }
+  }
+  @return $shadow;
+}
+
+/// Stroke font-character
+/// @param  {Integer} $stroke - Stroke width
+/// @param  {Color}   $color  - Stroke color
+/// @return {Style}           - text-shadow
+@mixin stroke($stroke, $color) {
+  text-shadow: stroke($stroke, $color);
+}
+
+.chat-container {
+  height: 100%;
   font-size: 1rem;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 
@@ -15,81 +52,88 @@ $title_image_green: "/static/base/menu/title_green.png";
     font-size: 20px;
     color: white;
     text-shadow: 2px 2px 0 green, -1px -1px 0 green, 1px -1px 0 green, -1px 1px 0 green, 1px 1px 0 green;
-  }
-
-  #chat-log {
-    height: 100%;
-    background: black;
-    overflow-y: auto;
-    border: 15px solid transparent;
-    border-image: url($menu_border_image) 15 round;
-    overflow-wrap: break-word;
-  }
-
-  #chat-users {
-    background: black;
-    height: 100%;
-    overflow-y: auto;
-    border: 15px solid transparent;
-    border-image: url($menu_border_image) 15 round;
-    overflow-wrap: break-word;
-  }
-
-  #new-messages {
-    border: 10px solid transparent;
-    border-image: url($title_image_green) 10 round;
-    border-image-slice: 10 fill;
-    color: #999999;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    bottom: 15px;
-    display: none;
-  }
-
-  #chat-input {
-    font-size: 2vh;
-  }
-
-  #chat-message-input {
-    width: 100%;
-    font-size: 2vh;
-  }
-
-  #chat-message-pm {
-    width: 100%;
-    font-size: 2vh;
-  }
-
-  #chat-message-submit {
-    width: 100%;
-    border: 2px solid #330000;
-    background-color: #660000;
-    color: black;
-  }
-
-  #chat-color {
-    width: 100%;
-    border: 1px solid black;
-    text-align: center;
+    margin: 0;
   }
 
   p {
     margin: 0;
     font-weight: normal;
   }
+}
 
-  .chat-icon {
-    font-size: 3vh;
-  }
+.chat-header {
+  @include container-align-vertically;
+  height: 50px;
+}
 
-  .icon-volume-on {
-    color: green;
-  }
+.chat-body {
+  height: calc(100% - 100px);
+}
 
-  .icon-volume-off {
-    color: red;
-  }
+#new-messages {
+  border: 10px solid transparent;
+  border-image: url($title_image_green) 10 round;
+  border-image-slice: 10 fill;
+  color: #999;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  bottom: 15px;
+  display: none;
+}
 
+.chat-footer {
+  height: 50px;
+}
+
+.chat-icon {
+  font-size: 40px;
+  color: white;
+}
+
+.icon-volume-on {
+  @include stroke(2, green);
+}
+
+.icon-volume-off {
+  @include stroke(2, red);
+}
+
+#chat-log,
+#chat-users {
+  height: 100%;
+  overflow-y: auto;
+  border: 15px solid transparent;
+  border-image: url($menu_border_image) 15 round;
+  overflow-wrap: break-word;
+}
+
+.chat-message, .user-message {
+  text-shadow: 0px 0px 1px #999;
+}
+
+@mixin chat-footer-common {
+  font-size: 1rem;
+  width: 100%;
+  height: 100%;
+}
+
+#chat-message-pm,
+#chat-message-input {
+  @include chat-footer-common;
+}
+
+
+#chat-message-submit {
+  @include chat-footer-common;
+  border: 2px solid #330000;
+  background-color: #660000;
+  color: black;
+}
+
+#chat-color {
+  @include chat-footer-common;
+  border: 1px solid black;
+  text-align: center;
 }
