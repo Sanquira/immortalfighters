@@ -218,7 +218,7 @@
             let user_span = document.createElement("STRONG");
             let user_text = document.createTextNode(new Date(time).toLocaleTimeString() + " ");
             let user_text_name = document.createElement('span');
-            user_text_name.innerText = from_user.name;
+            user_text_name.innerText = from_user.name.split("_").join(" ");
             user_text_name.style.color = from_user.color;
             user_span.appendChild(user_text);
             user_span.appendChild(user_text_name);
@@ -226,7 +226,7 @@
                 user_span.appendChild(document.createTextNode(" \u21D2 "));
                 user_text_name = document.createElement('span');
                 user_text_name.style.color = to_user.color;
-                user_text_name.innerText = to_user.name;
+                user_text_name.innerText = to_user.name.split("_").join(" ");
                 user_span.appendChild(user_text_name);
             }
             user_span.appendChild(document.createTextNode(": "));
@@ -389,10 +389,8 @@
                 para.setAttribute("class", "user-message");
                 para.style.color = user[1].color;
                 const user_span = document.createElement("STRONG");
-                let user_text = document.createTextNode(user[0]);
-                user_span.appendChild(user_text);
-                user_text = document.createTextNode(": ");
-                user_span.appendChild(user_text);
+                user_span.appendChild(document.createTextNode(user.name.split("_").join(" ")));
+                user_span.appendChild(document.createTextNode(": "));
                 para.appendChild(user_span);
                 para.appendChild(user[1].messageRef);
                 usersEle.appendChild(para);
