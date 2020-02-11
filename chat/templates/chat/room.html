@@ -395,19 +395,19 @@
                 usersEle.removeChild(usersEle.firstChild);
             }
             let usersArr = Object.keys(userList).map(function (key) {
-                return [key, userList[key]];
+                return userList[key];
             });
-            usersArr.sort((a, b) => a[0].localeCompare(b[0]));
+            usersArr.sort((a, b) => a.name.localeCompare(b.name));
             for (let i = 0; i < usersArr.length; i++) {
                 let user = usersArr[i];
                 const para = document.createElement("P");
                 para.setAttribute("class", "user-message");
-                para.style.color = user[1].color;
+                para.style.color = user.color;
                 const user_span = document.createElement("STRONG");
                 user_span.appendChild(document.createTextNode(user.name.split("_").join(" ")));
                 user_span.appendChild(document.createTextNode(": "));
                 para.appendChild(user_span);
-                para.appendChild(user[1].messageRef);
+                para.appendChild(user.messageRef);
                 usersEle.appendChild(para);
             }
         }
