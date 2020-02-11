@@ -291,7 +291,7 @@
             let shn = log.scrollHeight;
             let st = log.scrollTop;
 
-            if (sho === (st + ch)) {
+            if (sho === Math.round(st + ch)) {
                 setNewMessagesVisibility(false);
                 log.scrollTop = shn - ch;
             } else {
