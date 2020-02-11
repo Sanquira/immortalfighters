@@ -231,11 +231,26 @@
             }
             user_span.appendChild(document.createTextNode(": "));
             let message_text = document.createElement('span');
-            message_text.innerText = message;
+
+            message_text.innerHTML = findAndParseHTML(message);
             message_text.style.color = from_user.color;
             para.appendChild(user_span);
             para.appendChild(message_text);
             return para;
+        }
+
+        /**
+         * Find and replace all URLs in string with html link.
+         *
+         * URL regex pattern:
+         * /((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g
+         */
+        function findAndParseHTML(text) {
+            var Rexp = /((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g;
+
+            // Replac the RegExp content by HTML element
+            return text.replace(Rexp,
+                "<a href='$1' target='_blank'>$1</a>");
         }
 
         /**
