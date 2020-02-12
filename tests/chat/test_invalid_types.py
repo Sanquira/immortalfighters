@@ -7,6 +7,7 @@ from tests.chat.utils import next_error, is_error, next_message_of_type
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_number_type(connected_communicator, user1, room1):
     """Tests sending message with numeric type"""
     communicator = await connected_communicator(user1, room1)
@@ -20,6 +21,7 @@ async def test_number_type(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_string_time(connected_communicator, user1, room1):
     """
     Tests sending message with string time.
@@ -38,6 +40,7 @@ async def test_string_time(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_time_override(connected_communicator, user1, room1):
     """
     Tests that you cannot send message with a specific time.
@@ -56,6 +59,7 @@ async def test_time_override(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_int_message(connected_communicator, user1, room1):
     """Tests that you cannot send chat_message with integer message"""
     communicator = await connected_communicator(user1, room1)
@@ -70,6 +74,7 @@ async def test_int_message(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_user_override(connected_communicator, user1, room1):
     """Tests that you cannot inject user who sent the message"""
     communicator = await connected_communicator(user1, room1)
@@ -85,6 +90,7 @@ async def test_user_override(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_int_target_user(connected_communicator, user1, room1):
     """Tests that you cannot send PM to user specified by an integer"""
     communicator = await connected_communicator(user1, room1)

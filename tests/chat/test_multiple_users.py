@@ -7,6 +7,7 @@ from tests.chat.utils import ignore_messages, next_message, is_valid_message_wit
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_login_workflow(user_communicator, user1, user2, room1):
     """
     Tests that login workflow works as expected
@@ -56,6 +57,7 @@ async def test_login_workflow(user_communicator, user1, user2, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_user_disconnect(connected_communicator, user1, user2, room1):
     """
     Tests user disconnecting from the server
@@ -80,6 +82,7 @@ async def test_user_disconnect(connected_communicator, user1, user2, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_valid_chat_message(connected_communicator, user1, user2, room1):
     """
     Tests user disconnecting from the server
@@ -107,6 +110,7 @@ async def test_valid_chat_message(connected_communicator, user1, user2, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_simple_pm_message(connected_communicator, user1, user2, room1):
     """
     Tests sending simple private message
@@ -138,6 +142,7 @@ async def test_simple_pm_message(connected_communicator, user1, user2, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_invalid_user_pm_message(connected_communicator, user1, user2, room1):
     """
     Tests sending private messages to non-existing users
@@ -165,6 +170,7 @@ async def test_invalid_user_pm_message(connected_communicator, user1, user2, roo
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_pm_message(connected_communicator, user1, user2, admin_user, room1):
     """
     Tests sending private messages between 3 people

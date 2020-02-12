@@ -7,13 +7,15 @@ from typing import Dict
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from django.db.models import Q
+from django.conf import settings
 
 from base.models.ifuser import IFUser
 from chat.components.messages import ChatMessage, RoomUnavailableError, ErrorMessage, UserJoinChannelMessage, \
     UserLeaveChannelMessage, PrivateMessage, InvalidMessageError, BaseMessage, UserAlreadyConnectedError, \
     JoinChannelMessage
 from chat.components.serializables import ChatUser
-from chat.models import Room
+from chat.models import Room, HistoryRecord
 from chat.views import check_permission
 
 
@@ -44,6 +46,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         Method that handles connection of the new client to the server
         """
         self.room_name = self.scope['url_route']['kwargs']['room_name']
+
+        room_query = Room.objects.filter(name=self.room_name)
+        if not room_query.exists():
+            await self.accept()
+            await self.raise_error(RoomUnavailableError(room=self.room_name), close=True)
+            return
+
+        self.room = room_query.first()
         self.room_group_name = 'chat_%s' % self.room_name
         self.user = self.scope["user"]
         message = await self.pre_join()
@@ -64,10 +74,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 self.channel_name
             )
 
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                UserJoinChannelMessage(user=message.user.to_dict()).to_dict()
-            )
+            await self._group_send(UserJoinChannelMessage(user=message.user.to_dict()))
 
     async def disconnect(self, code):
         """Disconnects user from room, if he was properly connected"""
@@ -80,10 +87,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 self.channel_name
             )
 
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                UserLeaveChannelMessage(self.user.username).to_dict()
-            )
+            await self._group_send(UserLeaveChannelMessage(self.user.username))
 
     async def receive_json(self, content, **kwargs):
         """Receive message from WebSocket"""
@@ -92,10 +96,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             message = await self.parse_client_message(content)
             if message is not None:
                 # Re-send message to room group
-                await self.channel_layer.group_send(
-                    self.room_group_name,
-                    message.to_dict()
-                )
+                await self._group_send(message)
 
     async def chat_message(self, event):
         """Receive message from room group"""
@@ -168,18 +169,15 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     @database_sync_to_async
     def pre_join(self) -> BaseMessage:
         """Checks that user can connect to the room"""
-        if not Room.objects.exists():
-            return RoomUnavailableError(room=self.room_name)
-
-        room = Room.objects.get(name=self.room_name)
-        if not check_permission(room, self.user):
+        if not check_permission(self.room, self.user):
             return RoomUnavailableError(room=self.room_name)
 
         if self.username_in_room():
             return UserAlreadyConnectedError(user=self.user.username)
 
+        history = self._fetch_history()
         users = list(map(ChatUser, self.room_users().values()))
-        return JoinChannelMessage(users, ChatUser(self.user))
+        return JoinChannelMessage(users, ChatUser(self.user), history)
 
     def room_users(self) -> Dict[str, IFUser]:
         """Returns all users that are connected in the room"""
@@ -188,3 +186,24 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     def username_in_room(self):
         """Checks if some user with same username is in room"""
         return self.user.username in self.room_users()
+
+    async def _group_send(self, message: BaseMessage):
+        serialized_message = message.to_dict()
+        record = HistoryRecord(room=self.room, time=message.time, message=serialized_message)
+        await database_sync_to_async(record.save)()
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            serialized_message
+        )
+
+    def _fetch_history(self):
+        """Fetches history for this consumer"""
+        history = HistoryRecord.objects \
+            .filter(room=self.room) \
+            .exclude((Q(message__type="private_message") &
+                      (~(Q(message__target_user=self.user.username)
+                         | Q(message__user=self.user.username)))))
+        history = history[:settings.CHAT_HISTORY_MESSAGES]
+        history = list(map(lambda record: record.message, history))
+        history.reverse()
+        return history

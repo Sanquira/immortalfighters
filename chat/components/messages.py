@@ -56,8 +56,8 @@ class JoinChannelMessage(BaseMessage):
     Contains all users that are in the room before this tried to connect.
     """
 
-    def __init__(self, users: List[ChatUser], user: ChatUser) -> None:
-        super().__init__(message_type="join_channel")
+    def __init__(self, users: List[ChatUser], user: ChatUser, history: List[str]) -> None:
+        super().__init__(message_type="join_channel", history=history)
         self.users = users
         self.user = user
 
@@ -74,7 +74,6 @@ class UserJoinChannelMessage(BaseMessage):
 
     def __init__(self, user, time: int = -1) -> None:
         super().__init__(message_type="user_join_channel", time=time, user=user)
-        self.user = user
 
 
 class UserLeaveChannelMessage(BaseMessage):

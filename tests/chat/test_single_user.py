@@ -6,11 +6,12 @@ import pytest
 from channels.testing import WebsocketCommunicator
 
 from tests.chat.utils import is_error, is_valid_message_with_type, next_message, ignore_messages, next_error, \
-    next_message_of_type
+    next_message_of_type, valid_history
 from immortalfighters.routing import application
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_connect_anonymous():
     """
     Tests that you need to be logged in to use chat
@@ -29,6 +30,7 @@ async def test_connect_anonymous():
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_connect_logged_in(user_communicator, user1, room1):
     """
     Tests that you can connect to the room
@@ -45,6 +47,7 @@ async def test_connect_logged_in(user_communicator, user1, room1):
     message = await next_message(communicator)
     assert is_valid_message_with_type(message, "join_channel")
     assert len(message["users"]) == 0
+    assert len(message["history"]) == 0
     assert message["user"]["name"] == user1.username
 
     message = await next_message(communicator)
@@ -53,6 +56,7 @@ async def test_connect_logged_in(user_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_non_existing_room(user_communicator, user1, non_existing_room):
     """
     Tests that you cannot connect to nonexistent room
@@ -70,6 +74,7 @@ async def test_non_existing_room(user_communicator, user1, non_existing_room):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_already_connected(user_communicator, user1, room1):
     """
     Tests that you cannot connect if user is already connected
@@ -102,6 +107,7 @@ async def test_already_connected(user_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_users_after_disconnect(user_communicator, user1, user2, room1):
     """
     Tests that after user disconnects, the number of users connected on the server is 0
@@ -123,10 +129,12 @@ async def test_users_after_disconnect(user_communicator, user1, user2, room1):
     message = await next_message(communicator2)
     assert is_valid_message_with_type(message, "join_channel")
     assert len(message["users"]) == 0
+    assert valid_history(message["history"], 2, ["user_join_channel", "user_leave_channel"])
     assert message["user"]["name"] == user2.username
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_incorrect_type(connected_communicator, user1, room1):
     """
     Tests that user cannot send messages with invalid type
@@ -148,6 +156,7 @@ async def test_incorrect_type(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_no_type_specifed(connected_communicator, user1, room1):
     """
     Tests that user cannot send messages without type
@@ -169,6 +178,7 @@ async def test_no_type_specifed(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_invalid_chat_message(connected_communicator, user1, room1):
     """
     Tests that user cannot send invalid chat message
@@ -199,6 +209,7 @@ async def test_invalid_chat_message(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_valid_chat_message(connected_communicator, user1, room1):
     """
     Tests that user can send valid chat messages
@@ -222,6 +233,7 @@ async def test_valid_chat_message(connected_communicator, user1, room1):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_invalid_private_message(connected_communicator, user1, room1):
     """
     Tests that user cannot send invalid private messages
