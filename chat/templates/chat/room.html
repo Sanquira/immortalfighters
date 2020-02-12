@@ -203,17 +203,17 @@
 
         });
 
-         /**
+        /**
          * Return user by name, returns new user with default color, if user is not connected:
          *
          * @param user - username
          */
         function getUser(user) {
-             if (!(user in userList)) {
-                 return {name: user, color: DEFAULT_COLOR, messageRef: ""};
-             }
-             return userList[user];
-         }
+            if (!(user in userList)) {
+                return {name: user, color: DEFAULT_COLOR, messageRef: ""};
+            }
+            return userList[user];
+        }
 
         /**
          * Create <p> element containing colored message in format:
@@ -315,7 +315,7 @@
             let shn = log.scrollHeight;
             let st = log.scrollTop;
 
-            if (sho === Math.round(st + ch)) {
+            if (Math.abs(st + ch - sho) <= 5) {
                 setNewMessagesVisibility(false);
                 log.scrollTop = shn - ch;
             } else {
