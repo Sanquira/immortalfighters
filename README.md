@@ -42,25 +42,28 @@ IF project uses Django and PostgreSQL as database. Whole project is configured t
   ```
 7. When running manage.py:
 
-  Set env variable: DJANGO_SETTINGS_MODULE
+  Set env variable: `DJANGO_SETTINGS_MODULE`
   * Development:
-  immortalfighters.settings.development
+  `immortalfighters.settings.development`
   * Production:
-  immortalfighters.settings.production
+  `immortalfighters.settings.production`
   * Tests:
-  immortalfighters.settings.tests
+  `immortalfighters.settings.tests`
   
   Ex.:
-  DJANGO_SETTINGS_MODULE=immortalfighters.settings.production pipenv run python manage.py collectstatic
+  `DJANGO_SETTINGS_MODULE=immortalfighters.settings.production pipenv run python manage.py collectstatic`
   
 8. When deploying on production run these:
-  * migrate
-  * compilescss
-  * collectstatic
-  * service daphne restart
-  * service nginx restart
+  ```bash
+  export DJANGO_SETTINGS_MODULE=immortalfighters.settings.production
+  pipenv run python manage.py migrate
+  pipenv run python manage.py compilescss
+  pipenv run python manage.py collectstatic
+  service daphne restart
+  service nginx restart
+  ```
 
-(On production server, there is script for that. It's not in git tho.)
+(You should have script for this on production server, at least we do)
 
 ### Q&A
 **Q:** Why we do not have statistics in right menu?
