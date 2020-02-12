@@ -1,4 +1,5 @@
 """Module for Character entity."""
+from django.contrib import admin
 from django.db import models
 
 from base.models.ifuser import IFUser
@@ -26,3 +27,6 @@ class Character(models.Model):
     class Meta:
         verbose_name = "Postava"
         verbose_name_plural = "Postavy"
+
+
+admin.site.register(Character)

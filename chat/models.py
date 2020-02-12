@@ -37,3 +37,4 @@ class HistoryRecord(models.Model):
 
 
 admin.site.register(HistoryRecord)
+admin.site.register(Room)

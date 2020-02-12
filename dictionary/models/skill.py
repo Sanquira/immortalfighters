@@ -1,4 +1,6 @@
 """Module for Skill entity and corresponding objects."""
+from django.conf import settings
+from django.contrib import admin
 from django.db import models
 from markdownx.models import MarkdownxField
 
@@ -55,6 +57,7 @@ class Skill(models.Model):
     class Meta:
         verbose_name = "Dovednost"
         verbose_name_plural = "Dovednosti"
+        ordering = ['name', 'stat']
 
 
 # pylint: disable=unused-argument
@@ -128,3 +131,7 @@ def init_skills(apps, schema_editor):
     SkillPoints(difficulty=d3, rank=r4, points=90).save()
     SkillPoints(difficulty=d3, rank=r5, points=130).save()
     SkillPoints(difficulty=d3, rank=r6, points=189).save()
+
+
+if settings.DEBUG:
+    admin.site.register(SkillPoints)

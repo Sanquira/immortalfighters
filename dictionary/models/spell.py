@@ -1,4 +1,6 @@
 """Module for Spell entity and corresponding objects."""
+from django.conf import settings
+from django.contrib import admin
 from django.db import models
 from markdownx.models import MarkdownxField
 
@@ -240,3 +242,8 @@ def initialize_spell_directions(apps, schema_editor):
                    correct=-55).save()
     SpellDirection(name="Získávání nedostupných informací", discipline=SpellDiscipline.objects.filter(label="PO")[0],
                    correct=-42).save()
+
+if settings.DEBUG:
+    admin.site.register(SpellDiscipline)
+    admin.site.register(SpellDirection)
+    admin.site.register(ProfessionLimitation)

@@ -1,4 +1,6 @@
 """Module for CreatureSize entity and corresponding objects."""
+from django.conf import settings
+from django.contrib import admin
 from django.db import models
 
 
@@ -12,6 +14,7 @@ class CreatureSize(models.Model):
     class Meta:
         verbose_name = "Velikostní třída"
         verbose_name_plural = "Velikostní třídy"
+        ordering = ['name']
 
 
 # pylint: disable=unused-argument
@@ -26,3 +29,7 @@ def init_creature_size(apps, schema_editor):
     CreatureSize(name="C").save()
     CreatureSize(name="D").save()
     CreatureSize(name="E").save()
+
+
+if settings.DEBUG:
+    admin.site.register(CreatureSize)

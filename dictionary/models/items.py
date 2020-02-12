@@ -22,6 +22,7 @@ class Item(BaseItem):
     class Meta:
         verbose_name = "Předmět"
         verbose_name_plural = "Předměty"
+        ordering = ['name']
 
 
 class Artefact(BaseItem):

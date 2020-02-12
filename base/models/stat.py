@@ -1,4 +1,6 @@
 """Module for Stat entity."""
+from django.conf import settings
+from django.contrib import admin
 from django.db import models
 
 
@@ -25,3 +27,7 @@ def init_stats(apps, schema_editor):
     Stat(name="Odolnost", shortcut="RES").save()
     Stat(name="Inteligence", shortcut="INT").save()
     Stat(name="Charisma", shortcut="CHA").save()
+
+
+if settings.DEBUG:
+    admin.site.register(Stat)

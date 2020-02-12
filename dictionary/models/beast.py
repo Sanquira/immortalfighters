@@ -1,4 +1,6 @@
 """Module for Beast entity and corresponding objects."""
+from django.conf import settings
+from django.contrib import admin
 from django.db import models
 from markdownx.models import MarkdownxField
 
@@ -20,6 +22,7 @@ class BeastWeakness(models.Model):
     class Meta:
         verbose_name = "Zranitelnost"
         verbose_name_plural = "Zranitelnosti"
+        ordering = ['group']
 
 
 class BeastCategory(models.Model):
@@ -32,6 +35,7 @@ class BeastCategory(models.Model):
     class Meta:
         verbose_name = "Kategorie"
         verbose_name_plural = verbose_name
+        ordering = ['name']
 
 
 class Beast(models.Model):
@@ -142,3 +146,10 @@ def init_category(apps, schema_editor):
     BeastCategory(name="Šelmy").save()
     BeastCategory(name="Vodní tvorové").save()
     BeastCategory(name="Zvěř").save()
+
+
+if settings.DEBUG:
+    admin.site.register(BeastMobility)
+    admin.site.register(BeastAttack)
+    admin.site.register(BeastCategory)
+    admin.site.register(BeastWeakness)

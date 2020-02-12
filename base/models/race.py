@@ -1,4 +1,6 @@
 """Module for Race entity and corresponding objects."""
+from django.conf import settings
+from django.contrib import admin
 from django.db import models
 
 
@@ -25,10 +27,6 @@ class Race(models.Model):
     def __str__(self):
         return self.name
 
-    class Meta:
-        verbose_name = "Rasa"
-        verbose_name_plural = "Rasy"
-
     # pylint: disable=too-many-locals, too-many-arguments
     def race_factory(self, name: str, str_min: int, str_max: int, dex_min: int, dex_max: int, res_min: int,
                      res_max: int, int_min: int, int_max: int, cha_min: int, cha_max: int, str_fix: int, dex_fix: int,
@@ -50,6 +48,11 @@ class Race(models.Model):
         self.cha_min = cha_min
         self.cha_max = cha_max
         self.cha_fix = cha_fix
+
+    class Meta:
+        verbose_name = "Rasa"
+        verbose_name_plural = "Rasy"
+        ordering = ['name']
 
 
 # pylint: disable=unused-argument
@@ -80,3 +83,7 @@ def initialize_races(apps, schema_editor):
     clovek.save()
     barbar.save()
     kroll.save()
+
+
+if settings.DEBUG:
+    admin.site.register(Race)

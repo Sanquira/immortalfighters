@@ -1,4 +1,6 @@
 """Module for Profession entity and corresponding objects."""
+from django.conf import settings
+from django.contrib import admin
 from django.db import models
 from polymorphic.models import PolymorphicModel
 
@@ -95,6 +97,7 @@ class BaseProfession(PolymorphicModel):
     class Meta:
         verbose_name = "Povolání"
         verbose_name_plural = verbose_name
+        ordering = ['parent_prof', 'name']
 
 
 class XPLevel(models.Model):
@@ -117,6 +120,7 @@ class XPLevel(models.Model):
     class Meta:
         verbose_name = "Úroveň"
         verbose_name_plural = "Úrovně"
+        ordering = ['profession', 'level']
 
 
 # pylint: disable=fixme
@@ -712,3 +716,7 @@ def init_professions(apps, schema_editor):
     xp_level_thief_36 = XPLevel()
     xp_level_thief_36.xp_level_factory(thief, 36, 1604000, 656)
     xp_level_thief_36.save()
+
+
+if settings.DEBUG:
+    admin.site.register(BaseProfession)
