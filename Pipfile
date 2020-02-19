@@ -13,7 +13,7 @@ coverage = "*"
 pytest-cov = "*"
 
 [packages]
-django = "==2.2.8"
+django = "==2.2.10"
 django-bootstrap4 = "*"
 libsass = "*"
 django-compressor = "*"
