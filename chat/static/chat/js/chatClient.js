@@ -14,19 +14,30 @@ class ChatClient {
         this.onErrorMessage = function (error) {};
 
         this.webSocket = new WebSocket(wsUrl);
-        this.webSocket.onerror = this.socketClosedHandler.bind(this);
+        this.webSocket.onerror = this.socketErrorHandler.bind(this);
+        this.webSocket.onclose = this.socketCloseHandler.bind(this);
         this.webSocket.onmessage = this.messageHandler.bind(this);
         this.joined = false;
 
     }
 
     // Simulates websocket_error message as it would arrive from server in case of socket closure
-    socketClosedHandler(e) {
+    socketErrorHandler(e) {
         console.error(e);
         var error = {
             "type": "error",
             "error_type": "websocket_closed",
             "message": e.data,
+            "time": new Date().getTime() / 1000,
+        };
+        this.onErrorMessage(error)
+    }
+
+    socketCloseHandler() {
+        var error = {
+            "type": "error",
+            "error_type": "websocket_closed",
+            "message": "Websocket closed",
             "time": new Date().getTime() / 1000,
         };
         this.onErrorMessage(error)
