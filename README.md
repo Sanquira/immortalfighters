@@ -31,6 +31,7 @@ IF project uses Django and PostgreSQL as database. Whole project is configured t
     ```
     
    2. How to setup PostgreSQL on Ubuntu: https://help.ubuntu.com/lts/serverguide/postgresql.html
+   https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-14-04
 5. Clone project:
   ```
   git clone https://github.com/Sanquira/immortalfighters.git
