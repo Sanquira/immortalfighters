@@ -16,7 +16,7 @@ from chat.components.messages import ChatMessage, RoomUnavailableError, ErrorMes
     JoinChannelMessage
 from chat.components.serializables import ChatUser
 from chat.models import Room, HistoryRecord
-from chat.views import check_permission
+from chat.permissions import check_permission
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
