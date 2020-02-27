@@ -15,8 +15,9 @@ class LowerCaseCharField(models.CharField):
 
 
 class Room(models.Model):
-    """Chat single_room"""
+    """Chat single room"""
     name = LowerCaseCharField(max_length=30, unique=True)
+    permission = models.CharField(max_length=30, default=None, blank=True, null=True)
 
     def __str__(self):
         return self.name
