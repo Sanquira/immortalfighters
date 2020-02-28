@@ -8,8 +8,9 @@ from django.http import Http404
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 
-from base.models.ifuser import IFUser
+from chat.consumers import ChatConsumer
 from chat.models import Room
+from chat.permissions import check_permission
 
 
 @login_required
@@ -21,14 +22,12 @@ def list_rooms(request):
     for room in rooms:
         if check_permission(room, user):
             room_list.append(room)
+    users_list = ChatConsumer.users
+    room_list = map(lambda room: {
+        "name": room.name,
+        "users": len(users_list.get(room.name, {}))
+    }, room_list)
     return render(request, 'chat/index.html', {"rooms": room_list})
-
-
-# pylint: disable=unused-argument,fixme
-# TODO: Implement permissions for chat
-def check_permission(room: Room, user: IFUser) -> bool:
-    """Checks if user has permission for said room"""
-    return True
 
 
 @login_required
