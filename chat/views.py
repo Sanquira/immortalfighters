@@ -10,23 +10,19 @@ from django.utils.safestring import mark_safe
 
 from chat.consumers import ChatConsumer
 from chat.models import Room
-from chat.permissions import check_permission
+from chat.permissions import check_permission, list_available_rooms
 
 
 @login_required
 def list_rooms(request):
     """List of all rooms"""
-    rooms = Room.objects.all()
     user = request.user
-    room_list = []
-    for room in rooms:
-        if check_permission(room, user):
-            room_list.append(room)
+
     users_list = ChatConsumer.users
     room_list = map(lambda room: {
         "name": room.name,
         "users": len(users_list.get(room.name, {}))
-    }, room_list)
+    }, list_available_rooms(user))
     return render(request, 'chat/index.html', {"rooms": room_list})
 
 
