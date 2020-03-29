@@ -4,34 +4,34 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+coverage = "*"
 pylint = "*"
 pylint-django = "*"
-pytest-pylint = "*"
-pytest-django = "*"
 pytest-asyncio = "*"
-coverage = "*"
 pytest-cov = "*"
+pytest-django = "*"
+pytest-pylint = "*"
 
 [packages]
-django = "==2.2.10"
-django-bootstrap4 = "*"
-libsass = "*"
-django-compressor = "*"
-django-sass-processor = "*"
-django-import-export = "*"
 bootstrap4 = "*"
-django-polymorphic = "*"
+channels = "*"
+channels-redis = "*"
+daphne = "*"
+django = "==3.0.5"
+django-bootstrap4 = "*"
+django-compressor = "*"
+django-import-export = "*"
 django-markdownx = "*"
-markdown-if = {editable = true,git = "https://Sanquira@bitbucket.org/Sanquira/markdown_if.git"}
+django-polymorphic = "*"
+django-sass-processor = "*"
 django-simple-menu = "*"
 django-tagging = "*"
 django-tagging-autocomplete-new = "*"
-daphne = "*"
-twisted = {extras = ["http2", "tls"],version = "*"}
-channels = "*"
-channels-redis = "*"
+libsass = "*"
+markdown-if = {editable = true,git = "https://Sanquira@bitbucket.org/Sanquira/markdown_if.git"}
 pillow = "*"
 psycopg2-binary = "*"
+twisted = {extras = ["http2", "tls"],version = "*"}
 
 [requires]
 python_version = "3"
