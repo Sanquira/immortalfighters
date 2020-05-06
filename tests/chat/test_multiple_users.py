@@ -23,7 +23,7 @@ async def test_login_workflow(user_communicator, user1, user2, room1):
 
         user1 -> Receives UserJoinChannel message containing user2
     """
-    communicator = user_communicator(user1, room1)
+    communicator = await user_communicator(user1, room1)
     connected, __ = await communicator.connect()
     assert connected
 
@@ -36,7 +36,7 @@ async def test_login_workflow(user_communicator, user1, user2, room1):
     assert is_valid_message_with_type(message, "user_join_channel")
     assert message["user"]["name"] == user1.username
 
-    communicator2 = user_communicator(user2, room1)
+    communicator2 = await user_communicator(user2, room1)
     connected, __ = await communicator2.connect()
     assert connected
 
