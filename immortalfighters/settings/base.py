@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'permissions',
     'dictionary',
     'chat',
+    'dungeon',
 
     'markdownx',
     'import_export',

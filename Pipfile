@@ -28,6 +28,7 @@ django-simple-menu = "*"
 django-tagging = "*"
 django-tagging-autocomplete-new = "*"
 libsass = "*"
+lupa = "*"
 markdown-if = {editable = true,git = "https://Sanquira@bitbucket.org/Sanquira/markdown_if.git"}
 pillow = "*"
 psycopg2-binary = "*"
