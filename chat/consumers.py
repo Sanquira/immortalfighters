@@ -48,12 +48,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
 
         room_query = Room.objects.filter(name=self.room_name)
-        if not room_query.exists():
+        exists = database_sync_to_async(room_query.exists)
+        first = database_sync_to_async(room_query.first)
+        if not await exists():
             await self.accept()
             await self.raise_error(RoomUnavailableError(room=self.room_name), close=True)
             return
 
-        self.room = room_query.first()
+        self.room = await first()
         self.room_group_name = 'chat_%s' % self.room_name
         self.user = self.scope["user"]
         message = await self.pre_join()

@@ -36,7 +36,7 @@ def room2(room2, user2, user1, admin1):
 @pytest.mark.django_db
 async def test_history_with_pm(user_communicator, user1, room3):
     """Tests that you will correctly receive private messages in history if user is involved"""
-    communicator = user_communicator(user1, room3)
+    communicator = await user_communicator(user1, room3)
     connected, __ = await communicator.connect()
 
     assert connected
@@ -49,7 +49,7 @@ async def test_history_with_pm(user_communicator, user1, room3):
 @pytest.mark.django_db
 async def test_history_without_pm(user_communicator, user2, room3):
     """Tests that when the private message didn't involve the use that they are not included in history"""
-    communicator = user_communicator(user2, room3)
+    communicator = await user_communicator(user2, room3)
     connected, __ = await communicator.connect()
 
     assert connected
@@ -62,7 +62,7 @@ async def test_history_without_pm(user_communicator, user2, room3):
 @pytest.mark.django_db
 async def test_different_room_history(user_communicator, user2, room1, room2):
     """Tests that different room have different histories"""
-    communicator = user_communicator(user2, room2)
+    communicator = await user_communicator(user2, room2)
     connected, __ = await communicator.connect()
 
     assert connected
@@ -72,7 +72,7 @@ async def test_different_room_history(user_communicator, user2, room1, room2):
 
     await communicator.disconnect()
 
-    communicator = user_communicator(user2, room1)
+    communicator = await user_communicator(user2, room1)
     connected, __ = await communicator.connect()
 
     assert connected

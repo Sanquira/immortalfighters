@@ -40,7 +40,7 @@ async def test_connect_logged_in(user_communicator, user1, room1):
         User1 -> Receives join_channel
         User1 -> Receives user_join_channel
     """
-    communicator = user_communicator(user1, room1)
+    communicator = await user_communicator(user1, room1)
     connected, __ = await communicator.connect()
 
     assert connected
@@ -65,7 +65,7 @@ async def test_non_existing_room(user_communicator, user1, non_existing_room):
         User1 -> TryConnect
         User1 -> Room Unavailable error
     """
-    communicator = user_communicator(user1, non_existing_room)
+    communicator = await user_communicator(user1, non_existing_room)
     connected, __ = await communicator.connect()
     assert connected
 
@@ -85,12 +85,12 @@ async def test_already_connected(user_communicator, user1, room1):
         User2 -> User Already Connected error
         User1 -> No join messages
     """
-    communicator = user_communicator(user1, room1)
+    communicator = await user_communicator(user1, room1)
     await communicator.connect()
 
     await ignore_messages(communicator, 2)
 
-    communicator2 = user_communicator(user1, room1)
+    communicator2 = await user_communicator(user1, room1)
     await communicator2.connect()
 
     message = await next_message(communicator2)
@@ -119,11 +119,11 @@ async def test_users_after_disconnect(user_communicator, user1, user2, room1):
         User2 -> Connects
         Number of already connected users == 0
     """
-    communicator = user_communicator(user1, room1, autoclean=False)
+    communicator = await user_communicator(user1, room1, autoclean=False)
     await communicator.connect()
     await communicator.disconnect()
 
-    communicator2 = user_communicator(user2, room1)
+    communicator2 = await user_communicator(user2, room1)
     await communicator2.connect()
 
     message = await next_message(communicator2)
