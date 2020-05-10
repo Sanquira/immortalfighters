@@ -36,7 +36,7 @@ def admin1(transactional_db):
 @pytest.fixture
 def admin_char1(admin1):
     """First admin character"""
-    char = Character(owner=admin1, character_name="Kitten")
+    char = Character(owner=admin1, name="Kitten", health=0, max_health=0)
     char.save()
     return char
 
@@ -44,7 +44,7 @@ def admin_char1(admin1):
 @pytest.fixture
 def admin_char2(admin1):
     """Second admin character"""
-    char = Character(owner=admin1, character_name="Shitten")
+    char = Character(owner=admin1, name="Shitten", health=0, max_health=0)
     char.save()
     return char
 
@@ -52,7 +52,7 @@ def admin_char2(admin1):
 @pytest.fixture
 def user_char1(user1):
     """First user character"""
-    char = Character(owner=user1, character_name="Dog")
+    char = Character(owner=user1, name="Dog", health=0, max_health=0)
     char.save()
     return char
 
@@ -60,6 +60,6 @@ def user_char1(user1):
 @pytest.fixture
 def user_char2(user1):
     """Second user character"""
-    char = Character(owner=user1, character_name="Shog")
+    char = Character(owner=user1, name="Shog", health=0, max_health=0)
     char.save()
     return char
