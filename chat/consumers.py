@@ -126,7 +126,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """Receive private message from room group"""
         message = self.parse_server_message(event)
 
-        if message.get("target_user") != self.user.username:
+        if message.target_user != self.user.username:
             return
 
         # Send message to WebSocket
