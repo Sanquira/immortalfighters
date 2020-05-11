@@ -31,13 +31,14 @@ def valid_history(history, expected_count, expected_messages=None):
     expected_messages = expected_messages or []
     if len(history) != expected_count:
         return False
-    for i in range(len(expected_messages)):
-        if history[i]["type"] != expected_messages[i]:
+    for i, value in enumerate(expected_messages):
+        if history[i]["type"] != value:
             return False
     return True
 
 
 def create_history_record(room: Room, message: BaseMessage):
+    """Creates history record in database"""
     record = HistoryRecord(room=room, time=message.time, message=message.to_dict())
     record.save()
 

@@ -1,6 +1,7 @@
 """
 Tests that verify that chat is handling history correctly
 """
+# pylint: disable=redefined-outer-name
 import pytest
 
 from chat.components.messages import UserJoinChannelMessage, PrivateMessage, ChatMessage
@@ -10,6 +11,7 @@ from tests.chat.utils import next_message, is_valid_message_with_type, create_hi
 
 @pytest.fixture
 def room3(room3, user2, user1, admin1):
+    """Create history for room 3"""
     create_history_record(room3,
                           UserJoinChannelMessage(user=user1.username, time=1))
     create_history_record(room3,
@@ -24,7 +26,8 @@ def room3(room3, user2, user1, admin1):
 
 
 @pytest.fixture
-def room2(room2, user2, user1, admin1):
+def room2(room2, user2, user1):
+    """Create history for room 2"""
     create_history_record(room2,
                           UserJoinChannelMessage(user=user1.username, time=1))
     create_history_record(room2,
