@@ -35,6 +35,9 @@ jobs:
       - name: Lint with Pylint
         run: |
           pipenv run pylint --load-plugins pylint_django chat/ dictionary/ immortalfighters/ base/ utils/ tests/
-      - name: Test with pytest
+      - name: Test with pytest (PostgreSQL)
         run: |
-          pipenv run pytest --ds=immortalfighters.settings.tests
+          pipenv run pytest --ds=immortalfighters.settings.tests.postgre
+      - name: Test with pytest (SQLite)
+        run: |
+          pipenv run pytest --ds=immortalfighters.settings.tests.sqlite
