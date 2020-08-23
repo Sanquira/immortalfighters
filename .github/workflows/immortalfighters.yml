@@ -37,4 +37,4 @@ jobs:
           pipenv run pylint --load-plugins pylint_django chat/ dictionary/ immortalfighters/ base/ utils/ tests/
       - name: Test with pytest
         run: |
-          pipenv run pytest --ds=immortalfighters.settings.tests -n6
+          pipenv run pytest --ds=immortalfighters.settings.tests
