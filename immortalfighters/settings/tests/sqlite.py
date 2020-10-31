@@ -1,13 +1,8 @@
 """
-Development settings
-Don't require specific configuration, are set as default ones
+Settings used for tests
 """
 # pylint: disable=wildcard-import,unused-wildcard-import
-from .base import *
-
-DEBUG = True
-
-ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
+from immortalfighters.settings.base import *
 
 DATABASES = {
     'default': {
@@ -15,3 +10,7 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, '../db.sqlite3'),
     }
 }
+
+USE_TZ = False
+
+CHAT_HISTORY_MESSAGES = 3
